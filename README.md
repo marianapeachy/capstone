@@ -95,4 +95,5 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 ## 👨‍💻 Equipo de Desarrollo
 
 * **Asignatura**: Proyecto de Título (APT122 / Capstone) - Duoc UC
+* **Integrantes**: Mariana Ramirez, Nicko Cortes, Francisco Sandoval
 * **Cliente**: Walmart Chile (Área de Inteligencia Artificial)
