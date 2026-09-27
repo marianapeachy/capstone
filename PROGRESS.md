@@ -6,6 +6,22 @@ Estructura inicial del repositorio creada (directorios `src/`, `tests/`,
 `docs/`, `data/`, `scripts/`, más `.gitignore`, `requirements.txt`,
 `Dockerfile`, `CLAUDE.md`).
 
+## Plan de trabajo por fases (2026-09-27)
+
+1. [x] Terreno común: subir las ramas y abrir los PR #3, #4 y #5
+       (encadenados); flujo de trabajo en equipo en `CLAUDE.md`;
+       `graphify-out/` fuera de git y regenerado localmente; setup de
+       entorno nuevo en el README.
+2. [ ] CI con GitHub Actions (pytest + `docker build`) y protección de
+       `main` (PR + revisión + CI en verde). Ítem 13.
+3. [ ] Buscar datasets que simulen cámaras de seguridad de sala. Ítem 14.
+4. [ ] Recomendar skills de Claude Code aplicables al proyecto
+       (`/skill-finder`).
+5. [ ] Resolver limitaciones de la segmentación. Ítem 15.
+
+Para tomar un ítem, agregar `(dueño: <nombre>)` antes de empezar (ver
+"Trabajo en equipo" en `CLAUDE.md`).
+
 ## Pendientes (priorizados)
 
 1. [x] Implementar `src/preprocessing/roi_filter.py`: recortador de
@@ -109,6 +125,30 @@ Estructura inicial del repositorio creada (directorios `src/`, `tests/`,
        datasets). No versionado (`data/processed/*` en `.gitignore`).
 12. [ ] Falta script de *descarga* reproducible (hoy la descarga se
        hizo manualmente); ver Notas.
+
+13. [ ] CI en GitHub Actions: correr `pytest tests/` y `docker build` en
+       cada PR, y proteger `main` (merge solo por PR con una revisión y
+       CI en verde).
+14. [ ] Datasets con imágenes tipo cámara de seguridad (vista alta,
+       oblicua, gran angular/fisheye, pasillo completo) para validar
+       dewarping y segmentación en condiciones parecidas a Walmart.
+       Pedir también a Walmart una muestra de fotogramas reales.
+15. [ ] Limitaciones de la segmentación (ítem 4) y cómo atacarlas:
+       - Diagonales falsas (cadenas que saltan entre repisas): exigir
+         soporte de borde a lo largo de toda la recta ajustada, no solo
+         en los centros de franja, y que la pendiente de cada repisa sea
+         coherente con las vecinas (por perspectiva, varía suavemente
+         con la altura).
+       - Líneas extra en cajas apiladas: una repisa real tiene una franja
+         delgada y uniforme (con etiquetas de precio) entre dos bordes
+         cercanos; verificar ese patrón. Además, cuando exista el
+         detector, refinar los niveles en `src/postprocessing/`: una
+         línea que cruza por el medio de productos detectados no es
+         repisa.
+       - ROI casi igual a la imagen en primeros planos: esperable; se
+         valida con imágenes de cámaras de sala (ítem 14).
+       - Medición real: set de validación con repisas y góndola
+         etiquetadas a mano (polilíneas, ej. en CVAT o Label Studio).
 
 ## Notas
 
