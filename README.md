@@ -92,6 +92,25 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 └── requirements.txt        # Dependencias del proyecto
 ```
 
+### Configuración de un entorno nuevo
+
+```bash
+git clone https://github.com/marianapeachy/capstone.git && cd capstone
+python -m venv .venv            # activar: .venv\Scripts\activate (Windows) / source .venv/bin/activate
+pip install -r requirements.txt
+pip install graphifyy==0.9.70   # grafo del código; lo exigen los hooks de Claude Code
+graphify update .               # genera graphify-out/ (no se versiona)
+pytest tests/
+```
+
+- **Datos** (no se versionan): descargar los datasets a `data/raw/` según
+  [docs/datasets.md](docs/datasets.md) y luego `python scripts/prepare_datasets.py`.
+- **Claude Code**: instalar la extensión "Claude Code" de Anthropic en VS Code
+  e iniciar sesión con la cuenta propia. Claude lee `CLAUDE.md` al empezar, que
+  incluye el flujo de trabajo en equipo (ramas, PR y dueños de ítems).
+- **GitHub CLI** (`gh auth login`) para abrir Pull Requests desde la terminal.
+- **Docker Desktop** para construir y probar la imagen (ver abajo).
+
 ### Ejecución local
 
 ```bash
