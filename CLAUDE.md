@@ -21,7 +21,10 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
 - **ROI automática**: el sistema segmenta la góndola y sus repisas en
   `src/preprocessing/`, antes de YOLO26. Ningún usuario dibuja ni configura
   ROI por cámara, así que el código no debe depender de una ROI cargada de
-  configuración. `crop_roi()` recibe la ROI que entrega esa segmentación.
+  configuración. Flujo: `correct_image()` -> `segment_gondola()` ->
+  `crop_roi(imagen_corregida, segmentacion.roi)`. Las detecciones vuelven
+  a la imagen original con `RoiCrop.to_original()` y luego
+  `CorrectedImage.to_original()`.
 - **Profundidad constante**: toda góndola se asume de **25 cm** de
   profundidad (valor fijo, dentro del rango real de 20-30 cm). No se
   estima profundidad (sin modelos de profundidad ni visión estéreo): el
@@ -46,6 +49,7 @@ src/preprocessing/   # Filtros CLAHE, dewarping, segmentación automática y rec
 src/models/           # Inferencia YOLO26 (Ultralytics)
 src/postprocessing/    # Cálculo de disponibilidad y umbral <30%
 src/reporting/         # Reportes en Excel, CSV y PDF
+src/evaluation/        # Métricas de evaluación (no es etapa del pipeline)
 scripts/               # CLI de ejecución del pipeline
 tests/                 # Pruebas unitarias con pytest
 data/raw/              # Imágenes de entrada (no versionadas)
@@ -57,6 +61,7 @@ data/processed/        # Salidas intermedias/procesadas (no versionadas)
 ```bash
 pytest tests/
 python scripts/run_pipeline.py
+python scripts/visualize_segmentation.py   # revisar la segmentación a ojo
 ```
 
 ## Notas

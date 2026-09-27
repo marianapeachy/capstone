@@ -216,21 +216,21 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1790548429.0523868,
-    "seen": 1790548447.549692,
-    "ast_hash": "90c3ac5d39df2d70e3f0894a02d97761",
+    "mtime": 1790550320.9409666,
+    "seen": 1790550360.296259,
+    "ast_hash": "316bed4a2b91b8bd0aa1a85239d80cf4",
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1790548439.0047455,
-    "seen": 1790548447.5496926,
-    "ast_hash": "8fda844c016487af8ef07c10c6be2461",
+    "mtime": 1790550317.2341332,
+    "seen": 1790550360.2962599,
+    "ast_hash": "bb0824c61117c2353d2caa1e12aa20b5",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1790548430.0878532,
-    "seen": 1790548447.549694,
-    "ast_hash": "85f0d392c685bddef6f734b601b9d685",
+    "mtime": 1790550323.0813446,
+    "seen": 1790550360.2962606,
+    "ast_hash": "17acde1171d27cc4835b790d0743dfa6",
     "semantic_hash": ""
   },
   "docs/datasets.md": {
@@ -417,6 +417,42 @@
     "mtime": 1790548395.1047494,
     "seen": 1790548447.549672,
     "ast_hash": "783c036d6cdb079b20309c3a85a1bac1",
+    "semantic_hash": ""
+  },
+  "scripts/visualize_segmentation.py": {
+    "mtime": 1790549907.1706266,
+    "seen": 1790550360.2962193,
+    "ast_hash": "40aa50353083e0cb5d2f2a6652b6794e",
+    "semantic_hash": ""
+  },
+  "src/evaluation/__init__.py": {
+    "mtime": 1790549004.3228362,
+    "seen": 1790550360.2962253,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "src/evaluation/segmentation_proxy.py": {
+    "mtime": 1790549164.3412285,
+    "seen": 1790550360.2962263,
+    "ast_hash": "6676eb068179b0bb06257dab85f0b8f5",
+    "semantic_hash": ""
+  },
+  "src/preprocessing/gondola_segmentation.py": {
+    "mtime": 1790550333.2283528,
+    "seen": 1790550360.2962317,
+    "ast_hash": "37dbb9ff59ce22e5dc5cab189841d2e9",
+    "semantic_hash": ""
+  },
+  "tests/test_gondola_segmentation.py": {
+    "mtime": 1790550058.0438035,
+    "seen": 1790550360.2962382,
+    "ast_hash": "9beeea5a9a9a5f5db43f37c374eaac92",
+    "semantic_hash": ""
+  },
+  "tests/test_segmentation_proxy.py": {
+    "mtime": 1790550087.2099864,
+    "seen": 1790550360.2962418,
+    "ast_hash": "606535a88dc2e78ac2af05c02ca0a97d",
     "semantic_hash": ""
   }
 }

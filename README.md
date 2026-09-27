@@ -79,8 +79,9 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 │   ├── preprocessing/      # Filtros de imagen, segmentación automática y recorte de ROI
 │   ├── models/             # Módulos de inferencia (YOLO26 / CV Clásico)
 │   ├── postprocessing/     # Cálculo de métricas y lógica de umbrales (<30%)
-│   └── reporting/          # Generadores de reportes (Excel, CSV, PDF)
-├── scripts/                # CLI de ejecución del pipeline (run_pipeline.py)
+│   ├── reporting/          # Generadores de reportes (Excel, CSV, PDF)
+│   └── evaluation/         # Métricas de evaluación (fuera del pipeline)
+├── scripts/                # CLI del pipeline y visor de segmentación
 ├── data/                   # Datasets (data/raw y data/processed, no versionados)
 ├── tests/                  # Pruebas unitarias e integración (pytest)
 ├── Fase 1/                 # Entregables académicos de la Fase 1 (no modificar)

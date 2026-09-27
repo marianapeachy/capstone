@@ -37,9 +37,33 @@ Estructura inicial del repositorio creada (directorios `src/`, `tests/`,
        Walmart el modelo y la calibración de sus cámaras (o fotos de un
        tablero de ajedrez para calibrar). Los datasets públicos no traen
        distorsión de lente: con ellos se usa solo CLAHE (sin calibración).
-4. [ ] Implementar la segmentación automática de la góndola y sus
+4. [x] Implementar la segmentación automática de la góndola y sus
        repisas en `src/preprocessing/` (cambio de alcance 2026-09-27:
        ningún usuario define la ROI). Visión clásica, antes de YOLO26.
+       Hecho: `gondola_segmentation.py` con `segment_gondola()` ->
+       `GondolaSegmentation` (ROI, `ShelfLine` por repisa, bbox por nivel
+       y `found`). Método: saltos del brillo promedio por fila en franjas
+       verticales, enlazados entre franjas (permite repisas inclinadas por
+       perspectiva). Se descartó Canny + Hough: el texto de las etiquetas
+       dominaba y cada fila de cajas salía como repisa. Sin repisas
+       detectadas -> imagen completa con `found=False` (contingencia de
+       análisis global). Visor: `scripts/visualize_segmentation.py`
+       (láminas + `metrics.csv` en `data/processed/segmentation_preview/`).
+       Métricas aproximadas en `src/evaluation/segmentation_proxy.py`,
+       que usan las anotaciones existentes como evidencia indirecta.
+       Línea base (100 imágenes por dataset): 99-100% de las anotaciones
+       (incluidos los espacios vacíos) quedan dentro de la ROI; en
+       SKU-110K la ROI ocupa el 91% del área, el 52% de los productos
+       queda apoyado sobre una repisa detectada y el 76% de las repisas
+       detectadas tiene productos encima. La métrica de repisas con
+       productos subestima: el borde superior de la góndola y las repisas
+       vacías son líneas correctas sin productos encima.
+       Limitaciones conocidas: algunas líneas diagonales falsas en tomas
+       amplias (ej. refrigeradores), líneas extra en filas de cajas
+       apiladas, y en fotos de primer plano la ROI es casi toda la imagen
+       (esperable). Pendientes: set de validación etiquetado a mano con
+       góndolas/repisas, y evaluarlo con imágenes reales de Walmart.
+       Especificación original:
        Debe entregar la ROI de la góndola (entrada de `crop_roi()`) y,
        para el Nivel 1, los límites de cada repisa. Corre después de
        `correct_image()`, sobre la imagen corregida (decidido 2026-09-27:
