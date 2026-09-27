@@ -18,6 +18,10 @@ El proyecto aborda la automatización de la auditoría de espacios en salas de v
   * **Perspectiva y lentes**: Distorsión óptica por ángulos oblicuos de cámaras de seguridad y lentes tipo *fisheye*.
   * **La Trampa del Apilamiento**: Diferenciación entre espacio libre útil para reposición y espacio vertical vacío donde no es posible apilar productos por fragilidad o geometría.
 
+### 2. Supuestos del Dominio
+* **Segmentación automática de ROI**: El sistema detecta por sí solo la góndola y sus repisas en cada imagen. Ningún usuario dibuja ni configura zonas ROI por cámara.
+* **Profundidad constante de góndola**: Las góndolas reales tienen entre 20 y 30 cm de profundidad; el sistema usa un valor fijo de **25 cm** para todos los casos. No estima profundidad: analiza la vista frontal 2D de la góndola, y en el Nivel 1 el volumen libre se obtiene del área frontal libre multiplicada por esos 25 cm.
+
 ---
 
 ## 💡 Objetivos y Niveles de Solución
@@ -26,9 +30,9 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 | Criterio | Solución Óptima (Nivel 1) | MVP Alternativo (Nivel 2) |
 | :--- | :--- | :--- |
-| **Objetivo Principal** | Medición espacial y volumétrica exacta del espacio libre | Alerta macro por umbral binario de stock |
+| **Objetivo Principal** | Medición espacial y volumétrica exacta del espacio libre (profundidad constante de 25 cm) | Alerta macro por umbral binario de stock |
 | **Métrica de Salida** | Centímetros o porcentaje exacto de espacio vacío por repisa | ¿Disponibilidad < 30% en la góndola? (Sí / No) |
-| **Granularidad** | Segmentado nivel por nivel de la góndola (Nivel 1, 2, 3...) | Análisis global de la imagen |
+| **Granularidad** | Segmentado nivel por nivel de la góndola (Nivel 1, 2, 3...), con repisas detectadas automáticamente | Análisis global de la góndola detectada automáticamente |
 | **Complejidad** | Alta (Segmentación espacial + Visión Computacional) | Media (Detección por umbral de píxeles / parches) |
 
 ---
@@ -36,8 +40,8 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 ## 🛠️ Requerimientos Funcionales (RF)
 
 * **RF01 - Ingesta de Imágenes**: Procesamiento estático de fotogramas en formato imagen (tiempo de inferencia objetivo: 2 a 5 segundos por imagen).
-* **RF02 - Detección de Espacios Vacíos**: Identificación de regiones sin producto dentro de las regiones de interés (ROI) correspondientes a la góndola.
-* **RF03 - Cálculo de Disponibilidad**: Estimación cuantitativa del espacio libre (porcentaje/cm o clasificación por umbral <30%).
+* **RF02 - Detección de Espacios Vacíos**: Identificación de regiones sin producto dentro de las regiones de interés (ROI) correspondientes a la góndola, que el sistema segmenta automáticamente.
+* **RF03 - Cálculo de Disponibilidad**: Estimación cuantitativa del espacio libre (porcentaje/cm o clasificación por umbral <30%), asumiendo profundidad de góndola constante (25 cm).
 * **RF04 - Generación de Alertas**: Emisión de notificaciones prioritarias para el equipo de reposición cuando se detecte un quiebre de stock.
 * **RF05 - Módulo de Reportería**: Exportación de datos analíticos auditados en formatos **Excel (.xlsx)**, **CSV** y **PDF**.
 
@@ -47,13 +51,13 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 1. **Reponedor de Tienda**: Recibe alertas inmediatas en dispositivos móviles para acudir a los pasillos con quiebre crítico.
 2. **Jefe de Salón / Supervisor**: Visualiza dashboards de disponibilidad por pasillo y exporta reportes periódicos de desempeño.
-3. **Administrador de Sistema**: Configura planogramas, define zonas ROI de góndolas y gestiona usuarios.
+3. **Administrador de Sistema**: Configura planogramas, cámaras y umbrales de alerta, y gestiona usuarios. No define zonas ROI: el sistema segmenta la góndola automáticamente.
 
 ---
 
 ## 🏗️ Estrategia Algorítmica y Arquitectura
 
-* **Enfoque Híbrido**: Evaluación de modelos de extracción de características (**YOLO11**) combinados obligatoriamente con **Visión Computacional Clásica** (detección de bordes, transformaciones matriciales y filtros morfológicos) para mantener control matemático sobre el ruido visual.
+* **Enfoque Híbrido**: Evaluación de modelos de extracción de características (**YOLO26** de Ultralytics, con cabeza sin NMS para góndolas densas) combinados obligatoriamente con **Visión Computacional Clásica** (detección de bordes, transformaciones matriciales y filtros morfológicos) para mantener control matemático sobre el ruido visual. La segmentación automática de la góndola y sus repisas es parte de este pre-procesamiento clásico: se ejecuta sobre la imagen ya corregida (CLAHE + dewarping) y antes de la inferencia.
 * **Pipeline Modular**: Separación física de los componentes de *Pre-procesamiento*, *Inferencia de Modelo* y *Post-procesamiento*.
 * **Código de Producción**: Desarrollo exclusivo en scripts modulares de Python (`.py`), descartando notebooks para la ejecución core.
 
@@ -72,15 +76,15 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 .
 ├── docs/                   # Documentación de diseño, minutas y especificaciones
 ├── src/                    # Código fuente en scripts Python modulares
-│   ├── preprocessing/      # Filtros de imagen, corrección ROI y pre-procesamiento
-│   ├── models/             # Módulos de inferencia (YOLOv8 / CV Clásico)
+│   ├── preprocessing/      # Filtros de imagen, segmentación automática y recorte de ROI
+│   ├── models/             # Módulos de inferencia (YOLO26 / CV Clásico)
 │   ├── postprocessing/     # Cálculo de métricas y lógica de umbrales (<30%)
 │   └── reporting/          # Generadores de reportes (Excel, CSV, PDF)
 ├── scripts/                # CLI de ejecución del pipeline (run_pipeline.py)
 ├── data/                   # Datasets (data/raw y data/processed, no versionados)
 ├── tests/                  # Pruebas unitarias e integración (pytest)
 ├── Fase 1/                 # Entregables académicos de la Fase 1 (no modificar)
-├── Dockerfile              # Imagen de ejecución del pipeline (python:3.10-slim)
+├── Dockerfile              # Imagen de ejecución del pipeline (python:3.10-slim-trixie)
 ├── CLAUDE.md               # Memoria de proyecto y reglas de código para IA
 ├── PROGRESS.md             # Bitácora de tareas por sprint
 ├── README.md               # Documentación principal del repositorio
@@ -100,6 +104,8 @@ python scripts/run_pipeline.py
 ```bash
 docker build -t shelfvision-ai .
 docker run --rm shelfvision-ai
+# Pruebas dentro del contenedor (tests/ no se copia a la imagen, se monta):
+docker run --rm -v "$(pwd)/tests:/app/tests" shelfvision-ai python -m pytest tests/
 ```
 
 ---

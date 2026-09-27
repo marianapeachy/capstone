@@ -1,7 +1,7 @@
 # Datasets - ShelfVision AI
 
 Registro de datasets candidatos para entrenamiento y validación del
-pipeline (preprocessing -> YOLOv8 -> postprocessing). Ninguno se versiona
+pipeline (preprocessing -> YOLO26 -> postprocessing). Ninguno se versiona
 en Git (ver `.gitignore`); se descargan a `data/raw/` en el entorno local
 de cada integrante.
 
@@ -16,13 +16,20 @@ de cada integrante.
 
 | Dataset | Fuente | Por qué aporta valor | Licencia | Estado |
 | --- | --- | --- | --- | --- |
-| [SKU-110K](https://docs.ultralytics.com/datasets/detect/sku-110k/) | [Trax Retail / eg4000/SKU110K_CVPR19](https://github.com/eg4000/SKU110K_CVPR19) | Benchmark académico estándar (CVPR'19) para detección en góndolas densamente pobladas: 11,743 imágenes, 1.7M+ bounding boxes de producto en clase única. **Soporte nativo en Ultralytics** (YAML de config ya incluido en la librería YOLOv8/v11). Ideal para pre-entrenar/afinar el detector base antes del dataset oculto de Walmart Chile. | Académico y no comercial, sin redistribución | Descargado (12.2 GB) en `data/raw/sku-110k/SKU110K_fixed/` (train/val/test + anotaciones CSV) |
+| [SKU-110K](https://docs.ultralytics.com/datasets/detect/sku-110k/) | [Trax Retail / eg4000/SKU110K_CVPR19](https://github.com/eg4000/SKU110K_CVPR19) | Benchmark académico estándar (CVPR'19) para detección en góndolas densamente pobladas: 11,743 imágenes, 1.7M+ bounding boxes de producto en clase única. **Soporte nativo en Ultralytics** (YAML de config `SKU-110K.yaml` incluido en la librería `ultralytics`, compatible con YOLO26). Ideal para pre-entrenar/afinar el detector base antes del dataset oculto de Walmart Chile. | Académico y no comercial, sin redistribución | Descargado (12.2 GB) en `data/raw/sku-110k/SKU110K_fixed/` (train/val/test + anotaciones CSV) |
 | [Out Of Stock detection](https://universe.roboflow.com/empty-space-detection-capstone/out-of-stock-detection) | Roboflow Universe | Anota directamente la clase **"Empty-space"**, no productos. Es el único dataset de la lista alineado 1:1 con RF02/RF03 (umbral `<30%`), en vez de inferir el vacío por ausencia de producto. | Ver ficha del proyecto en Roboflow | Descargado (346 MB, formato COCO) en `data/raw/out-of-stock-detection-roboflow/train/` (3024 imágenes, `_annotations.coco.json`). Solo trae split `train`, sin `valid`/`test` |
 | [Empty Shelf Detector](https://universe.roboflow.com/fyp-ormnr/empty-shelf-detector) | Roboflow Universe | Complementa al anterior con más variabilidad de ángulos/iluminación en la misma clase "empty". | Ver ficha del proyecto en Roboflow | Descargado (31 MB, formato COCO) en `data/raw/empty-shelf-detector-roboflow/` (train: 291, valid: 24, test: 18 imágenes) |
 
 > **Corrección:** el dataset "TrainingDataPro/grocery-shelves-dataset"
 > reportado previamente **no existe** (confirmado vía API de Hugging Face:
 > repo inexistente). Se descarta de la lista.
+
+> **Sin anotaciones de góndola ni repisa:** ninguno de estos datasets
+> anota la góndola ni sus repisas; solo productos, espacios vacíos y
+> precios (grocery-shelves solo trae la clase `Box`). Sirven para
+> entrenar el detector, pero no para evaluar la segmentación automática
+> de la ROI. Para eso hace falta un set de validación etiquetado a mano
+> (ver `PROGRESS.md`).
 
 ## Qué hacer con estos datasets (proceso)
 

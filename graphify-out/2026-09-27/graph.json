@@ -14,7 +14,7 @@
       "file_type": "code",
       "norm_label": "roicrop",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L28"
+      "source_location": "L26"
     },
     {
       "id": "claude_skills_skill_finder_scripts_search_skills_add_source",
@@ -590,7 +590,7 @@
       "file_type": "code",
       "norm_label": "crop_roi()",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L82"
+      "source_location": "L80"
     },
     {
       "id": "src_preprocessing_roi_filter_normalize_roi",
@@ -602,7 +602,7 @@
       "file_type": "code",
       "norm_label": "normalize_roi()",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L50"
+      "source_location": "L48"
     },
     {
       "id": "src_preprocessing_roi_filter_roicrop_to_original",
@@ -614,7 +614,7 @@
       "file_type": "code",
       "norm_label": ".to_original()",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L36"
+      "source_location": "L34"
     },
     {
       "id": "tests_test_models_test_ultralytics_version_supports_yolo26",
@@ -1356,121 +1356,6 @@
       "source_location": "L78"
     },
     {
-      "id": "claude_skills_skill_finder_skill",
-      "label": "skill-finder/SKILL.md",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "frontmatter": {
-        "name": "skill-finder",
-        "description": "Search, install, and manage Agent Skills locally and from GitHub, then help decide whether the task really needs a skill or another customization primitive. Use when looking for skills, installing skills, managing a skill collection, or choosing between a skill, prompt, instruction, or agent.",
-        "argument-hint": "\u63a2\u3057\u305f\u3044 skill \u306e\u7528\u9014\u3084\u30ad\u30fc\u30ef\u30fc\u30c9",
-        "user-invocable": "true",
-        "license": "CC BY-NC-SA 4.0"
-      },
-      "node_kind": "page",
-      "norm_label": "skill-finder/skill.md",
-      "source_file": ".claude/skills/skill-finder/SKILL.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_agent_instructions",
-      "label": "agent-instructions.md",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "page",
-      "norm_label": "agent-instructions.md",
-      "source_file": ".claude/skills/skill-finder/references/agent-instructions.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing",
-      "label": "customization-routing.md",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "page",
-      "norm_label": "customization-routing.md",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_collection_management",
-      "label": "Collection Management",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "collection management",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L48"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_customization_routing",
-      "label": "Customization Routing",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "customization routing",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_decide_whether_the_user_needs_a_skill",
-      "label": "Decide Whether the User Needs a Skill",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "decide whether the user needs a skill",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L5"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_fast_rules",
-      "label": "Fast Rules",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "fast rules",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L15"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_recommendation_heuristics",
-      "label": "Recommendation Heuristics",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "recommendation heuristics",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L37"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_response_pattern",
-      "label": "Response Pattern",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "response pattern",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L22"
-    },
-    {
       "id": "claude_skills_skill_finder_skill_agent_instructions",
       "label": "Agent Instructions",
       "_origin": "ast",
@@ -2031,7 +1916,7 @@
       "node_kind": "heading",
       "norm_label": "comandos frecuentes",
       "source_file": "CLAUDE.md",
-      "source_location": "L52"
+      "source_location": "L42"
     },
     {
       "id": "claude_continuidad_entre_sesiones_chats",
@@ -2043,7 +1928,7 @@
       "node_kind": "heading",
       "norm_label": "continuidad entre sesiones / chats",
       "source_file": "CLAUDE.md",
-      "source_location": "L66"
+      "source_location": "L56"
     },
     {
       "id": "claude_estructura_relevante",
@@ -2055,7 +1940,7 @@
       "node_kind": "heading",
       "norm_label": "estructura relevante",
       "source_file": "CLAUDE.md",
-      "source_location": "L39"
+      "source_location": "L29"
     },
     {
       "id": "claude_graphify",
@@ -2067,7 +1952,7 @@
       "node_kind": "heading",
       "norm_label": "graphify",
       "source_file": "CLAUDE.md",
-      "source_location": "L88"
+      "source_location": "L78"
     },
     {
       "id": "claude_notas",
@@ -2079,7 +1964,7 @@
       "node_kind": "heading",
       "norm_label": "notas",
       "source_file": "CLAUDE.md",
-      "source_location": "L59"
+      "source_location": "L49"
     },
     {
       "id": "claude_reglas_de_c\u00f3digo",
@@ -3026,7 +2911,7 @@
       "node_kind": "heading",
       "norm_label": "que hacer con estos datasets (proceso)",
       "source_file": "docs/datasets.md",
-      "source_location": "L34"
+      "source_location": "L27"
     },
     {
       "id": "docs_datasets_ya_identificados_por_el_equipo",
@@ -3185,7 +3070,7 @@
       "node_kind": "heading",
       "norm_label": "notas",
       "source_file": "PROGRESS.md",
-      "source_location": "L72"
+      "source_location": "L57"
     },
     {
       "id": "progress_pendientes_priorizados",
@@ -3201,17 +3086,17 @@
     },
     {
       "id": "src_preprocessing_roi_filter_rationale_1",
-      "label": "Recorte de la region de interes (ROI) sobre la gondola detectada. Parte del\u2026",
+      "label": "Recorte de la region de interes (ROI) sobre la gondola detectada. Primera etapa\u2026",
       "_origin": "ast",
       "community": 25,
       "community_name": "test_preprocessing.py",
       "file_type": "rationale",
-      "norm_label": "recorte de la region de interes (roi) sobre la gondola detectada. parte del...",
+      "norm_label": "recorte de la region de interes (roi) sobre la gondola detectada. primera etapa...",
       "source_file": "src/preprocessing/roi_filter.py",
       "source_location": "L1"
     },
     {
-      "id": "src_preprocessing_roi_filter_rationale_29",
+      "id": "src_preprocessing_roi_filter_rationale_27",
       "label": "Imagen recortada junto con la ROI (en coordenadas de la imagen original) de la\u2026",
       "_origin": "ast",
       "community": 25,
@@ -3219,10 +3104,10 @@
       "file_type": "rationale",
       "norm_label": "imagen recortada junto con la roi (en coordenadas de la imagen original) de la...",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L29"
+      "source_location": "L27"
     },
     {
-      "id": "src_preprocessing_roi_filter_rationale_37",
+      "id": "src_preprocessing_roi_filter_rationale_35",
       "label": "Traslada un bbox expresado en coordenadas del recorte (ej. una deteccion de\u2026",
       "_origin": "ast",
       "community": 25,
@@ -3230,10 +3115,10 @@
       "file_type": "rationale",
       "norm_label": "traslada un bbox expresado en coordenadas del recorte (ej. una deteccion de...",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L37"
+      "source_location": "L35"
     },
     {
-      "id": "src_preprocessing_roi_filter_rationale_51",
+      "id": "src_preprocessing_roi_filter_rationale_49",
       "label": "Normaliza una ROI al estandar del proyecto dentro de una imagen de `width` x\u2026",
       "_origin": "ast",
       "community": 25,
@@ -3241,10 +3126,10 @@
       "file_type": "rationale",
       "norm_label": "normaliza una roi al estandar del proyecto dentro de una imagen de `width` x...",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L51"
+      "source_location": "L49"
     },
     {
-      "id": "src_preprocessing_roi_filter_rationale_83",
+      "id": "src_preprocessing_roi_filter_rationale_81",
       "label": "Recorta `image` a la ROI de la gondola. Una ROI parcialmente fuera de la imagen\u2026",
       "_origin": "ast",
       "community": 25,
@@ -3252,7 +3137,7 @@
       "file_type": "rationale",
       "norm_label": "recorta `image` a la roi de la gondola. una roi parcialmente fuera de la imagen...",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L83"
+      "source_location": "L81"
     },
     {
       "id": "tests_test_models_rationale_1",
@@ -4268,6 +4153,37 @@
       "source_location": "L1"
     },
     {
+      "id": "claude_skills_skill_finder_skill",
+      "label": "skill-finder/SKILL.md",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "skill-finder",
+        "description": "Search, install, and manage Agent Skills locally and from GitHub, then help decide whether the task really needs a skill or another customization primitive. Use when looking for skills, installing skills, managing a skill collection, or choosing between a skill, prompt, instruction, or agent.",
+        "argument-hint": "\u63a2\u3057\u305f\u3044 skill \u306e\u7528\u9014\u3084\u30ad\u30fc\u30ef\u30fc\u30c9",
+        "user-invocable": "true",
+        "license": "CC BY-NC-SA 4.0"
+      },
+      "node_kind": "page",
+      "norm_label": "skill-finder/skill.md",
+      "source_file": ".claude/skills/skill-finder/SKILL.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_agent_instructions",
+      "label": "agent-instructions.md",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "agent-instructions.md",
+      "source_file": ".claude/skills/skill-finder/references/agent-instructions.md",
+      "source_location": "L1"
+    },
+    {
       "id": "claude_skills_skill_finder_references_agent_instructions_agent_behavior_rules",
       "label": "Agent Behavior Rules",
       "_origin": "ast",
@@ -4422,6 +4338,90 @@
       "norm_label": "trust level indicators",
       "source_file": ".claude/skills/skill-finder/references/agent-instructions.md",
       "source_location": "L109"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing",
+      "label": "customization-routing.md",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "customization-routing.md",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_collection_management",
+      "label": "Collection Management",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "collection management",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L48"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_customization_routing",
+      "label": "Customization Routing",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "customization routing",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_decide_whether_the_user_needs_a_skill",
+      "label": "Decide Whether the User Needs a Skill",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "decide whether the user needs a skill",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L5"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_fast_rules",
+      "label": "Fast Rules",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "fast rules",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L15"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_recommendation_heuristics",
+      "label": "Recommendation Heuristics",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "recommendation heuristics",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L37"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_response_pattern",
+      "label": "Response Pattern",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "response pattern",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L22"
     },
     {
       "id": "claude_skills_skill_finder_scripts_update_other_descriptions",
@@ -4717,18 +4717,6 @@
       "source_location": "L13"
     },
     {
-      "id": "readme_2_supuestos_del_dominio",
-      "label": "2. Supuestos del Dominio",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Auditor\u00eda Automatizada de G\u00f3ndolas mediante Visi\u00f3n Artificial (Walmart Chile)",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "2. supuestos del dominio",
-      "source_file": "README.md",
-      "source_location": "L21"
-    },
-    {
       "id": "readme_auditor\u00eda_automatizada_de_g\u00f3ndolas_mediante_visi\u00f3n_artificial_walmart_chile",
       "label": "Auditor\u00eda Automatizada de G\u00f3ndolas mediante Visi\u00f3n Artificial (Walmart Chile)",
       "_origin": "ast",
@@ -4774,7 +4762,7 @@
       "node_kind": "heading",
       "norm_label": "ejecucion con docker",
       "source_file": "README.md",
-      "source_location": "L102"
+      "source_location": "L98"
     },
     {
       "id": "readme_ejecuci\u00f3n_local",
@@ -4786,7 +4774,7 @@
       "node_kind": "heading",
       "norm_label": "ejecucion local",
       "source_file": "README.md",
-      "source_location": "L94"
+      "source_location": "L90"
     },
     {
       "id": "readme_equipo_de_desarrollo",
@@ -4798,7 +4786,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udc68\u200d\ud83d\udcbb equipo de desarrollo",
       "source_file": "README.md",
-      "source_location": "L121"
+      "source_location": "L117"
     },
     {
       "id": "readme_estrategia_algor\u00edtmica_y_arquitectura",
@@ -4810,7 +4798,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83c\udfd7\ufe0f estrategia algoritmica y arquitectura",
       "source_file": "README.md",
-      "source_location": "L58"
+      "source_location": "L54"
     },
     {
       "id": "readme_estrategia_de_datos_y_evaluaci\u00f3n",
@@ -4822,7 +4810,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udcca estrategia de datos y evaluacion",
       "source_file": "README.md",
-      "source_location": "L66"
+      "source_location": "L62"
     },
     {
       "id": "readme_estructura_del_repositorio",
@@ -4834,7 +4822,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udcc1 estructura del repositorio",
       "source_file": "README.md",
-      "source_location": "L73"
+      "source_location": "L69"
     },
     {
       "id": "readme_objetivos_y_niveles_de_soluci\u00f3n",
@@ -4846,7 +4834,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udca1 objetivos y niveles de solucion",
       "source_file": "README.md",
-      "source_location": "L27"
+      "source_location": "L23"
     },
     {
       "id": "readme_perfiles_de_usuario",
@@ -4858,7 +4846,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udc65 perfiles de usuario",
       "source_file": "README.md",
-      "source_location": "L50"
+      "source_location": "L46"
     },
     {
       "id": "readme_planificaci\u00f3n_y_cronograma_carta_gantt",
@@ -4870,7 +4858,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udcc5 planificacion y cronograma (carta gantt)",
       "source_file": "README.md",
-      "source_location": "L113"
+      "source_location": "L109"
     },
     {
       "id": "readme_requerimientos_funcionales_rf",
@@ -4882,7 +4870,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udee0\ufe0f requerimientos funcionales (rf)",
       "source_file": "README.md",
-      "source_location": "L40"
+      "source_location": "L36"
     },
     {
       "id": "claude_skills_skill_finder_scripts_search_skills_find_newrepos",
@@ -5962,7 +5950,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L102",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -5974,7 +5962,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L104",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -6682,7 +6670,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L18",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -6694,7 +6682,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L21",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -6946,7 +6934,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L19",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
@@ -7006,7 +6994,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L82",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -7018,7 +7006,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L82",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -7030,7 +7018,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L50",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -7102,7 +7090,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L50",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -7114,7 +7102,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L36",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -7225,7 +7213,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L39",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -7236,7 +7224,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L52",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -7247,7 +7235,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L59",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -7258,7 +7246,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L66",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -7280,7 +7268,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L88",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -10327,7 +10315,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/datasets.md",
-      "source_location": "L34",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -10371,7 +10359,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "PROGRESS.md",
-      "source_location": "L72",
+      "source_location": "L57",
       "weight": 1.0
     },
     {
@@ -10398,6 +10386,17 @@
     },
     {
       "source": "readme_auditor\u00eda_automatizada_de_g\u00f3ndolas_mediante_visi\u00f3n_artificial_walmart_chile",
+      "target": "readme_planificaci\u00f3n_y_cronograma_carta_gantt",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_auditor\u00eda_automatizada_de_g\u00f3ndolas_mediante_visi\u00f3n_artificial_walmart_chile",
       "target": "readme_definici\u00f3n_del_alcance",
       "relation": "contains",
       "_origin": "ast",
@@ -10409,24 +10408,13 @@
     },
     {
       "source": "readme_auditor\u00eda_automatizada_de_g\u00f3ndolas_mediante_visi\u00f3n_artificial_walmart_chile",
-      "target": "readme_planificaci\u00f3n_y_cronograma_carta_gantt",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L113",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_auditor\u00eda_automatizada_de_g\u00f3ndolas_mediante_visi\u00f3n_artificial_walmart_chile",
       "target": "readme_equipo_de_desarrollo",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L121",
+      "source_location": "L117",
       "weight": 1.0
     },
     {
@@ -10437,7 +10425,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L27",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -10459,7 +10447,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L40",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -10470,7 +10458,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L50",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -10481,7 +10469,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L58",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -10492,7 +10480,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L66",
+      "source_location": "L62",
       "weight": 1.0
     },
     {
@@ -10503,7 +10491,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L73",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -10518,14 +10506,14 @@
       "weight": 1.0
     },
     {
-      "source": "readme_definici\u00f3n_del_alcance",
-      "target": "readme_2_supuestos_del_dominio",
+      "source": "readme_estructura_del_repositorio",
+      "target": "readme_ejecuci\u00f3n_local",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L21",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -10536,18 +10524,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L102",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_estructura_del_repositorio",
-      "target": "readme_ejecuci\u00f3n_local",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L94",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -10668,7 +10645,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L28",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -10679,7 +10656,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L50",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -10690,7 +10667,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L82",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -10987,7 +10964,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L36",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -11442,47 +11419,47 @@
       "weight": 1.0
     },
     {
-      "source": "src_preprocessing_roi_filter_rationale_29",
+      "source": "src_preprocessing_roi_filter_rationale_27",
       "target": "src_preprocessing_roi_filter_roicrop",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L29",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
-      "source": "src_preprocessing_roi_filter_rationale_37",
+      "source": "src_preprocessing_roi_filter_rationale_35",
       "target": "src_preprocessing_roi_filter_roicrop_to_original",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L37",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
-      "source": "src_preprocessing_roi_filter_rationale_51",
+      "source": "src_preprocessing_roi_filter_rationale_49",
       "target": "src_preprocessing_roi_filter_normalize_roi",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L51",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
-      "source": "src_preprocessing_roi_filter_rationale_83",
+      "source": "src_preprocessing_roi_filter_rationale_81",
       "target": "src_preprocessing_roi_filter_crop_roi",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L83",
+      "source_location": "L81",
       "weight": 1.0
     },
     {
@@ -11609,18 +11586,6 @@
       "context": "RoiCrop.to_original()",
       "source_file": "PROGRESS.md",
       "source_location": "L16",
-      "weight": 1.0
-    },
-    {
-      "source": "claude_reglas_de_c\u00f3digo",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "context": "crop_roi()",
-      "source_file": "CLAUDE.md",
-      "source_location": "L22",
       "weight": 1.0
     },
     {
