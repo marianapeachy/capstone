@@ -216,33 +216,33 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1790546858.6175253,
-    "seen": 1790546911.470848,
-    "ast_hash": "5de32e8e201a169bdf1f2245f2caf65c",
+    "mtime": 1790540046.709915,
+    "seen": 1790543430.4709454,
+    "ast_hash": "aa2e0a4761071bf0ac458060c2b770e8",
     "semantic_hash": ""
   },
   "PROGRESS.md": {
-    "mtime": 1790546895.479427,
-    "seen": 1790546911.470849,
-    "ast_hash": "a72f6f29db6ed987872e551f7b5edc38",
+    "mtime": 1790543171.2111714,
+    "seen": 1790543430.4709463,
+    "ast_hash": "6875063a06b30efb79994d230a1eb147",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1790546845.7323914,
-    "seen": 1790546911.47085,
-    "ast_hash": "2ca0019756cbeec2bf48a797df4753b4",
+    "mtime": 1790539865.7116568,
+    "seen": 1790543430.4709468,
+    "ast_hash": "7550d4284ce7289c8486aa0e08bebe80",
     "semantic_hash": ""
   },
   "docs/datasets.md": {
-    "mtime": 1790546887.0376718,
-    "seen": 1790546911.4708507,
-    "ast_hash": "95fd7b5e30482733edab4760c50fb4fe",
+    "mtime": 1790542719.017346,
+    "seen": 1790543430.4709477,
+    "ast_hash": "eb0627516c7df354c9b7311fe4e8970b",
     "semantic_hash": ""
   },
   "requirements.txt": {
-    "mtime": 1790545772.2522874,
-    "seen": 1790545847.3994503,
-    "ast_hash": "42aa641a257bee55272f6250c0d1c2c4",
+    "mtime": 1790539808.2929766,
+    "seen": 1790543430.4709487,
+    "ast_hash": "dd1480579be841c60df927a7f2b5f39b",
     "semantic_hash": ""
   },
   ".claude/skills/skill-finder/assets/demo-en.mp4": {
@@ -255,150 +255,6 @@
     "mtime": 1790540438.731573,
     "seen": 1790543430.47095,
     "ast_hash": "a14f3f2eee4ca498be300601334e1545",
-    "semantic_hash": ""
-  },
-  "src/preprocessing/roi_filter.py": {
-    "mtime": 1790546860.9780302,
-    "seen": 1790546911.4708247,
-    "ast_hash": "5e033cfe9f578c453d69bba4498ea43a",
-    "semantic_hash": ""
-  },
-  "tests/test_preprocessing.py": {
-    "mtime": 1790543968.0459316,
-    "seen": 1790543991.4801018,
-    "ast_hash": "9fc73c190e1760283598dc5071a7b64f",
-    "semantic_hash": ""
-  },
-  "Anexos/Gestion/README.txt": {
-    "mtime": 1790543738.2310622,
-    "seen": 1790543991.4801192,
-    "ast_hash": "5981fbb73d8622c953bc335947771360",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Diagrama General Casos de Uso.png": {
-    "mtime": 1790543738.188023,
-    "seen": 1790543991.480126,
-    "ast_hash": "08daaaa3140503c5fb18da6d705b737f",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Diagrama de arquitectura/Diagrama de Arquitectura.png": {
-    "mtime": 1790543738.192534,
-    "seen": 1790543991.4801269,
-    "ast_hash": "5efea7f04873b676c976c763d320c6f6",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Diagramas particulares por cada C. U._/Diagrama C.U 00.png": {
-    "mtime": 1790543738.1935346,
-    "seen": 1790543991.4801278,
-    "ast_hash": "80e9eccae4d722eeb5a2c88d0f58020d",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Diagramas particulares por cada C. U._/Diagrama C.U 01.png": {
-    "mtime": 1790543738.1955438,
-    "seen": 1790543991.4801288,
-    "ast_hash": "b119e969f5d2839b266dc20660926dbd",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Diagramas particulares por cada C. U._/Diagrama C.U 02.png": {
-    "mtime": 1790543738.1960604,
-    "seen": 1790543991.4801297,
-    "ast_hash": "a464f3ab403e6327ba77546b2c155ae3",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Diagramas particulares por cada C. U._/Diagrama C.U 03.png": {
-    "mtime": 1790543738.1970644,
-    "seen": 1790543991.480131,
-    "ast_hash": "8c9153afb7b1d91fd99968a68c48972e",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Diagramas particulares por cada C. U._/Diagrama C.U 04.png": {
-    "mtime": 1790543738.1982071,
-    "seen": 1790543991.4801316,
-    "ast_hash": "ea40f9e01943a978e42d6e2e1995fc19",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Diagramas particulares por cada C. U._/Diagrama C.U 05.png": {
-    "mtime": 1790543738.1992066,
-    "seen": 1790543991.4801326,
-    "ast_hash": "8cb333289ad47c62d2d9cc1da1b7f523",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Diagramas particulares por cada C. U._/Diagrama C.U 06.png": {
-    "mtime": 1790543738.200209,
-    "seen": 1790543991.4801333,
-    "ast_hash": "9a338ee22f76354bc9372b9607104e41",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Admin-1.jpg": {
-    "mtime": 1790543738.2032177,
-    "seen": 1790543991.4801345,
-    "ast_hash": "275d3d2ce2b2a68bad6da462e8af0b7b",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Admin-2.jpg": {
-    "mtime": 1790543738.2042065,
-    "seen": 1790543991.4801354,
-    "ast_hash": "d1e22c5dfab3722b668f655004824bec",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Admin-3.jpg": {
-    "mtime": 1790543738.2052085,
-    "seen": 1790543991.4801362,
-    "ast_hash": "f88fb4e9b89c2045d6901c797c25715a",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Admin-4.jpg": {
-    "mtime": 1790543738.2062168,
-    "seen": 1790543991.480137,
-    "ast_hash": "98c31deb85e79497c3403efdc53b44c1",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Dashboard-1.jpg": {
-    "mtime": 1790543738.2073803,
-    "seen": 1790543991.480138,
-    "ast_hash": "24072080a0fd794991fb9fea4cdc5d4a",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Dashboard-2.jpg": {
-    "mtime": 1790543738.2083917,
-    "seen": 1790543991.480139,
-    "ast_hash": "0027b12c54ffeb3b69eee141146d1c0d",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Dashboard-3.jpg": {
-    "mtime": 1790543738.21049,
-    "seen": 1790543991.4801397,
-    "ast_hash": "fe5c55869446af42b577b88de3417637",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Mobile-1.jpg": {
-    "mtime": 1790543738.2114906,
-    "seen": 1790543991.4801407,
-    "ast_hash": "2a4872ae1a4235e3f09965d6317e5240",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Mobile-2.jpg": {
-    "mtime": 1790543738.2114906,
-    "seen": 1790543991.4801416,
-    "ast_hash": "d88540185c9e7019f4a4b36abac37855",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Mobile-3.jpg": {
-    "mtime": 1790543738.2124903,
-    "seen": 1790543991.4801424,
-    "ast_hash": "16366fbdca0d32edb1365dd04ae45ad5",
-    "semantic_hash": ""
-  },
-  "Anexos/Dise\u00f1o/Mockups/Mockup Mobile-4.jpg": {
-    "mtime": 1790543738.2134905,
-    "seen": 1790543991.480143,
-    "ast_hash": "76e81bd90c33f772bedf097a1910a603",
-    "semantic_hash": ""
-  },
-  "tests/test_models.py": {
-    "mtime": 1790544671.4033163,
-    "seen": 1790544727.4238114,
-    "ast_hash": "200733982c616d64de7842381ab3c406",
     "semantic_hash": ""
   }
 }

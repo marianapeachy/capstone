@@ -4,19 +4,6 @@
   "graph": {},
   "nodes": [
     {
-      "id": "src_preprocessing_roi_filter_roicrop",
-      "label": "RoiCrop",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "roicrop",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L28"
-    },
-    {
       "id": "claude_skills_skill_finder_scripts_search_skills_add_source",
       "label": "add_source()",
       "_callable": true,
@@ -581,258 +568,6 @@
       "source_location": "L27"
     },
     {
-      "id": "src_preprocessing_roi_filter_crop_roi",
-      "label": "crop_roi()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "crop_roi()",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L82"
-    },
-    {
-      "id": "src_preprocessing_roi_filter_normalize_roi",
-      "label": "normalize_roi()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "normalize_roi()",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L50"
-    },
-    {
-      "id": "src_preprocessing_roi_filter_roicrop_to_original",
-      "label": ".to_original()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": ".to_original()",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L36"
-    },
-    {
-      "id": "tests_test_models_test_ultralytics_version_supports_yolo26",
-      "label": "test_ultralytics_version_supports_yolo26()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_ultralytics_version_supports_yolo26()",
-      "source_file": "tests/test_models.py",
-      "source_location": "L14"
-    },
-    {
-      "id": "tests_test_models_test_yolo26_has_nms_free_head",
-      "label": "test_yolo26_has_nms_free_head()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_yolo26_has_nms_free_head()",
-      "source_file": "tests/test_models.py",
-      "source_location": "L24"
-    },
-    {
-      "id": "tests_test_models_test_yolo26_nms_false_uses_end2end_head_and_respects_max_det",
-      "label": "test_yolo26_nms_false_uses_end2end_head_and_respects_max_det()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_yolo26_nms_false_uses_end2end_head_and_respects_max_det()",
-      "source_file": "tests/test_models.py",
-      "source_location": "L29"
-    },
-    {
-      "id": "tests_test_models_yolo26",
-      "label": "yolo26()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "yolo26()",
-      "source_file": "tests/test_models.py",
-      "source_location": "L20"
-    },
-    {
-      "id": "tests_test_preprocessing_bgr_image",
-      "label": "_bgr_image()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "_bgr_image()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L7"
-    },
-    {
-      "id": "tests_test_preprocessing_test_crop_roi_empty_image_raises",
-      "label": "test_crop_roi_empty_image_raises()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_crop_roi_empty_image_raises()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L104"
-    },
-    {
-      "id": "tests_test_preprocessing_test_crop_roi_fully_outside_raises",
-      "label": "test_crop_roi_fully_outside_raises()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_crop_roi_fully_outside_raises()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L74"
-    },
-    {
-      "id": "tests_test_preprocessing_test_crop_roi_inside_bounds_returns_exact_region",
-      "label": "test_crop_roi_inside_bounds_returns_exact_region()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_crop_roi_inside_bounds_returns_exact_region()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L17"
-    },
-    {
-      "id": "tests_test_preprocessing_test_crop_roi_none_image_raises",
-      "label": "test_crop_roi_none_image_raises()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_crop_roi_none_image_raises()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L92"
-    },
-    {
-      "id": "tests_test_preprocessing_test_crop_roi_partially_outside_is_clipped_to_image",
-      "label": "test_crop_roi_partially_outside_is_clipped_to_image()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_crop_roi_partially_outside_is_clipped_to_image()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L59"
-    },
-    {
-      "id": "tests_test_preprocessing_test_crop_roi_rejects_non_array_input",
-      "label": "test_crop_roi_rejects_non_array_input()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_crop_roi_rejects_non_array_input()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L109"
-    },
-    {
-      "id": "tests_test_preprocessing_test_crop_roi_returns_copy_not_view",
-      "label": "test_crop_roi_returns_copy_not_view()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_crop_roi_returns_copy_not_view()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L31"
-    },
-    {
-      "id": "tests_test_preprocessing_test_crop_roi_supports_grayscale_images",
-      "label": "test_crop_roi_supports_grayscale_images()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_crop_roi_supports_grayscale_images()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L26"
-    },
-    {
-      "id": "tests_test_preprocessing_test_crop_roi_zero_area_raises",
-      "label": "test_crop_roi_zero_area_raises()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_crop_roi_zero_area_raises()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L79"
-    },
-    {
-      "id": "tests_test_preprocessing_test_normalize_roi_rejects_non_finite_coordinates",
-      "label": "test_normalize_roi_rejects_non_finite_coordinates()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_normalize_roi_rejects_non_finite_coordinates()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L84"
-    },
-    {
-      "id": "tests_test_preprocessing_test_normalize_roi_rounds_float_coordinates_outward",
-      "label": "test_normalize_roi_rounds_float_coordinates_outward()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_normalize_roi_rounds_float_coordinates_outward()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L42"
-    },
-    {
-      "id": "tests_test_preprocessing_test_normalize_roi_swaps_inverted_coordinates",
-      "label": "test_normalize_roi_swaps_inverted_coordinates()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_normalize_roi_swaps_inverted_coordinates()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L38"
-    },
-    {
-      "id": "tests_test_preprocessing_test_to_original_translates_crop_coordinates",
-      "label": "test_to_original_translates_crop_coordinates()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_to_original_translates_crop_coordinates()",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L51"
-    },
-    {
       "id": "scripts_run_pipeline_main",
       "label": "main()",
       "_callable": true,
@@ -1224,6 +959,17 @@
       "source_location": "L94"
     },
     {
+      "id": "bbox",
+      "label": "BBox",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "prepare_datasets.py",
+      "file_type": "code",
+      "norm_label": "bbox",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "path",
       "label": "Path",
       "_origin": "ast",
@@ -1255,17 +1001,6 @@
       "norm_label": "converters.py",
       "source_file": "src/datasets/converters.py",
       "source_location": "L1"
-    },
-    {
-      "id": "src_datasets_converters_py_bbox",
-      "label": "BBox",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "prepare_datasets.py",
-      "file_type": "code",
-      "norm_label": "bbox",
-      "source_file": "",
-      "source_location": ""
     },
     {
       "id": "tests_test_dataset_converters",
@@ -1354,121 +1089,6 @@
       "norm_label": "sku-110k ya publica sus anotaciones como [x_min, y_min, x_max, y_max]...",
       "source_file": "src/datasets/converters.py",
       "source_location": "L78"
-    },
-    {
-      "id": "claude_skills_skill_finder_skill",
-      "label": "skill-finder/SKILL.md",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "frontmatter": {
-        "name": "skill-finder",
-        "description": "Search, install, and manage Agent Skills locally and from GitHub, then help decide whether the task really needs a skill or another customization primitive. Use when looking for skills, installing skills, managing a skill collection, or choosing between a skill, prompt, instruction, or agent.",
-        "argument-hint": "\u63a2\u3057\u305f\u3044 skill \u306e\u7528\u9014\u3084\u30ad\u30fc\u30ef\u30fc\u30c9",
-        "user-invocable": "true",
-        "license": "CC BY-NC-SA 4.0"
-      },
-      "node_kind": "page",
-      "norm_label": "skill-finder/skill.md",
-      "source_file": ".claude/skills/skill-finder/SKILL.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_agent_instructions",
-      "label": "agent-instructions.md",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "page",
-      "norm_label": "agent-instructions.md",
-      "source_file": ".claude/skills/skill-finder/references/agent-instructions.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing",
-      "label": "customization-routing.md",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "page",
-      "norm_label": "customization-routing.md",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_collection_management",
-      "label": "Collection Management",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "collection management",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L48"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_customization_routing",
-      "label": "Customization Routing",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "customization routing",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L1"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_decide_whether_the_user_needs_a_skill",
-      "label": "Decide Whether the User Needs a Skill",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "decide whether the user needs a skill",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L5"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_fast_rules",
-      "label": "Fast Rules",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "fast rules",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L15"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_recommendation_heuristics",
-      "label": "Recommendation Heuristics",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "recommendation heuristics",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L37"
-    },
-    {
-      "id": "claude_skills_skill_finder_references_customization_routing_response_pattern",
-      "label": "Response Pattern",
-      "_origin": "ast",
-      "community": 10,
-      "community_name": "Skill Finder",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "response pattern",
-      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
-      "source_location": "L22"
     },
     {
       "id": "claude_skills_skill_finder_skill_agent_instructions",
@@ -2031,19 +1651,7 @@
       "node_kind": "heading",
       "norm_label": "comandos frecuentes",
       "source_file": "CLAUDE.md",
-      "source_location": "L52"
-    },
-    {
-      "id": "claude_continuidad_entre_sesiones_chats",
-      "label": "Continuidad entre sesiones / chats",
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "ShelfVision AI - Walmart Chile",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "continuidad entre sesiones / chats",
-      "source_file": "CLAUDE.md",
-      "source_location": "L66"
+      "source_location": "L38"
     },
     {
       "id": "claude_estructura_relevante",
@@ -2055,7 +1663,7 @@
       "node_kind": "heading",
       "norm_label": "estructura relevante",
       "source_file": "CLAUDE.md",
-      "source_location": "L39"
+      "source_location": "L25"
     },
     {
       "id": "claude_graphify",
@@ -2067,7 +1675,7 @@
       "node_kind": "heading",
       "norm_label": "graphify",
       "source_file": "CLAUDE.md",
-      "source_location": "L88"
+      "source_location": "L52"
     },
     {
       "id": "claude_notas",
@@ -2079,7 +1687,7 @@
       "node_kind": "heading",
       "norm_label": "notas",
       "source_file": "CLAUDE.md",
-      "source_location": "L59"
+      "source_location": "L45"
     },
     {
       "id": "claude_reglas_de_c\u00f3digo",
@@ -3026,7 +2634,7 @@
       "node_kind": "heading",
       "norm_label": "que hacer con estos datasets (proceso)",
       "source_file": "docs/datasets.md",
-      "source_location": "L34"
+      "source_location": "L27"
     },
     {
       "id": "docs_datasets_ya_identificados_por_el_equipo",
@@ -3041,110 +2649,11 @@
       "source_location": "L8"
     },
     {
-      "id": "fixture",
-      "label": "fixture",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "fixture",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "parametrize",
-      "label": "parametrize",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "parametrize",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "pixelbbox",
-      "label": "PixelBBox",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "pixelbbox",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_preprocessing_roi_filter",
-      "label": "roi_filter.py",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "roi_filter.py",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_preprocessing_roi_filter_py_bbox",
-      "label": "BBox",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "bbox",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_preprocessing_roi_filter_py_ndarray",
-      "label": "ndarray",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "ndarray",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "tests_test_models",
-      "label": "test_models.py",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_models.py",
-      "source_file": "tests/test_models.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_preprocessing",
-      "label": "test_preprocessing.py",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "test_preprocessing.py",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_preprocessing_py_ndarray",
-      "label": "ndarray",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "code",
-      "norm_label": "ndarray",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "progress",
       "label": "PROGRESS.md",
       "_origin": "ast",
       "community": 25,
-      "community_name": "test_preprocessing.py",
+      "community_name": "Bit\u00e1cora de Sprint 1 - ShelfVision AI",
       "file_type": "document",
       "node_kind": "page",
       "norm_label": "progress.md",
@@ -3156,7 +2665,7 @@
       "label": "Bit\u00e1cora de Sprint 1 - ShelfVision AI",
       "_origin": "ast",
       "community": 25,
-      "community_name": "test_preprocessing.py",
+      "community_name": "Bit\u00e1cora de Sprint 1 - ShelfVision AI",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "bitacora de sprint 1 - shelfvision ai",
@@ -3168,7 +2677,7 @@
       "label": "Estado",
       "_origin": "ast",
       "community": 25,
-      "community_name": "test_preprocessing.py",
+      "community_name": "Bit\u00e1cora de Sprint 1 - ShelfVision AI",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "estado",
@@ -3180,101 +2689,24 @@
       "label": "Notas",
       "_origin": "ast",
       "community": 25,
-      "community_name": "test_preprocessing.py",
+      "community_name": "Bit\u00e1cora de Sprint 1 - ShelfVision AI",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "notas",
       "source_file": "PROGRESS.md",
-      "source_location": "L72"
+      "source_location": "L41"
     },
     {
       "id": "progress_pendientes_priorizados",
       "label": "Pendientes (priorizados)",
       "_origin": "ast",
       "community": 25,
-      "community_name": "test_preprocessing.py",
+      "community_name": "Bit\u00e1cora de Sprint 1 - ShelfVision AI",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "pendientes (priorizados)",
       "source_file": "PROGRESS.md",
       "source_location": "L9"
-    },
-    {
-      "id": "src_preprocessing_roi_filter_rationale_1",
-      "label": "Recorte de la region de interes (ROI) sobre la gondola detectada. Parte del\u2026",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "rationale",
-      "norm_label": "recorte de la region de interes (roi) sobre la gondola detectada. parte del...",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_preprocessing_roi_filter_rationale_29",
-      "label": "Imagen recortada junto con la ROI (en coordenadas de la imagen original) de la\u2026",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "rationale",
-      "norm_label": "imagen recortada junto con la roi (en coordenadas de la imagen original) de la...",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L29"
-    },
-    {
-      "id": "src_preprocessing_roi_filter_rationale_37",
-      "label": "Traslada un bbox expresado en coordenadas del recorte (ej. una deteccion de\u2026",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "rationale",
-      "norm_label": "traslada un bbox expresado en coordenadas del recorte (ej. una deteccion de...",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L37"
-    },
-    {
-      "id": "src_preprocessing_roi_filter_rationale_51",
-      "label": "Normaliza una ROI al estandar del proyecto dentro de una imagen de `width` x\u2026",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "rationale",
-      "norm_label": "normaliza una roi al estandar del proyecto dentro de una imagen de `width` x...",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L51"
-    },
-    {
-      "id": "src_preprocessing_roi_filter_rationale_83",
-      "label": "Recorta `image` a la ROI de la gondola. Una ROI parcialmente fuera de la imagen\u2026",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "rationale",
-      "norm_label": "recorta `image` a la roi de la gondola. una roi parcialmente fuera de la imagen...",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L83"
-    },
-    {
-      "id": "tests_test_models_rationale_1",
-      "label": "Verifica que el entorno soporte el detector elegido para src/models/: YOLO26 de\u2026",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "rationale",
-      "norm_label": "verifica que el entorno soporte el detector elegido para src/models/: yolo26 de...",
-      "source_file": "tests/test_models.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_test_preprocessing_rationale_8",
-      "label": "Imagen BGR sintetica donde cada pixel codifica su posicion, para verificar que\u2026",
-      "_origin": "ast",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "file_type": "rationale",
-      "norm_label": "imagen bgr sintetica donde cada pixel codifica su posicion, para verificar que...",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L8"
     },
     {
       "id": "claude_skills_graphify_references_add_watch",
@@ -4268,6 +3700,37 @@
       "source_location": "L1"
     },
     {
+      "id": "claude_skills_skill_finder_skill",
+      "label": "skill-finder/SKILL.md",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "skill-finder",
+        "description": "Search, install, and manage Agent Skills locally and from GitHub, then help decide whether the task really needs a skill or another customization primitive. Use when looking for skills, installing skills, managing a skill collection, or choosing between a skill, prompt, instruction, or agent.",
+        "argument-hint": "\u63a2\u3057\u305f\u3044 skill \u306e\u7528\u9014\u3084\u30ad\u30fc\u30ef\u30fc\u30c9",
+        "user-invocable": "true",
+        "license": "CC BY-NC-SA 4.0"
+      },
+      "node_kind": "page",
+      "norm_label": "skill-finder/skill.md",
+      "source_file": ".claude/skills/skill-finder/SKILL.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_agent_instructions",
+      "label": "agent-instructions.md",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "agent-instructions.md",
+      "source_file": ".claude/skills/skill-finder/references/agent-instructions.md",
+      "source_location": "L1"
+    },
+    {
       "id": "claude_skills_skill_finder_references_agent_instructions_agent_behavior_rules",
       "label": "Agent Behavior Rules",
       "_origin": "ast",
@@ -4422,6 +3885,90 @@
       "norm_label": "trust level indicators",
       "source_file": ".claude/skills/skill-finder/references/agent-instructions.md",
       "source_location": "L109"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing",
+      "label": "customization-routing.md",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "customization-routing.md",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_collection_management",
+      "label": "Collection Management",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "collection management",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L48"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_customization_routing",
+      "label": "Customization Routing",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "customization routing",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_decide_whether_the_user_needs_a_skill",
+      "label": "Decide Whether the User Needs a Skill",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "decide whether the user needs a skill",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L5"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_fast_rules",
+      "label": "Fast Rules",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "fast rules",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L15"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_recommendation_heuristics",
+      "label": "Recommendation Heuristics",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "recommendation heuristics",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L37"
+    },
+    {
+      "id": "claude_skills_skill_finder_references_customization_routing_response_pattern",
+      "label": "Response Pattern",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Agent Instructions",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "response pattern",
+      "source_file": ".claude/skills/skill-finder/references/customization-routing.md",
+      "source_location": "L22"
     },
     {
       "id": "claude_skills_skill_finder_scripts_update_other_descriptions",
@@ -4717,18 +4264,6 @@
       "source_location": "L13"
     },
     {
-      "id": "readme_2_supuestos_del_dominio",
-      "label": "2. Supuestos del Dominio",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "Auditor\u00eda Automatizada de G\u00f3ndolas mediante Visi\u00f3n Artificial (Walmart Chile)",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "2. supuestos del dominio",
-      "source_file": "README.md",
-      "source_location": "L21"
-    },
-    {
       "id": "readme_auditor\u00eda_automatizada_de_g\u00f3ndolas_mediante_visi\u00f3n_artificial_walmart_chile",
       "label": "Auditor\u00eda Automatizada de G\u00f3ndolas mediante Visi\u00f3n Artificial (Walmart Chile)",
       "_origin": "ast",
@@ -4774,7 +4309,7 @@
       "node_kind": "heading",
       "norm_label": "ejecucion con docker",
       "source_file": "README.md",
-      "source_location": "L102"
+      "source_location": "L98"
     },
     {
       "id": "readme_ejecuci\u00f3n_local",
@@ -4786,7 +4321,7 @@
       "node_kind": "heading",
       "norm_label": "ejecucion local",
       "source_file": "README.md",
-      "source_location": "L94"
+      "source_location": "L90"
     },
     {
       "id": "readme_equipo_de_desarrollo",
@@ -4798,7 +4333,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udc68\u200d\ud83d\udcbb equipo de desarrollo",
       "source_file": "README.md",
-      "source_location": "L121"
+      "source_location": "L115"
     },
     {
       "id": "readme_estrategia_algor\u00edtmica_y_arquitectura",
@@ -4810,7 +4345,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83c\udfd7\ufe0f estrategia algoritmica y arquitectura",
       "source_file": "README.md",
-      "source_location": "L58"
+      "source_location": "L54"
     },
     {
       "id": "readme_estrategia_de_datos_y_evaluaci\u00f3n",
@@ -4822,7 +4357,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udcca estrategia de datos y evaluacion",
       "source_file": "README.md",
-      "source_location": "L66"
+      "source_location": "L62"
     },
     {
       "id": "readme_estructura_del_repositorio",
@@ -4834,7 +4369,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udcc1 estructura del repositorio",
       "source_file": "README.md",
-      "source_location": "L73"
+      "source_location": "L69"
     },
     {
       "id": "readme_objetivos_y_niveles_de_soluci\u00f3n",
@@ -4846,7 +4381,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udca1 objetivos y niveles de solucion",
       "source_file": "README.md",
-      "source_location": "L27"
+      "source_location": "L23"
     },
     {
       "id": "readme_perfiles_de_usuario",
@@ -4858,7 +4393,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udc65 perfiles de usuario",
       "source_file": "README.md",
-      "source_location": "L50"
+      "source_location": "L46"
     },
     {
       "id": "readme_planificaci\u00f3n_y_cronograma_carta_gantt",
@@ -4870,7 +4405,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udcc5 planificacion y cronograma (carta gantt)",
       "source_file": "README.md",
-      "source_location": "L113"
+      "source_location": "L107"
     },
     {
       "id": "readme_requerimientos_funcionales_rf",
@@ -4882,7 +4417,7 @@
       "node_kind": "heading",
       "norm_label": "\ud83d\udee0\ufe0f requerimientos funcionales (rf)",
       "source_file": "README.md",
-      "source_location": "L40"
+      "source_location": "L36"
     },
     {
       "id": "claude_skills_skill_finder_scripts_search_skills_find_newrepos",
@@ -5030,7 +4565,6 @@
     {
       "id": "datetime",
       "label": "datetime",
-      "_origin": "semantic",
       "community": 0,
       "community_name": "search_skills.py",
       "external": true,
@@ -5042,7 +4576,6 @@
     {
       "id": "typing",
       "label": "typing",
-      "_origin": "semantic",
       "community": 0,
       "community_name": "search_skills.py",
       "external": true,
@@ -5054,7 +4587,6 @@
     {
       "id": "urllib_parse",
       "label": "urllib_parse",
-      "_origin": "semantic",
       "community": 0,
       "community_name": "search_skills.py",
       "external": true,
@@ -5066,7 +4598,6 @@
     {
       "id": "argparse",
       "label": "argparse",
-      "_origin": "semantic",
       "community": 1,
       "community_name": "prepare_datasets.py",
       "external": true,
@@ -5078,7 +4609,6 @@
     {
       "id": "csv",
       "label": "csv",
-      "_origin": "semantic",
       "community": 1,
       "community_name": "prepare_datasets.py",
       "external": true,
@@ -5090,7 +4620,6 @@
     {
       "id": "sys",
       "label": "sys",
-      "_origin": "semantic",
       "community": 1,
       "community_name": "prepare_datasets.py",
       "external": true,
@@ -5102,7 +4631,6 @@
     {
       "id": "xml_etree_elementtree",
       "label": "xml_etree_elementtree",
-      "_origin": "semantic",
       "community": 1,
       "community_name": "prepare_datasets.py",
       "external": true,
@@ -5112,57 +4640,8 @@
       "type": "external"
     },
     {
-      "id": "dataclasses",
-      "label": "dataclasses",
-      "_origin": "semantic",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "dataclasses",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "math",
-      "label": "math",
-      "_origin": "semantic",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "math",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "numpy",
-      "label": "numpy",
-      "_origin": "semantic",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "numpy",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "pytest",
-      "label": "pytest",
-      "_origin": "semantic",
-      "community": 25,
-      "community_name": "test_preprocessing.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "pytest",
-      "source_file": "",
-      "type": "external"
-    },
-    {
       "id": "json",
       "label": "json",
-      "_origin": "semantic",
       "community": 6,
       "community_name": "update_scientific_descriptions.py",
       "external": true,
@@ -5174,7 +4653,6 @@
     {
       "id": "pathlib",
       "label": "pathlib",
-      "_origin": "semantic",
       "community": 6,
       "community_name": "update_scientific_descriptions.py",
       "external": true,
@@ -5186,7 +4664,6 @@
     {
       "id": "re",
       "label": "re",
-      "_origin": "semantic",
       "community": 6,
       "community_name": "update_scientific_descriptions.py",
       "external": true,
@@ -5198,7 +4675,6 @@
     {
       "id": "subprocess",
       "label": "subprocess",
-      "_origin": "semantic",
       "community": 6,
       "community_name": "update_scientific_descriptions.py",
       "external": true,
@@ -5210,7 +4686,6 @@
     {
       "id": "time",
       "label": "time",
-      "_origin": "semantic",
       "community": 6,
       "community_name": "update_scientific_descriptions.py",
       "external": true,
@@ -5954,30 +5429,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_preprocessing_roi_filter_crop_roi",
-      "target": "src_preprocessing_roi_filter_normalize_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L102",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter_crop_roi",
-      "target": "src_preprocessing_roi_filter_roicrop",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L104",
-      "weight": 1.0
-    },
-    {
       "source": "tests_test_dataset_converters_test_class_group_defaults_to_other_for_unknown_class",
       "target": "src_datasets_converters_class_group",
       "relation": "calls",
@@ -6071,258 +5522,6 @@
       "context": "call",
       "source_file": "tests/test_dataset_converters.py",
       "source_location": "L29",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_empty_image_raises",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L106",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_fully_outside_raises",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L76",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_fully_outside_raises",
-      "target": "tests_test_preprocessing_bgr_image",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L76",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_inside_bounds_returns_exact_region",
-      "target": "tests_test_preprocessing_bgr_image",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L18",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_inside_bounds_returns_exact_region",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L19",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_none_image_raises",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L94",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_partially_outside_is_clipped_to_image",
-      "target": "tests_test_preprocessing_bgr_image",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L60",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_partially_outside_is_clipped_to_image",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L61",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_rejects_non_array_input",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L111",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_returns_copy_not_view",
-      "target": "tests_test_preprocessing_bgr_image",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L32",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_returns_copy_not_view",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L33",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_supports_grayscale_images",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L28",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_zero_area_raises",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L81",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_zero_area_raises",
-      "target": "tests_test_preprocessing_bgr_image",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L81",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_normalize_roi_rejects_non_finite_coordinates",
-      "target": "src_preprocessing_roi_filter_normalize_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L86",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_normalize_roi_rounds_float_coordinates_outward",
-      "target": "src_preprocessing_roi_filter_normalize_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L43",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_normalize_roi_swaps_inverted_coordinates",
-      "target": "src_preprocessing_roi_filter_normalize_roi",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L39",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_to_original_translates_crop_coordinates",
-      "target": "src_preprocessing_roi_filter_roicrop",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L52",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_models_yolo26",
-      "target": "fixture",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "decorator",
-      "source_file": "tests/test_models.py",
-      "source_location": "L19",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_empty_image_raises",
-      "target": "parametrize",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "decorator",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L97",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_test_crop_roi_fully_outside_raises",
-      "target": "parametrize",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "decorator",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -6674,30 +5873,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_preprocessing_roi_filter",
-      "target": "math",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L18",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter",
-      "target": "numpy",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L21",
-      "weight": 1.0
-    },
-    {
       "source": "tests_test_dataset_converters",
       "target": "src_datasets_converters_class_group",
       "relation": "imports",
@@ -6767,90 +5942,6 @@
       "context": "import",
       "source_file": "tests/test_dataset_converters.py",
       "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_models",
-      "target": "numpy",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "tests/test_models.py",
-      "source_location": "L6",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_models",
-      "target": "pytest",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "tests/test_models.py",
-      "source_location": "L7",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "numpy",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "pytest",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L2",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L4",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "src_preprocessing_roi_filter_normalize_roi",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L4",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "src_preprocessing_roi_filter_roicrop",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L4",
       "weight": 1.0
     },
     {
@@ -6938,18 +6029,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_preprocessing_roi_filter",
-      "target": "dataclasses",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L19",
-      "weight": 1.0
-    },
-    {
       "source": "tests_test_dataset_converters",
       "target": "src_datasets_converters",
       "relation": "imports_from",
@@ -6959,18 +6038,6 @@
       "context": "import",
       "source_file": "tests/test_dataset_converters.py",
       "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "src_preprocessing_roi_filter",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L4",
       "weight": 1.0
     },
     {
@@ -6998,44 +6065,8 @@
       "weight": 1.0
     },
     {
-      "source": "src_preprocessing_roi_filter_crop_roi",
-      "target": "src_preprocessing_roi_filter_py_bbox",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L82",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter_crop_roi",
-      "target": "src_preprocessing_roi_filter_py_ndarray",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L82",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter_normalize_roi",
-      "target": "src_preprocessing_roi_filter_py_bbox",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L50",
-      "weight": 1.0
-    },
-    {
       "source": "src_datasets_converters_clip_bbox",
-      "target": "src_datasets_converters_py_bbox",
+      "target": "bbox",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -7047,7 +6078,7 @@
     },
     {
       "source": "src_datasets_converters_coco_bbox_to_xyxy",
-      "target": "src_datasets_converters_py_bbox",
+      "target": "bbox",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -7059,7 +6090,7 @@
     },
     {
       "source": "src_datasets_converters_polyline_to_bbox",
-      "target": "src_datasets_converters_py_bbox",
+      "target": "bbox",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -7071,7 +6102,7 @@
     },
     {
       "source": "src_datasets_converters_sku110k_row_to_bbox",
-      "target": "src_datasets_converters_py_bbox",
+      "target": "bbox",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -7083,7 +6114,7 @@
     },
     {
       "source": "src_datasets_converters_supervisely_rect_to_xyxy",
-      "target": "src_datasets_converters_py_bbox",
+      "target": "bbox",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -7091,42 +6122,6 @@
       "context": "return_type",
       "source_file": "src/datasets/converters.py",
       "source_location": "L68",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter_normalize_roi",
-      "target": "pixelbbox",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "return_type",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L50",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter_roicrop_to_original",
-      "target": "src_preprocessing_roi_filter_py_bbox",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "return_type",
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L36",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_bgr_image",
-      "target": "tests_test_preprocessing_py_ndarray",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "return_type",
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L7",
       "weight": 1.0
     },
     {
@@ -7225,7 +6220,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L39",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -7236,7 +6231,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L52",
+      "source_location": "L38",
       "weight": 1.0
     },
     {
@@ -7247,18 +6242,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L59",
+      "source_location": "L45",
       "weight": 1.0
     },
     {
       "source": "claude_shelfvision_ai_walmart_chile",
-      "target": "claude_continuidad_entre_sesiones_chats",
+      "target": "claude_graphify",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L66",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -7270,17 +6265,6 @@
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
       "source_location": "L7",
-      "weight": 1.0
-    },
-    {
-      "source": "claude_shelfvision_ai_walmart_chile",
-      "target": "claude_graphify",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CLAUDE.md",
-      "source_location": "L88",
       "weight": 1.0
     },
     {
@@ -10327,7 +9311,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/datasets.md",
-      "source_location": "L34",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -10371,7 +9355,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "PROGRESS.md",
-      "source_location": "L72",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -10398,6 +9382,17 @@
     },
     {
       "source": "readme_auditor\u00eda_automatizada_de_g\u00f3ndolas_mediante_visi\u00f3n_artificial_walmart_chile",
+      "target": "readme_planificaci\u00f3n_y_cronograma_carta_gantt",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L107",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_auditor\u00eda_automatizada_de_g\u00f3ndolas_mediante_visi\u00f3n_artificial_walmart_chile",
       "target": "readme_definici\u00f3n_del_alcance",
       "relation": "contains",
       "_origin": "ast",
@@ -10409,24 +9404,13 @@
     },
     {
       "source": "readme_auditor\u00eda_automatizada_de_g\u00f3ndolas_mediante_visi\u00f3n_artificial_walmart_chile",
-      "target": "readme_planificaci\u00f3n_y_cronograma_carta_gantt",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L113",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_auditor\u00eda_automatizada_de_g\u00f3ndolas_mediante_visi\u00f3n_artificial_walmart_chile",
       "target": "readme_equipo_de_desarrollo",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L121",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -10437,7 +9421,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L27",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -10459,7 +9443,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L40",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -10470,7 +9454,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L50",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -10481,7 +9465,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L58",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -10492,7 +9476,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L66",
+      "source_location": "L62",
       "weight": 1.0
     },
     {
@@ -10503,7 +9487,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L73",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -10518,14 +9502,14 @@
       "weight": 1.0
     },
     {
-      "source": "readme_definici\u00f3n_del_alcance",
-      "target": "readme_2_supuestos_del_dominio",
+      "source": "readme_estructura_del_repositorio",
+      "target": "readme_ejecuci\u00f3n_local",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L21",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -10536,18 +9520,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L102",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_estructura_del_repositorio",
-      "target": "readme_ejecuci\u00f3n_local",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L94",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -10661,39 +9634,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_preprocessing_roi_filter",
-      "target": "src_preprocessing_roi_filter_roicrop",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L28",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter",
-      "target": "src_preprocessing_roi_filter_normalize_roi",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L50",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L82",
-      "weight": 1.0
-    },
-    {
       "source": "tests_test_dataset_converters",
       "target": "tests_test_dataset_converters_test_polyline_to_bbox_returns_enclosing_rect",
       "relation": "contains",
@@ -10779,215 +9719,6 @@
       "confidence_score": 1.0,
       "source_file": "tests/test_dataset_converters.py",
       "source_location": "L51",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_models",
-      "target": "tests_test_models_test_ultralytics_version_supports_yolo26",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_models.py",
-      "source_location": "L14",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_models",
-      "target": "tests_test_models_yolo26",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_models.py",
-      "source_location": "L20",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_models",
-      "target": "tests_test_models_test_yolo26_has_nms_free_head",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_models.py",
-      "source_location": "L24",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_models",
-      "target": "tests_test_models_test_yolo26_nms_false_uses_end2end_head_and_respects_max_det",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_models.py",
-      "source_location": "L29",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_crop_roi_empty_image_raises",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L104",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_crop_roi_rejects_non_array_input",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L109",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_crop_roi_inside_bounds_returns_exact_region",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L17",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_crop_roi_supports_grayscale_images",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L26",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_crop_roi_returns_copy_not_view",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L31",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_normalize_roi_swaps_inverted_coordinates",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L38",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_normalize_roi_rounds_float_coordinates_outward",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L42",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_to_original_translates_crop_coordinates",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L51",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_crop_roi_partially_outside_is_clipped_to_image",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L59",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_bgr_image",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L7",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_crop_roi_fully_outside_raises",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L74",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_crop_roi_zero_area_raises",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L79",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_normalize_roi_rejects_non_finite_coordinates",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L84",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing",
-      "target": "tests_test_preprocessing_test_crop_roi_none_image_raises",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L92",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter_roicrop",
-      "target": "src_preprocessing_roi_filter_roicrop_to_original",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -11431,83 +10162,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_preprocessing_roi_filter_rationale_1",
-      "target": "src_preprocessing_roi_filter",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter_rationale_29",
-      "target": "src_preprocessing_roi_filter_roicrop",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L29",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter_rationale_37",
-      "target": "src_preprocessing_roi_filter_roicrop_to_original",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L37",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter_rationale_51",
-      "target": "src_preprocessing_roi_filter_normalize_roi",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L51",
-      "weight": 1.0
-    },
-    {
-      "source": "src_preprocessing_roi_filter_rationale_83",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/preprocessing/roi_filter.py",
-      "source_location": "L83",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_models_rationale_1",
-      "target": "tests_test_models",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_models.py",
-      "source_location": "L1",
-      "weight": 1.0
-    },
-    {
-      "source": "tests_test_preprocessing_rationale_8",
-      "target": "tests_test_preprocessing_bgr_image",
-      "relation": "rationale_for",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "tests/test_preprocessing.py",
-      "source_location": "L8",
-      "weight": 1.0
-    },
-    {
       "source": "claude_skills_skill_finder_references_agent_instructions",
       "target": "claude_skills_skill_finder_references_customization_routing",
       "relation": "references",
@@ -11586,68 +10240,8 @@
       "source_file": "scripts/prepare_datasets.py",
       "source_location": "L198",
       "weight": 1.0
-    },
-    {
-      "source": "progress_pendientes_priorizados",
-      "target": "src_preprocessing_roi_filter_roicrop",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "context": "RoiCrop",
-      "source_file": "PROGRESS.md",
-      "source_location": "L15",
-      "weight": 1.0
-    },
-    {
-      "source": "progress_pendientes_priorizados",
-      "target": "src_preprocessing_roi_filter_roicrop_to_original",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "context": "RoiCrop.to_original()",
-      "source_file": "PROGRESS.md",
-      "source_location": "L16",
-      "weight": 1.0
-    },
-    {
-      "source": "claude_reglas_de_c\u00f3digo",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "context": "crop_roi()",
-      "source_file": "CLAUDE.md",
-      "source_location": "L22",
-      "weight": 1.0
-    },
-    {
-      "source": "progress_pendientes_priorizados",
-      "target": "src_preprocessing_roi_filter_crop_roi",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "context": "crop_roi()",
-      "source_file": "PROGRESS.md",
-      "source_location": "L15",
-      "weight": 1.0
-    },
-    {
-      "source": "progress_pendientes_priorizados",
-      "target": "src_preprocessing_roi_filter_normalize_roi",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.95,
-      "context": "normalize_roi()",
-      "source_file": "PROGRESS.md",
-      "source_location": "L14",
-      "weight": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "993eae11ed00ea2e407fe49080112f04a5241931"
+  "built_at_commit": "ae519099d447b2f4453e2d3bf1c227b022fb4e4b"
 }
