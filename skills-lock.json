@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "skill-finder": {
+      "source": "aktsmm/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skill-finder/SKILL.md",
+      "computedHash": "a043255f9e1e4c78d1e8dae31851e60b9f13a1a2cc508550b3caf79444698269"
+    }
+  }
+}

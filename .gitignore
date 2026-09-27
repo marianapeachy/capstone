@@ -1,0 +1,59 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# --- Entornos virtuales ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Variables de entorno / secretos ---
+.env
+.env.*
+
+# --- Datos del proyecto (no versionar contenido, solo estructura) ---
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# --- Imágenes generadas / capturas (excepto ejemplos documentados) ---
+*.jpg
+*.jpeg
+*.png
+!docs/**/*.jpg
+!docs/**/*.jpeg
+!docs/**/*.png
+
+# --- Checkpoints y pesos de modelos (YOLOv8 / PyTorch / ONNX) ---
+*.pt
+*.onnx
+*.pth
+*.weights
+checkpoints/
+
+# --- Reportes generados (Excel, CSV, PDF) ---
+*.xlsx
+*.csv
+*.pdf
+!docs/**/*.pdf
+
+# --- Herramientas / IDEs ---
+.vscode/
+.idea/
+*.swp
+
+# --- Pytest / cobertura ---
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db

@@ -73,13 +73,33 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 ├── docs/                   # Documentación de diseño, minutas y especificaciones
 ├── src/                    # Código fuente en scripts Python modulares
 │   ├── preprocessing/      # Filtros de imagen, corrección ROI y pre-procesamiento
-│   ├── models/             # Módulos de inferencia (YOLO11 / CV Clásico)
+│   ├── models/             # Módulos de inferencia (YOLOv8 / CV Clásico)
 │   ├── postprocessing/     # Cálculo de métricas y lógica de umbrales (<30%)
 │   └── reporting/          # Generadores de reportes (Excel, CSV, PDF)
-├── data/                   # Instrucciones y scripts de preparación de datasets
-├── tests/                  # Pruebas unitarias e integración
+├── scripts/                # CLI de ejecución del pipeline (run_pipeline.py)
+├── data/                   # Datasets (data/raw y data/processed, no versionados)
+├── tests/                  # Pruebas unitarias e integración (pytest)
+├── Fase 1/                 # Entregables académicos de la Fase 1 (no modificar)
+├── Dockerfile              # Imagen de ejecución del pipeline (python:3.10-slim)
+├── CLAUDE.md               # Memoria de proyecto y reglas de código para IA
+├── PROGRESS.md             # Bitácora de tareas por sprint
 ├── README.md               # Documentación principal del repositorio
 └── requirements.txt        # Dependencias del proyecto
+```
+
+### Ejecución local
+
+```bash
+pip install -r requirements.txt
+pytest tests/
+python scripts/run_pipeline.py
+```
+
+### Ejecución con Docker
+
+```bash
+docker build -t shelfvision-ai .
+docker run --rm shelfvision-ai
 ```
 
 ---
