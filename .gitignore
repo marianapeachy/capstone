@@ -44,9 +44,12 @@ checkpoints/
 *.pdf
 !docs/**/*.pdf
 
-# --- graphify: respaldos por fecha y estado efimero de consultas ---
-graphify-out/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
-graphify-out/cache/last_query_stamp
+# --- graphify: el grafo se regenera localmente (ver CLAUDE.md) ---
+graphify-out/
+
+# --- Claude Code: configuracion personal (la compartida es .claude/settings.json) ---
+.claude/settings.local.json
+CLAUDE.local.md
 
 # --- Herramientas / IDEs ---
 .vscode/

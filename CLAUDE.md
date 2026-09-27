@@ -14,13 +14,17 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
   absolutos de la imagen original.
 - **Enfoque híbrido obligatorio**: `src/preprocessing/` (OpenCV) siempre
   precede a `src/models/` (YOLO26), en este orden: corrección de imagen
-  (CLAHE + dewarping) -> segmentación automática de góndola/repisas ->
+  (dewarping y luego CLAHE, `correct_image()`) -> segmentación automática
+  de góndola/repisas ->
   recorte de ROI. La segmentación trabaja sobre la imagen ya corregida.
   No se reemplaza el pre-procesamiento clásico por el modelo de inferencia.
 - **ROI automática**: el sistema segmenta la góndola y sus repisas en
   `src/preprocessing/`, antes de YOLO26. Ningún usuario dibuja ni configura
   ROI por cámara, así que el código no debe depender de una ROI cargada de
-  configuración. `crop_roi()` recibe la ROI que entrega esa segmentación.
+  configuración. Flujo: `correct_image()` -> `segment_gondola()` ->
+  `crop_roi(imagen_corregida, segmentacion.roi)`. Las detecciones vuelven
+  a la imagen original con `RoiCrop.to_original()` y luego
+  `CorrectedImage.to_original()`.
 - **Profundidad constante**: toda góndola se asume de **25 cm** de
   profundidad (valor fijo, dentro del rango real de 20-30 cm). No se
   estima profundidad (sin modelos de profundidad ni visión estéreo): el
@@ -45,6 +49,7 @@ src/preprocessing/   # Filtros CLAHE, dewarping, segmentación automática y rec
 src/models/           # Inferencia YOLO26 (Ultralytics)
 src/postprocessing/    # Cálculo de disponibilidad y umbral <30%
 src/reporting/         # Reportes en Excel, CSV y PDF
+src/evaluation/        # Métricas de evaluación (no es etapa del pipeline)
 scripts/               # CLI de ejecución del pipeline
 tests/                 # Pruebas unitarias con pytest
 data/raw/              # Imágenes de entrada (no versionadas)
@@ -56,6 +61,7 @@ data/processed/        # Salidas intermedias/procesadas (no versionadas)
 ```bash
 pytest tests/
 python scripts/run_pipeline.py
+python scripts/visualize_segmentation.py   # revisar la segmentación a ojo
 ```
 
 ## Notas
@@ -64,6 +70,47 @@ python scripts/run_pipeline.py
   debe modificarse.
 - Los pesos de modelos (`*.pt`, `*.onnx`) y las imágenes de datos no se
   versionan (ver `.gitignore`).
+
+## Trabajo en equipo (flujo obligatorio)
+
+Tres integrantes trabajan en paralelo, cada uno con su propio Claude
+Code. Estas reglas aplican a todas las sesiones, para no pisarse commits
+ni trabajo:
+
+1. **Antes de empezar**: `git switch main && git pull`, y regenerar el
+   grafo (`graphify update .`, ver sección graphify). Si la tarea depende
+   de un PR aún no mergeado, partir desde esa rama en vez de `main`.
+2. **Tomar un ítem de `PROGRESS.md`** agregando `(dueño: <nombre>)` al
+   ítem, antes de escribir código. No tomar ítems que ya tienen dueño. Si
+   la tarea no está en el backlog, agregarla primero como ítem nuevo.
+3. **Una rama por ítem**: `feat/<tema>`, `fix/<tema>`, `docs/<tema>`,
+   `build/<tema>` o `chore/<tema>`. **Nunca** commit ni push directo a
+   `main`.
+4. **Commits solo cuando la persona lo pide**, separados por tema y en
+   estilo Conventional Commits en inglés (`feat: ...`, `fix: ...`,
+   `docs: ...`). Antes de cada commit, `pytest tests/` debe pasar; si se
+   tocó `Dockerfile` o `requirements.txt`, también `docker build`.
+5. **Nunca reescribir historia publicada**: nada de `git push --force`,
+   `git reset` ni `rebase` sobre ramas ya subidas. Para deshacer algo
+   publicado se usa `git revert`.
+6. **Todo entra a `main` por Pull Request** (`gh pr create`), con qué
+   cambia y cómo se verificó. Requiere revisión de otro integrante y CI
+   en verde. Preferir PR independientes contra `main`. Si hay PR
+   encadenados (uno con base en la rama de otro), se mergean de a uno y
+   en orden, con "Create a merge commit" (no squash), y **después de
+   cada merge se borra la rama mergeada** ("Delete branch"): solo así
+   GitHub cambia la base del PR siguiente a `main`. Antes de mergear un
+   PR, confirmar que su base diga `main`; si no, el cambio queda en otra
+   rama y no llega a `main`.
+7. **Al terminar el ítem**, marcarlo `[x]` en `PROGRESS.md` dentro del
+   mismo PR, editando solo las líneas de ese ítem (es el archivo que más
+   conflictos genera).
+8. **Configuración personal** en `CLAUDE.local.md` y
+   `.claude/settings.local.json` (no se versionan). La compartida es este
+   archivo y `.claude/settings.json`.
+
+Setup de un entorno nuevo: ver "Configuración de un entorno nuevo" en el
+README.
 
 ## Continuidad entre sesiones / chats
 
@@ -90,6 +137,15 @@ lo hecho, agregar lo nuevo pendiente) antes de cerrar la sesión.
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+**El grafo no se versiona** (`graphify-out/` está en `.gitignore`): cada
+integrante lo regenera en su máquina. Requiere graphify instalado
+(`pip install graphifyy==0.9.70`); sin él, los hooks de
+`.claude/settings.json` fallan en cada búsqueda o lectura de Claude.
+Regenerarlo con `graphify update .` al clonar, después de cada
+`git pull` o cambio de rama, y después de modificar código. Si
+`graphify-out/graph.json` no existe, crearlo con `graphify update .`
+antes de usar las reglas de abajo.
 
 Rules:
 - For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.

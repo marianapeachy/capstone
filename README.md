@@ -57,7 +57,7 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ## 🏗️ Estrategia Algorítmica y Arquitectura
 
-* **Enfoque Híbrido**: Evaluación de modelos de extracción de características (**YOLO26** de Ultralytics, con cabeza sin NMS para góndolas densas) combinados obligatoriamente con **Visión Computacional Clásica** (detección de bordes, transformaciones matriciales y filtros morfológicos) para mantener control matemático sobre el ruido visual. La segmentación automática de la góndola y sus repisas es parte de este pre-procesamiento clásico: se ejecuta sobre la imagen ya corregida (CLAHE + dewarping) y antes de la inferencia.
+* **Enfoque Híbrido**: Evaluación de modelos de extracción de características (**YOLO26** de Ultralytics, con cabeza sin NMS para góndolas densas) combinados obligatoriamente con **Visión Computacional Clásica** (detección de bordes, transformaciones matriciales y filtros morfológicos) para mantener control matemático sobre el ruido visual. La segmentación automática de la góndola y sus repisas es parte de este pre-procesamiento clásico: se ejecuta sobre la imagen ya corregida (dewarping de lente y luego CLAHE) y antes de la inferencia.
 * **Pipeline Modular**: Separación física de los componentes de *Pre-procesamiento*, *Inferencia de Modelo* y *Post-procesamiento*.
 * **Código de Producción**: Desarrollo exclusivo en scripts modulares de Python (`.py`), descartando notebooks para la ejecución core.
 
@@ -79,8 +79,9 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 │   ├── preprocessing/      # Filtros de imagen, segmentación automática y recorte de ROI
 │   ├── models/             # Módulos de inferencia (YOLO26 / CV Clásico)
 │   ├── postprocessing/     # Cálculo de métricas y lógica de umbrales (<30%)
-│   └── reporting/          # Generadores de reportes (Excel, CSV, PDF)
-├── scripts/                # CLI de ejecución del pipeline (run_pipeline.py)
+│   ├── reporting/          # Generadores de reportes (Excel, CSV, PDF)
+│   └── evaluation/         # Métricas de evaluación (fuera del pipeline)
+├── scripts/                # CLI del pipeline y visor de segmentación
 ├── data/                   # Datasets (data/raw y data/processed, no versionados)
 ├── tests/                  # Pruebas unitarias e integración (pytest)
 ├── Fase 1/                 # Entregables académicos de la Fase 1 (no modificar)
@@ -90,6 +91,25 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 ├── README.md               # Documentación principal del repositorio
 └── requirements.txt        # Dependencias del proyecto
 ```
+
+### Configuración de un entorno nuevo
+
+```bash
+git clone https://github.com/marianapeachy/capstone.git && cd capstone
+python -m venv .venv            # activar: .venv\Scripts\activate (Windows) / source .venv/bin/activate
+pip install -r requirements.txt
+pip install graphifyy==0.9.70   # grafo del código; lo exigen los hooks de Claude Code
+graphify update .               # genera graphify-out/ (no se versiona)
+pytest tests/
+```
+
+- **Datos** (no se versionan): descargar los datasets a `data/raw/` según
+  [docs/datasets.md](docs/datasets.md) y luego `python scripts/prepare_datasets.py`.
+- **Claude Code**: instalar la extensión "Claude Code" de Anthropic en VS Code
+  e iniciar sesión con la cuenta propia. Claude lee `CLAUDE.md` al empezar, que
+  incluye el flujo de trabajo en equipo (ramas, PR y dueños de ítems).
+- **GitHub CLI** (`gh auth login`) para abrir Pull Requests desde la terminal.
+- **Docker Desktop** para construir y probar la imagen (ver abajo).
 
 ### Ejecución local
 

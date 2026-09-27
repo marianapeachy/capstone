@@ -6,6 +6,22 @@ Estructura inicial del repositorio creada (directorios `src/`, `tests/`,
 `docs/`, `data/`, `scripts/`, más `.gitignore`, `requirements.txt`,
 `Dockerfile`, `CLAUDE.md`).
 
+## Plan de trabajo por fases (2026-09-27)
+
+1. [x] Terreno común: subir las ramas y abrir los PR #3, #4 y #5
+       (encadenados); flujo de trabajo en equipo en `CLAUDE.md`;
+       `graphify-out/` fuera de git y regenerado localmente; setup de
+       entorno nuevo en el README.
+2. [ ] CI con GitHub Actions (pytest + `docker build`) y protección de
+       `main` (PR + revisión + CI en verde). Ítem 13.
+3. [ ] Buscar datasets que simulen cámaras de seguridad de sala. Ítem 14.
+4. [ ] Recomendar skills de Claude Code aplicables al proyecto
+       (`/skill-finder`).
+5. [ ] Resolver limitaciones de la segmentación. Ítem 15.
+
+Para tomar un ítem, agregar `(dueño: <nombre>)` antes de empezar (ver
+"Trabajo en equipo" en `CLAUDE.md`).
+
 ## Pendientes (priorizados)
 
 1. [x] Implementar `src/preprocessing/roi_filter.py`: recortador de
@@ -21,14 +37,56 @@ Estructura inicial del repositorio creada (directorios `src/`, `tests/`,
 2. [x] Implementar pruebas unitarias en `tests/test_preprocessing.py`
        para `roi_filter.py` (casos: ROI dentro de límites, ROI fuera de
        límites, imagen vacía/None) — 16 tests, suite completa 24/24 OK.
-3. [ ] Implementar filtros CLAHE y dewarping en `src/preprocessing/`.
-4. [ ] Implementar la segmentación automática de la góndola y sus
+3. [x] Implementar filtros CLAHE y dewarping en `src/preprocessing/`:
+       `image_correction.py` con `correct_image()` (dewarping y luego
+       CLAHE) -> `CorrectedImage` (imagen + calibración usada, con
+       `to_original()`/`to_original_points()` para devolver detecciones
+       a coordenadas de la imagen original). `dewarp()` corrige solo la
+       distorsión de lente (modelo pinhole o fisheye de OpenCV) y
+       conserva el tamaño y la matriz de cámara. `apply_clahe()` ecualiza
+       solo la luminancia (Lab) para no alterar colores.
+       `LensCalibration.approximate(k1)` da una calibración genérica
+       mientras no existan las reales. 21 tests en
+       `tests/test_image_correction.py` (entre ellos, una repisa curvada
+       con distorsión sintética que vuelve a quedar recta). Validaciones
+       de imagen compartidas en `_validation.py`. Pendiente: pedir a
+       Walmart el modelo y la calibración de sus cámaras (o fotos de un
+       tablero de ajedrez para calibrar). Los datasets públicos no traen
+       distorsión de lente: con ellos se usa solo CLAHE (sin calibración).
+4. [x] Implementar la segmentación automática de la góndola y sus
        repisas en `src/preprocessing/` (cambio de alcance 2026-09-27:
        ningún usuario define la ROI). Visión clásica, antes de YOLO26.
+       Hecho: `gondola_segmentation.py` con `segment_gondola()` ->
+       `GondolaSegmentation` (ROI, `ShelfLine` por repisa, bbox por nivel
+       y `found`). Método: saltos del brillo promedio por fila en franjas
+       verticales, enlazados entre franjas (permite repisas inclinadas por
+       perspectiva). Se descartó Canny + Hough: el texto de las etiquetas
+       dominaba y cada fila de cajas salía como repisa. Sin repisas
+       detectadas -> imagen completa con `found=False` (contingencia de
+       análisis global). Visor: `scripts/visualize_segmentation.py`
+       (láminas + `metrics.csv` en `data/processed/segmentation_preview/`).
+       Métricas aproximadas en `src/evaluation/segmentation_proxy.py`,
+       que usan las anotaciones existentes como evidencia indirecta.
+       Línea base (100 imágenes por dataset): 99-100% de las anotaciones
+       (incluidos los espacios vacíos) quedan dentro de la ROI; en
+       SKU-110K la ROI ocupa el 91% del área, el 52% de los productos
+       queda apoyado sobre una repisa detectada y el 76% de las repisas
+       detectadas tiene productos encima. La métrica de repisas con
+       productos subestima: el borde superior de la góndola y las repisas
+       vacías son líneas correctas sin productos encima.
+       Limitaciones conocidas: algunas líneas diagonales falsas en tomas
+       amplias (ej. refrigeradores), líneas extra en filas de cajas
+       apiladas, y en fotos de primer plano la ROI es casi toda la imagen
+       (esperable). Pendientes: set de validación etiquetado a mano con
+       góndolas/repisas, y evaluarlo con imágenes reales de Walmart.
+       Especificación original:
        Debe entregar la ROI de la góndola (entrada de `crop_roi()`) y,
        para el Nivel 1, los límites de cada repisa. Corre después de
-       CLAHE/dewarping, sobre la imagen corregida (decidido 2026-09-27:
-       con lente fisheye las líneas de repisa se ven curvas). Ningún dataset descargado anota
+       `correct_image()`, sobre la imagen corregida (decidido 2026-09-27:
+       con lente fisheye las líneas de repisa se ven curvas). La
+       corrección de perspectiva por ángulo oblicuo (llevar el contorno
+       de la góndola a un rectángulo) va aquí, porque necesita ese
+       contorno; `image_correction.py` no la hace. Ningún dataset descargado anota
        góndolas ni repisas (solo productos, espacios vacíos y precios):
        para medirla hay que etiquetar a mano un set chico de validación.
        Incluir un script visor que dibuje la segmentación sobre imágenes
@@ -67,6 +125,30 @@ Estructura inicial del repositorio creada (directorios `src/`, `tests/`,
        datasets). No versionado (`data/processed/*` en `.gitignore`).
 12. [ ] Falta script de *descarga* reproducible (hoy la descarga se
        hizo manualmente); ver Notas.
+
+13. [ ] CI en GitHub Actions: correr `pytest tests/` y `docker build` en
+       cada PR, y proteger `main` (merge solo por PR con una revisión y
+       CI en verde).
+14. [ ] Datasets con imágenes tipo cámara de seguridad (vista alta,
+       oblicua, gran angular/fisheye, pasillo completo) para validar
+       dewarping y segmentación en condiciones parecidas a Walmart.
+       Pedir también a Walmart una muestra de fotogramas reales.
+15. [ ] Limitaciones de la segmentación (ítem 4) y cómo atacarlas:
+       - Diagonales falsas (cadenas que saltan entre repisas): exigir
+         soporte de borde a lo largo de toda la recta ajustada, no solo
+         en los centros de franja, y que la pendiente de cada repisa sea
+         coherente con las vecinas (por perspectiva, varía suavemente
+         con la altura).
+       - Líneas extra en cajas apiladas: una repisa real tiene una franja
+         delgada y uniforme (con etiquetas de precio) entre dos bordes
+         cercanos; verificar ese patrón. Además, cuando exista el
+         detector, refinar los niveles en `src/postprocessing/`: una
+         línea que cruza por el medio de productos detectados no es
+         repisa.
+       - ROI casi igual a la imagen en primeros planos: esperable; se
+         valida con imágenes de cámaras de sala (ítem 14).
+       - Medición real: set de validación con repisas y góndola
+         etiquetadas a mano (polilíneas, ej. en CVAT o Label Studio).
 
 ## Notas
 
