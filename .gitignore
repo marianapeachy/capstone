@@ -31,7 +31,7 @@ data/processed/*
 !docs/**/*.jpeg
 !docs/**/*.png
 
-# --- Checkpoints y pesos de modelos (YOLOv8 / PyTorch / ONNX) ---
+# --- Checkpoints y pesos de modelos (YOLO26 / PyTorch / ONNX) ---
 *.pt
 *.onnx
 *.pth
@@ -43,6 +43,10 @@ checkpoints/
 *.csv
 *.pdf
 !docs/**/*.pdf
+
+# --- graphify: respaldos por fecha y estado efimero de consultas ---
+graphify-out/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+graphify-out/cache/last_query_stamp
 
 # --- Herramientas / IDEs ---
 .vscode/
