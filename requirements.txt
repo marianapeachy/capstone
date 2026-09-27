@@ -1,5 +1,5 @@
-ultralytics>=8.0.0
-opencv-python-headless>=4.8.0
+ultralytics>=8.4.0  # primera version con YOLO26
+opencv-python>=4.8.0,<5  # no headless: ultralytics depende de opencv-python y ambos instalan cv2; <5 hasta validar OpenCV 5
 numpy>=1.24.0
 pandas>=2.0.0
 openpyxl>=3.1.0
