@@ -95,8 +95,13 @@ ni trabajo:
    publicado se usa `git revert`.
 6. **Todo entra a `main` por Pull Request** (`gh pr create`), con qué
    cambia y cómo se verificó. Requiere revisión de otro integrante y CI
-   en verde. PR encadenados (uno sobre otro) se mergean en orden con
-   "Create a merge commit", no con squash.
+   en verde. Preferir PR independientes contra `main`. Si hay PR
+   encadenados (uno con base en la rama de otro), se mergean de a uno y
+   en orden, con "Create a merge commit" (no squash), y **después de
+   cada merge se borra la rama mergeada** ("Delete branch"): solo así
+   GitHub cambia la base del PR siguiente a `main`. Antes de mergear un
+   PR, confirmar que su base diga `main`; si no, el cambio queda en otra
+   rama y no llega a `main`.
 7. **Al terminar el ítem**, marcarlo `[x]` en `PROGRESS.md` dentro del
    mismo PR, editando solo las líneas de ese ítem (es el archivo que más
    conflictos genera).
