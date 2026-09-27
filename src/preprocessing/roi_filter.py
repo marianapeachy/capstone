@@ -20,6 +20,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from src.preprocessing._validation import check_image
+
 BBox = tuple[float, float, float, float]
 PixelBBox = tuple[int, int, int, int]
 
@@ -87,16 +89,7 @@ def crop_roi(image: np.ndarray | None, roi: BBox) -> RoiCrop:
     El recorte es una copia (no una vista), para que los filtros que se
     apliquen despues no modifiquen la imagen original.
     """
-    if image is None:
-        raise ValueError("La imagen es None (¿fallo cv2.imread?)")
-    if not isinstance(image, np.ndarray):
-        raise TypeError(f"Se esperaba un np.ndarray, se recibio {type(image).__name__}")
-    if image.ndim not in (2, 3):
-        raise ValueError(
-            f"La imagen debe tener 2 o 3 dimensiones, tiene {image.ndim}"
-        )
-    if image.size == 0:
-        raise ValueError(f"La imagen esta vacia (shape={image.shape})")
+    check_image(image)
 
     height, width = image.shape[:2]
     x_min, y_min, x_max, y_max = normalize_roi(roi, width, height)
