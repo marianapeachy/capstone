@@ -12,9 +12,25 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
 - **Bounding boxes estandarizados**: toda coordenada de detección o
   anotación se representa como `[x_min, y_min, x_max, y_max]` en píxeles
   absolutos de la imagen original.
-- **Enfoque híbrido obligatorio**: `src/preprocessing/` (OpenCV: CLAHE,
-  dewarping, recorte de ROI) siempre precede a `src/models/` (YOLOv8).
+- **Enfoque híbrido obligatorio**: `src/preprocessing/` (OpenCV) siempre
+  precede a `src/models/` (YOLO26), en este orden: corrección de imagen
+  (CLAHE + dewarping) -> segmentación automática de góndola/repisas ->
+  recorte de ROI. La segmentación trabaja sobre la imagen ya corregida.
   No se reemplaza el pre-procesamiento clásico por el modelo de inferencia.
+- **ROI automática**: el sistema segmenta la góndola y sus repisas en
+  `src/preprocessing/`, antes de YOLO26. Ningún usuario dibuja ni configura
+  ROI por cámara, así que el código no debe depender de una ROI cargada de
+  configuración. `crop_roi()` recibe la ROI que entrega esa segmentación.
+- **Profundidad constante**: toda góndola se asume de **25 cm** de
+  profundidad (valor fijo, dentro del rango real de 20-30 cm). No se
+  estima profundidad (sin modelos de profundidad ni visión estéreo): el
+  análisis es 2D sobre la vista frontal. Si un cálculo necesita la
+  profundidad (volumen del Nivel 1), usa esa única constante global de
+  25 cm, nunca un valor por góndola o por cámara.
+- **Detector YOLO26** (`ultralytics>=8.4.0`, pesos `yolo26*.pt`). En
+  góndolas densas/apiladas inferir con `nms=False` (activa la cabeza sin
+  NMS; por defecto Ultralytics aplica NMS igual), `max_det` >= 1000 (el
+  default 300 trunca góndolas llenas) e `imgsz=1280`.
 - **Pipeline modular**: `preprocessing -> models -> postprocessing ->
   reporting`. Cada etapa vive en su propio paquete y no debe importar
   directamente detalles internos de otra etapa; se comunican mediante
@@ -25,8 +41,8 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
 ## Estructura relevante
 
 ```
-src/preprocessing/   # Filtros CLAHE, dewarping, recorte de ROI
-src/models/           # Inferencia YOLOv8
+src/preprocessing/   # Filtros CLAHE, dewarping, segmentación automática y recorte de ROI
+src/models/           # Inferencia YOLO26 (Ultralytics)
 src/postprocessing/    # Cálculo de disponibilidad y umbral <30%
 src/reporting/         # Reportes en Excel, CSV y PDF
 scripts/               # CLI de ejecución del pipeline
