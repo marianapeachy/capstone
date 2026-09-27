@@ -1,29 +1,29 @@
 # Graph Report - capstone  (2026-09-27)
 
 ## Corpus Check
-- 42 files · ~113,429 words
+- 45 files · ~115,415 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 7 file(s) not represented in the graph (top: (none) 7)
 
 ## Summary
-- 449 nodes · 569 edges · 41 communities (29 shown, 12 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.91)
+- 500 nodes · 701 edges · 43 communities (31 shown, 12 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 23 edges (avg confidence: 0.94)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `993eae11`
+- Built from commit: `d24e158f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - search_skills.py
 - prepare_datasets.py
-- properties
+- skill-index.schema.json
 - What You Must Do When Invoked
 - Skill Finder VS Code Extension - Design Spec
 - Agent Instructions
 - update_scientific_descriptions.py
-- Setup Guide
+- test_image_correction.py
 - Auditoría Automatizada de Góndolas mediante Visión Artificial (Walmart Chile)
 - Search-Skills.ps1
 - Skill Finder
@@ -33,7 +33,7 @@
 - properties
 - ShelfVision AI - Walmart Chile
 - skill-index.json
-- skill-index.schema.json
+- test_models.py
 - graphify reference: query, path, explain
 - category
 - url
@@ -50,35 +50,37 @@
 - run_pipeline.py
 - .claude/CLAUDE.md
 - extraction-spec.md
+- owner
+- Bitácora de Sprint 1 - ShelfVision AI
 
 ## God Nodes (most connected - your core abstractions)
 1. `main()` - 21 edges
-2. `crop_roi()` - 18 edges
-3. `Skill Finder VS Code Extension - Design Spec` - 14 edges
-4. `load_index()` - 12 edges
-5. `What You Must Do When Invoked` - 12 edges
-6. `clip_bbox()` - 11 edges
-7. `/graphify` - 11 edges
-8. `Auditoría Automatizada de Góndolas mediante Visión Artificial (Walmart Chile)` - 11 edges
-9. `normalize_roi()` - 10 edges
-10. `Skill Finder` - 10 edges
+2. `crop_roi()` - 19 edges
+3. `LensCalibration` - 16 edges
+4. `dewarp()` - 14 edges
+5. `Skill Finder VS Code Extension - Design Spec` - 14 edges
+6. `apply_clahe()` - 13 edges
+7. `correct_image()` - 13 edges
+8. `load_index()` - 12 edges
+9. `What You Must Do When Invoked` - 12 edges
+10. `clip_bbox()` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Reglas de código` --references--> `crop_roi()`  [INFERRED]
-  CLAUDE.md → src/preprocessing/roi_filter.py
+- `Reglas de código` --references--> `correct_image()`  [INFERRED]
+  CLAUDE.md → src/preprocessing/image_correction.py
 - `Pendientes (priorizados)` --references--> `RoiCrop`  [INFERRED]
   PROGRESS.md → src/preprocessing/roi_filter.py
 - `Pendientes (priorizados)` --references--> `normalize_roi()`  [INFERRED]
   PROGRESS.md → src/preprocessing/roi_filter.py
+- `Reglas de código` --references--> `crop_roi()`  [INFERRED]
+  CLAUDE.md → src/preprocessing/roi_filter.py
 - `Pendientes (priorizados)` --references--> `crop_roi()`  [INFERRED]
   PROGRESS.md → src/preprocessing/roi_filter.py
-- `test_class_group_defaults_to_other_for_unknown_class()` --calls--> `class_group()`  [EXTRACTED]
-  tests/test_dataset_converters.py → src/datasets/converters.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (41 total, 12 thin omitted)
+## Communities (43 total, 12 thin omitted)
 
 ### Community 0 - "search_skills.py"
 Cohesion: 0.06
@@ -88,9 +90,9 @@ Nodes (58): Any, add_source(), check_and_auto_update(), check_dependencies(), di
 Cohesion: 0.12
 Nodes (33): argparse, csv, Path, convert_kaggle_supermarket(), convert_roboflow_coco(), convert_sku110k(), convert_unidatapro(), main() (+25 more)
 
-### Community 2 - "properties"
-Cohesion: 0.07
-Nodes (32): description, examples, items, minItems, type, pattern, $ref, type (+24 more)
+### Community 2 - "skill-index.schema.json"
+Cohesion: 0.05
+Nodes (38): additionalProperties, description, examples, items, minItems, type, description, pattern (+30 more)
 
 ### Community 3 - "What You Must Do When Invoked"
 Cohesion: 0.07
@@ -108,9 +110,9 @@ Nodes (13): Agent Behavior Rules, Agent Instructions, Checklist Before Respondin
 Cohesion: 0.17
 Nodes (15): get_skill_description(), main(), Fetch descriptions from various GitHub repositories and update skill-index.json, Fetch description from SKILL.md frontmatter, get_skill_description(), infer_categories(), main(), Infer categories from skill name and description (+7 more)
 
-### Community 7 - "Setup Guide"
-Cohesion: 0.12
-Nodes (15): 1. Install GitHub CLI, 2. Authenticate, 3. Verify, Categories, Community (type: `community`), Curated Lists (type: `awesome-list`), Installation, Official (type: `official`) (+7 more)
+### Community 7 - "test_image_correction.py"
+Cohesion: 0.09
+Nodes (46): cv2, numpy, Pendientes (priorizados), apply_clahe(), correct_image(), CorrectedImage, dewarp(), LensCalibration (+38 more)
 
 ### Community 8 - "Auditoría Automatizada de Góndolas mediante Visión Artificial (Walmart Chile)"
 Cohesion: 0.12
@@ -121,24 +123,24 @@ Cohesion: 0.23
 Nodes (8): Find-NewRepos(), Get-SkillIndex(), Get-StarredSkills(), Invoke-AutoUpdateCheck(), Invoke-DiscoverNewRepos(), Search-LocalIndex(), Show-PostSearchSuggestions(), Test-IndexOutdated()
 
 ### Community 10 - "Skill Finder"
-Cohesion: 0.10
-Nodes (19): Collection Management, Customization Routing, Decide Whether the User Needs a Skill, Fast Rules, Recommendation Heuristics, Response Pattern, Agent Instructions, Command Reference (+11 more)
+Cohesion: 0.05
+Nodes (34): Collection Management, Customization Routing, Decide Whether the User Needs a Skill, Fast Rules, Recommendation Heuristics, Response Pattern, 1. Install GitHub CLI, 2. Authenticate (+26 more)
 
 ### Community 11 - "graphify reference: extra exports and benchmark"
 Cohesion: 0.22
 Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
 
 ### Community 12 - "properties"
-Cohesion: 0.22
-Nodes (9): description, examples, type, owner, type, properties, description, enum (+1 more)
+Cohesion: 0.25
+Nodes (8): description, type, description, type, properties, description, enum, type
 
 ### Community 13 - "source"
 Cohesion: 0.29
 Nodes (8): definitions, source, source, additionalProperties, description, examples, required, type
 
 ### Community 14 - "properties"
-Cohesion: 0.25
-Nodes (8): description, type, description, examples, type, description, path, properties
+Cohesion: 0.40
+Nodes (5): description, examples, type, path, properties
 
 ### Community 15 - "ShelfVision AI - Walmart Chile"
 Cohesion: 0.25
@@ -148,9 +150,9 @@ Nodes (7): Comandos frecuentes, Continuidad entre sesiones / chats, Estructura r
 Cohesion: 0.29
 Nodes (6): categories, $schema, lastUpdated, skills, sources, version
 
-### Community 17 - "skill-index.schema.json"
-Cohesion: 0.29
-Nodes (6): additionalProperties, description, required, $schema, title, type
+### Community 17 - "test_models.py"
+Cohesion: 0.25
+Nodes (4): fixture, pytest, Verifica que el entorno soporte el detector elegido para src/models/: YOLO26 de…, yolo26()
 
 ### Community 18 - "graphify reference: query, path, explain"
 Cohesion: 0.33
@@ -181,8 +183,8 @@ Cohesion: 0.40
 Nodes (4): Adicionales recomendados, Datasets - ShelfVision AI, Qué hacer con estos datasets (proceso), Ya identificados por el equipo
 
 ### Community 25 - "test_preprocessing.py"
-Cohesion: 0.07
-Nodes (39): dataclasses, fixture, math, numpy, parametrize, PixelBBox, Bitácora de Sprint 1 - ShelfVision AI, Estado (+31 more)
+Cohesion: 0.11
+Nodes (30): dataclasses, math, PixelBBox, crop_roi(), normalize_roi(), BBox, ndarray, Recorte de la region de interes (ROI) sobre la gondola detectada. Parte del… (+22 more)
 
 ### Community 26 - "graphify reference: add a URL and watch a folder"
 Cohesion: 0.50
@@ -196,22 +198,30 @@ Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify refer
 Cohesion: 0.50
 Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
 
+### Community 41 - "owner"
+Cohesion: 0.50
+Nodes (4): description, examples, type, owner
+
+### Community 42 - "Bitácora de Sprint 1 - ShelfVision AI"
+Cohesion: 0.50
+Nodes (3): Bitácora de Sprint 1 - ShelfVision AI, Estado, Notas
+
 ## Knowledge Gaps
 - **190 isolated node(s):** `$schema`, `version`, `lastUpdated`, `sources`, `skills` (+185 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 278 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 294 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `properties` connect `properties` to `skill-index.schema.json`?**
-  _High betweenness centrality (0.017) - this node is a cross-community bridge._
-- **Why does `properties` connect `properties` to `properties`, `source`, `skill`, `name`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
-- **Why does `categories` connect `properties` to `properties`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **Why does `properties` connect `properties` to `skill-index.schema.json`, `properties`, `source`, `skill`, `name`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `categories` connect `skill-index.schema.json` to `properties`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `crop_roi()` (e.g. with `Reglas de código` and `Pendientes (priorizados)`) actually correct?**
   _`crop_roi()` has 2 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 8 inferred relationships involving `LensCalibration` (e.g. with `_distort()` and `test_correct_image_dewarps_before_clahe()`) actually correct?**
+  _`LensCalibration` has 8 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `$schema`, `version`, `lastUpdated` to the rest of the system?**
   _190 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `search_skills.py` be split into smaller, more focused modules?**

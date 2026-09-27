@@ -1,12 +1,12 @@
 {
   "0": "search_skills.py",
   "1": "prepare_datasets.py",
-  "2": "properties",
+  "2": "skill-index.schema.json",
   "3": "What You Must Do When Invoked",
   "4": "Skill Finder VS Code Extension - Design Spec",
   "5": "Agent Instructions",
   "6": "update_scientific_descriptions.py",
-  "7": "Setup Guide",
+  "7": "test_image_correction.py",
   "8": "Auditoría Automatizada de Góndolas mediante Visión Artificial (Walmart Chile)",
   "9": "Search-Skills.ps1",
   "10": "Skill Finder",
@@ -16,7 +16,7 @@
   "14": "properties",
   "15": "ShelfVision AI - Walmart Chile",
   "16": "skill-index.json",
-  "17": "skill-index.schema.json",
+  "17": "test_models.py",
   "18": "graphify reference: query, path, explain",
   "19": "category",
   "20": "url",
@@ -39,5 +39,7 @@
   "37": "postprocessing/__init__.py",
   "38": "preprocessing/__init__.py",
   "39": "reporting/__init__.py",
-  "40": "tests/__init__.py"
+  "40": "tests/__init__.py",
+  "41": "owner",
+  "42": "Bitácora de Sprint 1 - ShelfVision AI"
 }

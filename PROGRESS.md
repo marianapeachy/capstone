@@ -21,14 +21,32 @@ Estructura inicial del repositorio creada (directorios `src/`, `tests/`,
 2. [x] Implementar pruebas unitarias en `tests/test_preprocessing.py`
        para `roi_filter.py` (casos: ROI dentro de límites, ROI fuera de
        límites, imagen vacía/None) — 16 tests, suite completa 24/24 OK.
-3. [ ] Implementar filtros CLAHE y dewarping en `src/preprocessing/`.
+3. [x] Implementar filtros CLAHE y dewarping en `src/preprocessing/`:
+       `image_correction.py` con `correct_image()` (dewarping y luego
+       CLAHE) -> `CorrectedImage` (imagen + calibración usada, con
+       `to_original()`/`to_original_points()` para devolver detecciones
+       a coordenadas de la imagen original). `dewarp()` corrige solo la
+       distorsión de lente (modelo pinhole o fisheye de OpenCV) y
+       conserva el tamaño y la matriz de cámara. `apply_clahe()` ecualiza
+       solo la luminancia (Lab) para no alterar colores.
+       `LensCalibration.approximate(k1)` da una calibración genérica
+       mientras no existan las reales. 21 tests en
+       `tests/test_image_correction.py` (entre ellos, una repisa curvada
+       con distorsión sintética que vuelve a quedar recta). Validaciones
+       de imagen compartidas en `_validation.py`. Pendiente: pedir a
+       Walmart el modelo y la calibración de sus cámaras (o fotos de un
+       tablero de ajedrez para calibrar). Los datasets públicos no traen
+       distorsión de lente: con ellos se usa solo CLAHE (sin calibración).
 4. [ ] Implementar la segmentación automática de la góndola y sus
        repisas en `src/preprocessing/` (cambio de alcance 2026-09-27:
        ningún usuario define la ROI). Visión clásica, antes de YOLO26.
        Debe entregar la ROI de la góndola (entrada de `crop_roi()`) y,
        para el Nivel 1, los límites de cada repisa. Corre después de
-       CLAHE/dewarping, sobre la imagen corregida (decidido 2026-09-27:
-       con lente fisheye las líneas de repisa se ven curvas). Ningún dataset descargado anota
+       `correct_image()`, sobre la imagen corregida (decidido 2026-09-27:
+       con lente fisheye las líneas de repisa se ven curvas). La
+       corrección de perspectiva por ángulo oblicuo (llevar el contorno
+       de la góndola a un rectángulo) va aquí, porque necesita ese
+       contorno; `image_correction.py` no la hace. Ningún dataset descargado anota
        góndolas ni repisas (solo productos, espacios vacíos y precios):
        para medirla hay que etiquetar a mano un set chico de validación.
        Incluir un script visor que dibuje la segmentación sobre imágenes

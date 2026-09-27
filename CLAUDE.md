@@ -14,7 +14,8 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
   absolutos de la imagen original.
 - **Enfoque híbrido obligatorio**: `src/preprocessing/` (OpenCV) siempre
   precede a `src/models/` (YOLO26), en este orden: corrección de imagen
-  (CLAHE + dewarping) -> segmentación automática de góndola/repisas ->
+  (dewarping y luego CLAHE, `correct_image()`) -> segmentación automática
+  de góndola/repisas ->
   recorte de ROI. La segmentación trabaja sobre la imagen ya corregida.
   No se reemplaza el pre-procesamiento clásico por el modelo de inferencia.
 - **ROI automática**: el sistema segmenta la góndola y sus repisas en
