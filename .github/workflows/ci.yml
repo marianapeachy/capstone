@@ -18,9 +18,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+# Runner fijo en ubuntu-24.04: ubuntu-latest pasa a Ubuntu 26 desde el
+# 2026-10-19 y puede no traer Python 3.10 (fin de soporte en octubre de 2026).
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
@@ -46,7 +48,7 @@ jobs:
         run: pytest tests/ -q
 
   docker:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
