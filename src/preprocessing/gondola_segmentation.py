@@ -21,10 +21,12 @@ Metodo:
    angostas donde el brillo promedio siguiendo la recta salta), no solo en
    los centros de franja: asi se descartan las diagonales falsas que
    enlazan saltos de repisas o productos distintos. Las que quedan son
-   repisas (ShelfLine).
+   repisas (ShelfLine), salvo las pegadas al borde superior de la foto
+   (sin espacio para productos encima), que solo limitan la gondola.
 4. La ROI envuelve las repisas y se extiende de a un nivel sobre la
-   primera y bajo la ultima mientras haya textura de producto: incluye
-   niveles que la foto corta y se detiene en techo o piso lisos.
+   primera y bajo la ultima, y de a una franja hacia los lados, mientras
+   haya textura de producto: incluye niveles que la foto corta y repisas
+   tapadas en parte, y se detiene en techo, piso o paredes lisos.
 
 Medicion contra las repisas anotadas de SHARD: scripts/evaluate_shard.py
 (ver PROGRESS.md, item #15).
@@ -110,8 +112,16 @@ def segment_gondola(
         gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
     gray = cv2.GaussianBlur(gray, (5, 5), 0)
 
-    lines = _detect_shelf_lines(gray, params)
-    bounds = _shelf_bounds(gray, lines, params) if lines else None
+    edges = _detect_shelf_lines(gray, params)
+    # Sobre una repisa se apoyan productos: a menos de la separacion minima
+    # entre repisas del borde superior de la foto no queda espacio para
+    # ellos (es el borde de la imagen o una repisa cuyos productos quedan
+    # fuera de cuadro). Ese borde no se informa como repisa, pero si limita
+    # la gondola: el nivel bajo el (ej. espacios vacios, sin textura) queda
+    # en la ROI.
+    min_top = params.min_spacing_frac * gray.shape[0]
+    lines = [line for line in edges if line.y_at((line.x_min + line.x_max) / 2) >= min_top]
+    bounds = _shelf_bounds(gray, edges, params) if lines else None
     if bounds is None:
         return GondolaSegmentation(
             roi=(0, 0, width, height), shelf_lines=(), shelves=(), found=False
@@ -317,6 +327,21 @@ def _shelf_bounds(
         edge, lower = bottom, edge
     if not levels:
         return None
+    # Igual hacia los lados, de a una franja: el borde de una repisa puede
+    # verse solo en parte del ancho (tapado por productos) aunque la
+    # gondola siga.
+    top, bottom = levels[0][0], levels[-1][1]
+    step = gray.shape[1] / params.strips
+    while x_min > 1:
+        left = max(0.0, x_min - step)
+        if _band_texture(texture, left, x_min, top, bottom) < threshold:
+            break
+        x_min = left
+    while x_max < gray.shape[1] - 1:
+        right = min(float(gray.shape[1]), x_max + step)
+        if _band_texture(texture, x_max, right, top, bottom) < threshold:
+            break
+        x_max = right
     return x_min, x_max, levels
 
 
