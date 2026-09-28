@@ -126,9 +126,9 @@ Para tomar un ítem, agregar `(dueño: <nombre>)` antes de empezar (ver
 12. [ ] Falta script de *descarga* reproducible (hoy la descarga se
        hizo manualmente); ver Notas.
 
-13. [ ] CI en GitHub Actions: correr `pytest tests/` y `docker build` en
-       cada PR, y proteger `main` (merge solo por PR con una revisión y
-       CI en verde).
+13. [ ] CI en GitHub Actions (dueño: Mariana): correr `pytest tests/` y
+       `docker build` en cada PR, y proteger `main` (merge solo por PR
+       con una revisión y CI en verde).
 14. [ ] Datasets con imágenes tipo cámara de seguridad (vista alta,
        oblicua, gran angular/fisheye, pasillo completo) para validar
        dewarping y segmentación en condiciones parecidas a Walmart.
