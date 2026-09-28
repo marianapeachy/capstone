@@ -30,15 +30,16 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
        seguridad de sala. Candidatos registrados en `docs/datasets.md`
        (sección "Candidatos tipo cámara de sala"); descargarlos y
        evaluarlos sigue en el ítem #14.
-4. [ ] (dueño: Francisco) Recomendar skills de Claude Code aplicables
+4. [x] (dueño: Francisco) Recomendar skills de Claude Code aplicables
        al proyecto (`/skill-finder`). Recomendadas: plugins
        `yolo@ultralytics` (entrenamiento, tuning e inferencia de YOLO26)
        y `superpowers@superpowers-marketplace` (TDD, depuración
        sistemática, verificación antes de cerrar), más las ya incluidas
        `/code-review`, `/security-review`, `/simplify`, `xlsx`, `pdf` y
-       `dataviz` (reportes, ítem #7). Instalados en el entorno de
-       Francisco; falta compartirlos en `.claude/settings.json`
-       (`extraKnownMarketplaces` + `enabledPlugins`). Ojo: la skill
+       `dataviz` (reportes, ítem #7). Los dos plugins quedan
+       compartidos en `.claude/settings.json` (`extraKnownMarketplaces`
+       + `enabledPlugins`): Claude Code los ofrece instalar al abrir el
+       proyecto. Ojo: la skill
        `finishing-a-development-branch` de superpowers ofrece mergear
        localmente a `main`; elegir siempre la opción de Pull Request.
 5. [ ] Resolver limitaciones de la segmentación. Ítem #15.

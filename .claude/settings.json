@@ -22,5 +22,23 @@
         ]
       }
     ]
+  },
+  "extraKnownMarketplaces": {
+    "ultralytics": {
+      "source": {
+        "source": "github",
+        "repo": "ultralytics/skills"
+      }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "yolo@ultralytics": true,
+    "superpowers@superpowers-marketplace": true
   }
 }

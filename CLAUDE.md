@@ -108,6 +108,10 @@ ni trabajo:
 8. **Configuración personal** en `CLAUDE.local.md` y
    `.claude/settings.local.json` (no se versionan). La compartida es este
    archivo y `.claude/settings.json`.
+9. **Plugins compartidos** (`.claude/settings.json`): `yolo@ultralytics`
+   y `superpowers`. Si una skill ofrece mergear localmente a `main` (ej.
+   `finishing-a-development-branch` de superpowers), elegir siempre la
+   opción de Pull Request: estas reglas tienen prioridad.
 
 Setup de un entorno nuevo: ver "Configuración de un entorno nuevo" en el
 README.
