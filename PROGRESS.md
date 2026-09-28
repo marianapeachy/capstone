@@ -8,11 +8,11 @@ Estructura inicial del repositorio creada (directorios `src/`, `tests/`,
 
 ## Plan de trabajo por fases (2026-09-27)
 
-1. [x] Terreno común: subir las ramas y abrir los PR #3, #4 y #5
+1. [x] (dueño: Francisco) Terreno común: subir las ramas y abrir los PR #3, #4 y #5
        (encadenados); flujo de trabajo en equipo en `CLAUDE.md`;
        `graphify-out/` fuera de git y regenerado localmente; setup de
        entorno nuevo en el README.
-2. [ ] CI con GitHub Actions (pytest + `docker build`) y protección de
+2. [x] (dueño: Mariana) CI con GitHub Actions (pytest + `docker build`) y protección de
        `main` (PR + revisión + CI en verde). Ítem 13.
 3. [ ] Buscar datasets que simulen cámaras de seguridad de sala. Ítem 14.
 4. [ ] Recomendar skills de Claude Code aplicables al proyecto
@@ -24,7 +24,7 @@ Para tomar un ítem, agregar `(dueño: <nombre>)` antes de empezar (ver
 
 ## Pendientes (priorizados)
 
-1. [x] Implementar `src/preprocessing/roi_filter.py`: recortador de
+1. [x] (dueño: Francisco) Implementar `src/preprocessing/roi_filter.py`: recortador de
        región de interés (ROI) sobre la góndola detectada, incluyendo
        normalización de coordenadas `[x_min, y_min, x_max, y_max]`.
        API: `normalize_roi()` (ordena, redondea hacia afuera, recorta a
@@ -34,10 +34,10 @@ Para tomar un ítem, agregar `(dueño: <nombre>)` antes de empezar (ver
        fuera se recorta; totalmente fuera, imagen None o vacía ->
        `ValueError`. La ROI llega como parámetro; la entregará la
        segmentación automática de la góndola (ítem 4).
-2. [x] Implementar pruebas unitarias en `tests/test_preprocessing.py`
+2. [x] (dueño: Francisco) Implementar pruebas unitarias en `tests/test_preprocessing.py`
        para `roi_filter.py` (casos: ROI dentro de límites, ROI fuera de
        límites, imagen vacía/None) — 16 tests, suite completa 24/24 OK.
-3. [x] Implementar filtros CLAHE y dewarping en `src/preprocessing/`:
+3. [x] (dueño: Francisco) Implementar filtros CLAHE y dewarping en `src/preprocessing/`:
        `image_correction.py` con `correct_image()` (dewarping y luego
        CLAHE) -> `CorrectedImage` (imagen + calibración usada, con
        `to_original()`/`to_original_points()` para devolver detecciones
@@ -53,7 +53,7 @@ Para tomar un ítem, agregar `(dueño: <nombre>)` antes de empezar (ver
        Walmart el modelo y la calibración de sus cámaras (o fotos de un
        tablero de ajedrez para calibrar). Los datasets públicos no traen
        distorsión de lente: con ellos se usa solo CLAHE (sin calibración).
-4. [x] Implementar la segmentación automática de la góndola y sus
+4. [x] (dueño: Francisco) Implementar la segmentación automática de la góndola y sus
        repisas en `src/preprocessing/` (cambio de alcance 2026-09-27:
        ningún usuario define la ROI). Visión clásica, antes de YOLO26.
        Hecho: `gondola_segmentation.py` con `segment_gondola()` ->
@@ -111,11 +111,11 @@ Para tomar un ítem, agregar `(dueño: <nombre>)` antes de empezar (ver
 8. [ ] Implementar `scripts/run_pipeline.py` como CLI que orquesta el
        pipeline completo.
 9. [ ] Documentar especificaciones técnicas y diagramas en `docs/`.
-10. [x] Descargar datasets candidatos (ver `docs/datasets.md`):
+10. [x] (dueño: Francisco) Descargar datasets candidatos (ver `docs/datasets.md`):
        SKU-110K, grocery-shelves (UniDataPro), supermarket-shelves
        (Kaggle), Out Of Stock detection y Empty Shelf Detector
        (Roboflow) — los 5 ya están en `data/raw/`.
-11. [x] Escribir conversores de anotaciones a nuestro estándar
+11. [x] (dueño: Francisco) Escribir conversores de anotaciones a nuestro estándar
        `[x_min, y_min, x_max, y_max]`: lógica pura en
        `src/datasets/converters.py` (probada en
        `tests/test_dataset_converters.py`, 8/8 tests OK) + CLI
@@ -126,9 +126,15 @@ Para tomar un ítem, agregar `(dueño: <nombre>)` antes de empezar (ver
 12. [ ] Falta script de *descarga* reproducible (hoy la descarga se
        hizo manualmente); ver Notas.
 
-13. [ ] CI en GitHub Actions (dueño: Mariana): correr `pytest tests/` y
+13. [x] (dueño: Mariana) CI en GitHub Actions: correr `pytest tests/` y
        `docker build` en cada PR, y proteger `main` (merge solo por PR
-       con una revisión y CI en verde).
+       con una revisión y CI en verde). Hecho: `.github/workflows/ci.yml`
+       con los jobs `tests` (Python 3.10, PyTorch CPU) y `docker` (build
+       sin publicar + pytest dentro de la imagen), en `ubuntu-24.04`
+       fijo (`ubuntu-latest` pasa a Ubuntu 26 el 2026-10-19 y puede no
+       traer Python 3.10). Protección de `main` aplicada: PR obligatorio,
+       1 aprobación, checks `tests` y `docker`, también para admins, sin
+       force push ni borrado.
 14. [ ] Datasets con imágenes tipo cámara de seguridad (vista alta,
        oblicua, gran angular/fisheye, pasillo completo) para validar
        dewarping y segmentación en condiciones parecidas a Walmart.
