@@ -80,3 +80,14 @@ def sku110k_row_to_bbox(x1: float, y1: float, x2: float, y2: float) -> BBox:
     el orden/tipos para mantener la misma interfaz que los demas
     conversores."""
     return min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2)
+
+
+def parse_shard_shelf_coords(text: str) -> tuple[float, ...]:
+    """Alturas de repisa de una fila de annotation.csv de SHARD (columna
+    shelfCoord: fracciones del alto separadas por coma, en cualquier
+    orden), ordenadas de arriba hacia abajo. SHARD no anota bboxes: estas
+    alturas evaluan la segmentacion (src/evaluation/shelf_evaluation.py)."""
+    values = tuple(sorted(float(v) for v in text.split(",") if v.strip()))
+    if any(not 0.0 <= v <= 1.0 for v in values):
+        raise ValueError(f"altura de repisa fuera de [0, 1]: {text!r}")
+    return values

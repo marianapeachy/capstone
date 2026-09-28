@@ -106,6 +106,8 @@ pytest tests/
 - **Datos** (no se versionan): `python scripts/download_datasets.py` los
   descarga a `data/raw/` (Roboflow pide `ROBOFLOW_API_KEY`; ver
   [docs/datasets.md](docs/datasets.md)) y luego `python scripts/prepare_datasets.py`.
+  `python scripts/evaluate_shard.py` mide la segmentación de repisas contra
+  SHARD (`--dataset shard`, 3.6 GB).
 - **Claude Code**: instalar la extensión "Claude Code" de Anthropic en VS Code
   e iniciar sesión con la cuenta propia. Claude lee `CLAUDE.md` al empezar, que
   incluye el flujo de trabajo en equipo (ramas, PR y dueños de ítems). Al abrir
