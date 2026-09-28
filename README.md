@@ -119,6 +119,8 @@ pytest tests/
 python scripts/run_pipeline.py
 ```
 
+El CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) corre `pytest` y el `docker build` (con los tests dentro de la imagen) en cada Pull Request hacia `main` y en cada push a `main`; un PR solo se puede mergear con ambos checks en verde.
+
 ### Ejecución con Docker
 
 ```bash
