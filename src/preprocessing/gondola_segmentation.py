@@ -15,11 +15,19 @@ Metodo:
    Hough: el texto de las etiquetas dominaba y cada fila de cajas
    aparecia como repisa.)
 2. Los saltos se enlazan entre franjas vecinas; cada cadena que cruza al
-   menos la mitad de las franjas es una repisa (ShelfLine). Por franjas,
-   cada repisa puede tener su propia inclinacion (perspectiva).
-3. La ROI envuelve las repisas y se extiende de a un nivel sobre la
+   menos la mitad de las franjas es candidata a repisa. Por franjas, cada
+   repisa puede tener su propia inclinacion (perspectiva).
+3. Cada candidata debe tener borde a lo largo de toda su recta (subfranjas
+   angostas donde el brillo promedio siguiendo la recta salta), no solo en
+   los centros de franja: asi se descartan las diagonales falsas que
+   enlazan saltos de repisas o productos distintos. Las que quedan son
+   repisas (ShelfLine).
+4. La ROI envuelve las repisas y se extiende de a un nivel sobre la
    primera y bajo la ultima mientras haya textura de producto: incluye
    niveles que la foto corta y se detiene en techo o piso lisos.
+
+Medicion contra las repisas anotadas de SHARD: scripts/evaluate_shard.py
+(ver PROGRESS.md, item #15).
 
 Si no se detecta ninguna repisa se devuelve la imagen completa con
 found=False: el pipeline puede seguir con el analisis global de la
@@ -53,6 +61,10 @@ class SegmentationParams:
     min_strip_fraction: float = 0.5  # fraccion de franjas que debe cruzar una repisa
     max_residual_frac: float = 0.02  # desvio maximo de la recta ajustada (del alto)
     content_ratio: float = 0.5  # textura minima (vs. franjas interiores) de la franja superior/inferior
+    support_substrips: int = 4  # subfranjas por franja en que se verifica el borde de cada repisa
+    support_radius_frac: float = 0.01  # holgura vertical al buscar el borde sobre la recta (del alto)
+    support_edge: float = 0.5  # salto minimo en una subfranja (misma escala que min_edge)
+    min_support: float = 0.7  # fraccion de subfranjas con borde que exige una repisa (0 = no se exige)
 
 
 @dataclass(frozen=True)
@@ -137,7 +149,7 @@ def _detect_shelf_lines(gray: np.ndarray, params: SegmentationParams) -> list[Sh
     min_spacing = params.min_spacing_frac * height
     sigma = max(1.0, 0.004 * height)
 
-    peaks_per_strip = []
+    peaks_per_strip, references = [], []
     for strip in range(params.strips):
         columns = gray[:, int(strip * strip_width) : int((strip + 1) * strip_width)]
         row_mean = _smooth(columns.astype(np.float32).mean(axis=1), sigma)
@@ -145,7 +157,8 @@ def _detect_shelf_lines(gray: np.ndarray, params: SegmentationParams) -> list[Sh
         # Relativo a la propia franja, para no depender de la iluminacion,
         # pero con un piso absoluto: en una franja casi lisa no se
         # amplifica el ruido hasta parecer una repisa.
-        jumps /= max(float(np.percentile(jumps, 99)), params.min_jump)
+        references.append(max(float(np.percentile(jumps, 99)), params.min_jump))
+        jumps /= references[-1]
         peaks_per_strip.append(_profile_peaks(jumps, params.min_edge, min_spacing))
 
     max_step = math.tan(math.radians(params.max_tilt_deg)) * strip_width + min_spacing / 4
@@ -167,6 +180,9 @@ def _detect_shelf_lines(gray: np.ndarray, params: SegmentationParams) -> list[Sh
                 open_chains.remove(best)
 
     min_strips = math.ceil(params.min_strip_fraction * params.strips)
+    vertical_gradient = np.gradient(
+        _smooth_rows(gray.astype(np.float32), sigma), axis=0
+    ) if params.min_support > 0 else None
     lines = []
     for chain in chains:
         if len(chain) < min_strips:
@@ -175,9 +191,54 @@ def _detect_shelf_lines(gray: np.ndarray, params: SegmentationParams) -> list[Sh
         # Una repisa es recta: si los saltos se alejan de la recta, la
         # cadena salto entre repisas distintas (lineas diagonales falsas).
         residuals = [abs(line.y_at((s + 0.5) * strip_width) - y) for s, y in chain]
-        if max(residuals) <= params.max_residual_frac * height:
-            lines.append(line)
+        if max(residuals) > params.max_residual_frac * height:
+            continue
+        # Los saltos de cada franja pueden calzar con la recta aunque la
+        # recta cruce productos entre ellos (diagonal que salta entre
+        # repisas): el borde debe verse a lo largo de toda la recta.
+        if vertical_gradient is not None and (
+            _edge_support(vertical_gradient, line, references, strip_width, params)
+            < params.min_support
+        ):
+            continue
+        lines.append(line)
     return sorted(lines, key=lambda line: line.y_at(width / 2))
+
+
+def _smooth_rows(image: np.ndarray, sigma: float) -> np.ndarray:
+    """Suavizado gaussiano solo en vertical (el mismo de _smooth)."""
+    radius = int(math.ceil(3 * sigma))
+    return cv2.GaussianBlur(
+        image, (1, 2 * radius + 1), sigmaX=0, sigmaY=sigma, borderType=cv2.BORDER_REPLICATE
+    )
+
+
+def _edge_support(
+    vertical_gradient: np.ndarray,
+    line: ShelfLine,
+    references: list[float],
+    strip_width: float,
+    params: SegmentationParams,
+) -> float:
+    """Fraccion de subfranjas, a lo largo de la recta, donde el brillo
+    promedio siguiendo la recta (con una holgura vertical) salta al menos
+    support_edge veces la referencia de su franja (la misma escala de
+    min_edge). En un borde de repisa el salto
+    es parejo en todo el ancho; en una recta que cruza productos, el texto y
+    los bordes de cajas se cancelan al promediar."""
+    height, width = vertical_gradient.shape
+    radius = max(1, round(params.support_radius_frac * height))
+    offsets = np.arange(-radius, radius + 1)[:, None]
+    sub_width = strip_width / params.support_substrips
+    starts = np.arange(line.x_min, line.x_max - sub_width / 2, sub_width)
+    supported = 0
+    for start in starts:
+        xs = np.arange(int(start), min(int(start + sub_width), width))
+        ys = np.clip(np.rint(line.slope * xs + line.intercept + offsets).astype(int), 0, height - 1)
+        strength = float(np.abs(vertical_gradient[ys, xs].mean(axis=1)).max())
+        strip = min(int((start + sub_width / 2) // strip_width), len(references) - 1)
+        supported += strength / references[strip] >= params.support_edge
+    return supported / len(starts) if len(starts) else 0.0
 
 
 def _smooth(profile: np.ndarray, sigma: float) -> np.ndarray:
