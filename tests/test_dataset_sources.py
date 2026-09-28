@@ -1,8 +1,14 @@
 from pathlib import Path
 
+import importlib.util
+import struct
+import zlib
+
+import py7zr
 import pytest
 
 from src.datasets.sources import (
+    ANNOTATION_ONLY,
     DATASETS,
     DatasetSource,
     ExpectedFiles,
@@ -29,15 +35,29 @@ def _touch(path: Path) -> None:
     path.write_bytes(b"")
 
 
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def _load_download_script():
+    spec = importlib.util.spec_from_file_location(
+        "download_datasets", ROOT / "scripts" / "download_datasets.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def test_catalog_keys_match_prepare_datasets_converters():
-    # scripts/prepare_datasets.py usa estas mismas claves en --dataset.
-    assert set(DATASETS) == {
+    # scripts/prepare_datasets.py usa estas mismas claves en --dataset; los
+    # de ANNOTATION_ONLY no tienen conversor de bboxes (anotan otra cosa).
+    assert set(DATASETS) - ANNOTATION_ONLY == {
         "unidatapro",
         "kaggle_supermarket",
         "sku110k",
         "roboflow_out_of_stock",
         "roboflow_empty_shelf",
     }
+    assert ANNOTATION_ONLY <= set(DATASETS)
     for key, source in DATASETS.items():
         assert source.key == key
         assert source.expected, f"{key} sin archivos esperados"
@@ -46,6 +66,61 @@ def test_catalog_keys_match_prepare_datasets_converters():
 def test_sku110k_is_not_shareable():
     # Su licencia prohibe redistribuirlo: cada integrante lo descarga.
     assert DATASETS["sku110k"].shareable is False
+
+
+def test_shard_downloads_7z_and_annotation_csv_from_pinned_figshare_files():
+    shard = DATASETS["shard"]
+    assert shard.license == "CC BY 4.0" and shard.shareable
+    assert shard.method == "archive"
+    # IDs de archivo de figshare (version 1 del articulo 24100695): fijos.
+    assert shard.url == "https://ndownloader.figshare.com/files/42285738"
+    assert shard.archive_name == "shelf_detection.7z"
+    assert shard.archive_size == 3_606_197_014
+    assert [(f.url, f.name, f.size) for f in shard.extra_files] == [
+        ("https://ndownloader.figshare.com/files/42285732", "annotation.csv", 1_631_733)
+    ]
+    assert "shard" in ANNOTATION_ONLY
+
+
+def test_extract_archive_supports_7z(tmp_path):
+    archive = tmp_path / "data.7z"
+    with py7zr.SevenZipFile(archive, "w") as sz:
+        sz.writestr(b"a", "images/1.jpg")
+        sz.writestr(b"bb", "images/sub/2.jpg")
+    dest = tmp_path / "out"
+    _load_download_script().extract_archive(archive, dest)
+    assert (dest / "images" / "1.jpg").read_bytes() == b"a"
+    assert (dest / "images" / "sub" / "2.jpg").read_bytes() == b"bb"
+
+
+def _write_7z_with_raw_name(archive: Path, safe_name: str, raw_name: str) -> None:
+    """.7z con un archivo llamado `raw_name` (ej. con `..`), que py7zr no
+    deja escribir: se escribe como `safe_name` (mismo largo) con el
+    encabezado sin comprimir, se reemplaza el nombre y se recalculan los
+    CRC del encabezado."""
+    assert len(safe_name) == len(raw_name)
+    sz = py7zr.SevenZipFile(archive, "w")
+    sz.encoded_header_mode = False
+    sz.writestr(b"ok", "images/ok.jpg")
+    sz.writestr(b"x", safe_name)
+    sz.close()
+    data = bytearray(
+        archive.read_bytes().replace(safe_name.encode("utf-16-le"), raw_name.encode("utf-16-le"))
+    )
+    offset, size = struct.unpack_from("<QQ", data, 12)
+    struct.pack_into("<I", data, 28, zlib.crc32(data[32 + offset : 32 + offset + size]))
+    struct.pack_into("<I", data, 8, zlib.crc32(data[12:32]))
+    archive.write_bytes(data)
+
+
+def test_extract_archive_rejects_7z_path_traversal_before_writing(tmp_path):
+    archive = tmp_path / "evil.7z"
+    _write_7z_with_raw_name(archive, "XX/evil.txt", "../evil.txt")
+    dest = tmp_path / "out"
+    with pytest.raises(ValueError):
+        _load_download_script().extract_archive(archive, dest)
+    assert not (tmp_path / "evil.txt").exists()
+    assert not (dest / "images" / "ok.jpg").exists()
 
 
 def test_check_layout_ok_when_counts_match(tmp_path):
