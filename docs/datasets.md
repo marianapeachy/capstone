@@ -54,6 +54,41 @@ sus anotaciones, y pedir a Walmart fotogramas reales de sus cámaras.
 > de la ROI. Para eso hace falta un set de validación etiquetado a mano
 > (ver `PROGRESS.md`).
 
+## Descarga reproducible
+
+`scripts/download_datasets.py` descarga los 5 datasets de arriba a
+`data/raw/` con la misma estructura que espera
+`scripts/prepare_datasets.py`, y verifica la cantidad de archivos de cada
+uno. El catálogo (URLs, versiones fijas, licencias y archivos esperados)
+está en `src/datasets/sources.py`.
+
+```bash
+python scripts/download_datasets.py --list    # catálogo y licencias
+python scripts/download_datasets.py           # descarga lo que falte (SKU-110K: 12.2 GB)
+python scripts/download_datasets.py --check   # solo verifica data/raw/
+python scripts/prepare_datasets.py            # convierte las anotaciones
+```
+
+- **Roboflow** (Out Of Stock detection y Empty Shelf Detector) requiere
+  una API key personal gratuita
+  ([app.roboflow.com/settings/api](https://app.roboflow.com/settings/api))
+  en `ROBOFLOW_API_KEY` o en `.env` (no versionado). Sin ella esos dos se
+  omiten.
+- Kaggle y Hugging Face se descargan sin cuenta. SKU-110K se reanuda si
+  la descarga se corta (el parcial queda en `data/raw/.downloads/`).
+- Un dataset que ya está completo no se vuelve a descargar.
+
+### Compartir datasets entre integrantes
+
+Los datasets con licencia que lo permite (`--list` muestra
+"compartible: si": los de Roboflow, Kaggle y UniDataPro, ~550 MB) se
+pueden pasar comprimidos por una carpeta de Drive/OneDrive **compartida
+solo con los integrantes** (no "cualquiera con el enlace"), manteniendo
+los `README` con la atribución. Quien los recibe los descomprime en
+`data/raw/<carpeta>/` y corre `--check` para confirmar que están
+completos. **SKU-110K no se comparte** (su licencia prohíbe
+redistribuirlo): cada integrante lo descarga con el script.
+
 ## Qué hacer con estos datasets (proceso)
 
 1. **Verificar licencia antes de descargar.** Todos deben permitir uso
@@ -69,9 +104,10 @@ sus anotaciones, y pedir a Walmart fotogramas reales de sus cámaras.
 4. **Separar en `train/val/test`** de forma reproducible (semilla fija)
    y documentar la proporción usada.
 5. **Guardar solo metadatos/scripts de descarga en Git**, no las
-   imágenes: un script en `scripts/` (ej. `download_dataset.py`) que
-   descarga y prepara cada dataset, para que cualquier integrante lo
-   reproduzca sin subir binarios pesados al repositorio.
+   imágenes: cada dataset nuevo se agrega al catálogo de
+   `src/datasets/sources.py` (lo usa `scripts/download_datasets.py`),
+   para que cualquier integrante lo reproduzca sin subir binarios
+   pesados al repositorio.
 6. **Nunca mezclar con el Dataset Oculto de Walmart Chile.** Estos
    datasets públicos son solo para entrenamiento/validación interna; el
    dataset oculto se reserva exclusivamente para la evaluación ciega

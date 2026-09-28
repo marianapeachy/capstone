@@ -15,7 +15,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | `src/postprocessing/` | Pendiente | #6 |
 | `src/reporting/` | Pendiente | #7 |
 | `scripts/run_pipeline.py` | Pendiente | #8 |
-| Datasets | 5 descargados y convertidos al estándar; falta la descarga reproducible | #10, #11, #12 |
+| Datasets | 5 descargados y convertidos al estándar, con descarga reproducible | #10, #11, #12 |
 | CI | Hecho: pytest + `docker build` en cada PR, `main` protegida | #13 |
 
 ## Plan de trabajo por fases (2026-09-27)
@@ -65,8 +65,6 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 - [ ] **#8** Implementar `scripts/run_pipeline.py` como CLI que orquesta
       el pipeline completo.
 - [ ] **#9** Documentar especificaciones técnicas y diagramas en `docs/`.
-- [ ] **#12** (dueño: Francisco) Script de *descarga* reproducible de los
-      datasets (hoy la descarga se hizo manualmente); ver Notas.
 - [ ] **#14** Datasets con imágenes tipo cámara de seguridad (vista alta,
       oblicua, gran angular/fisheye, pasillo completo) para validar
       dewarping y segmentación en condiciones parecidas a Walmart.
@@ -177,6 +175,22 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       `data/processed/annotations/<dataset>.csv` + `all_annotations.csv`
       (1,760,633 anotaciones combinadas de los 5 datasets). No
       versionado (`data/processed/*` en `.gitignore`).
+- [x] **#12** (dueño: Francisco) Script de descarga reproducible:
+      `scripts/download_datasets.py` (`--list`, `--check`, `--dataset`,
+      `--force`, `--keep-archives`) con el catálogo en
+      `src/datasets/sources.py` (URLs y versiones fijas, licencia, si se
+      puede compartir y cantidad de archivos esperada por dataset).
+      SKU-110K y Kaggle bajan como archivo comprimido (SKU-110K con
+      tamaño verificado y descarga reanudable), UniDataPro archivo por
+      archivo desde Hugging Face, y Roboflow por su API con
+      `ROBOFLOW_API_KEY`. Extracción protegida contra rutas que escapan
+      de la carpeta; el zip de Kaggle trae una carpeta raíz extra que
+      se quita (`archive_root`). 17 tests en
+      `tests/test_dataset_sources.py`. Verificado: `--check` valida los
+      5 datasets locales; descarga real de UniDataPro y Kaggle idéntica
+      a la copia local, y reanudación real de una descarga cortada. Sin
+      probar: la descarga de Roboflow (nadie tiene API key aún) y la
+      de SKU-110K completa (solo URL y reanudación).
 - [x] **#13** (dueño: Mariana) CI en GitHub Actions: correr
       `pytest tests/` y `docker build` en cada PR, y proteger `main`
       (merge solo por PR con una revisión y CI en verde). Hecho:
@@ -222,7 +236,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 - README.md se actualizará incrementalmente a medida que se implementen
   los módulos.
 - Los 2 datasets de Roboflow se descargaron manualmente (export ZIP en
-  formato COCO) porque la descarga programática requiere API key de
-  Roboflow, que el equipo no tenía configurada. Pendiente decidir si se
-  gestiona una API key para automatizar esto en `scripts/prepare_datasets.py`
-  (hoy asume que los datos ya están en `data/raw/`).
+  formato COCO). `scripts/download_datasets.py` los descarga si cada
+  integrante configura su API key personal de Roboflow en
+  `ROBOFLOW_API_KEY` o `.env`; sin key, se pueden copiar desde otro
+  integrante (CC BY 4.0) y validar con `--check`.
