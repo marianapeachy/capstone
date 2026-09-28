@@ -1,0 +1,72 @@
+# CI de ShelfVision AI: corre la suite de pytest y construye la imagen Docker
+# en cada PR hacia main y en cada push a main. Los nombres de los jobs
+# ("tests" y "docker") son los checks que exige la proteccion de main.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Un push nuevo a un PR cancela la corrida anterior del mismo PR. En main no se
+# cancela: cada merge conserva su resultado.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# Runner fijo en ubuntu-24.04: ubuntu-latest pasa a Ubuntu 26 desde el
+# 2026-10-19 y puede no traer Python 3.10 (fin de soporte en octubre de 2026).
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      # Misma version de Python que la imagen Docker (python:3.10-slim-trixie).
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.10"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      # PyTorch solo CPU antes que el resto: desde PyPI, en Linux se descargan
+      # varios GB de CUDA/cuDNN que el runner no usa (igual que en el Dockerfile).
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+
+      # Ningun test necesita datasets ni pesos: test_models.py construye YOLO26
+      # desde su YAML, sin conexion.
+      - name: Run tests
+        run: pytest tests/ -q
+
+  docker:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      # Solo se construye, no se publica. load: true deja la imagen en el
+      # daemon local para poder correr los tests dentro de ella.
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: false
+          load: true
+          tags: shelfvision-ai:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # tests/ no se copia a la imagen (.dockerignore), asi que se monta.
+      - name: Run tests inside image
+        run: docker run --rm -v "$PWD/tests:/app/tests" shelfvision-ai:ci python -m pytest tests/ -q
