@@ -42,7 +42,9 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
        proyecto. Ojo: la skill
        `finishing-a-development-branch` de superpowers ofrece mergear
        localmente a `main`; elegir siempre la opción de Pull Request.
-5. [ ] Resolver limitaciones de la segmentación. Ítem #15.
+5. [x] (dueño: Francisco) Resolver limitaciones de la segmentación. Ítem
+       #15: F1 de repisas en SHARD 0.758 -> 0.823 (holdout); lo que
+       sigue, en #17.
 
 ## Pendientes (priorizados)
 
@@ -78,25 +80,26 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       baja resolución, compresión JPEG, ruido), transformando también
       sus anotaciones. Pedir también a Walmart una muestra de fotogramas
       reales.
-- [ ] **#15** Limitaciones de la segmentación (ítem #4) y cómo atacarlas:
-      - Diagonales falsas (cadenas que saltan entre repisas): exigir
-        soporte de borde a lo largo de toda la recta ajustada, no solo
-        en los centros de franja, y que la pendiente de cada repisa sea
-        coherente con las vecinas (por perspectiva, varía suavemente
-        con la altura).
-      - Líneas extra en cajas apiladas: una repisa real tiene una franja
-        delgada y uniforme (con etiquetas de precio) entre dos bordes
-        cercanos; verificar ese patrón. Además, cuando exista el
-        detector, refinar los niveles en `src/postprocessing/`: una
-        línea que cruza por el medio de productos detectados no es
-        repisa.
-      - ROI casi igual a la imagen en primeros planos: esperable; se
-        valida con imágenes de cámaras de sala (ítem #14).
-      - Medición real: SHARD anota la altura de cada repisa en ~22K
-        fotos (CC BY 4.0) y puede reemplazar buena parte del etiquetado
-        a mano. Para lo que no cubre (repisas inclinadas, contorno de
-        la góndola), set chico etiquetado a mano (polilíneas, ej. en
-        CVAT o Label Studio).
+- [ ] **#17** Limitaciones de la segmentación que siguen tras #15 (F1
+      de repisas 0.82 en SHARD):
+      - Líneas sobre filas de productos iguales (bandas de color o
+        bordes superiores alineados de bolsas y cajas apiladas): los
+        chequeos clásicos probados en #15 no las separan de las
+        repisas. Atacarlas en `src/postprocessing/` con el detector
+        (#5): una línea que cruza por el medio de productos detectados
+        no es repisa.
+      - Recall 0.85: el soporte de borde descarta repisas reales tapadas
+        en parte (postes, productos colgantes).
+      - Localización: la diferencia con la altura anotada en SHARD está
+        centrada (mediana +0.5% del alto) pero dispersa (desv. estándar
+        2%), por el grosor del borde de repisa y el ruido de anotación;
+        con tolerancia 5% el F1 es 0.88.
+      - Fotos con perspectiva fuerte y primeros planos de productos
+        colgantes (sin repisas).
+      - ROI casi igual a la imagen en primeros planos y validación con
+        cámaras de sala: siguen en #14. Para lo que SHARD no cubre
+        (repisas inclinadas, contorno de la góndola), set chico
+        etiquetado a mano (polilíneas, ej. en CVAT o Label Studio).
 
 ## Hecho
 
@@ -164,6 +167,50 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       oblicuo (llevar el contorno de la góndola a un rectángulo) va
       aquí, porque necesita ese contorno; `image_correction.py` no la
       hace.
+- [x] **#15** (dueño: Francisco) Limitaciones de la segmentación (ítem
+      #4), medidas contra las repisas anotadas de SHARD. Hecho: SHARD en
+      el catálogo (`shard`: figshare, CC BY 4.0, `.7z` de 3.6 GB que se
+      descomprime con `py7zr`, más `annotation.csv`; 22,743 fotos
+      verificadas con `--check` y MD5 de figshare). Evaluador
+      `src/evaluation/shelf_evaluation.py`: cada `ShelfLine` se reduce a
+      su Y promedio (en una recta, la Y en el centro del tramo) como
+      fracción del alto y se empareja 1 a 1 con las repisas anotadas con
+      tolerancia configurable (3% del alto por defecto); precisión,
+      recall y F1 por imagen y en total. CLI `scripts/evaluate_shard.py`
+      (fotos barajadas con semilla 0: "dev" = primeras 1000, para
+      ajustar; "holdout" = siguientes 1000, para confirmar) y
+      `visualize_segmentation.py --dataset shard` (lámina con las
+      repisas anotadas en verde). Resultados con tolerancia 3%
+      (precisión / recall / F1):
+      línea base dev 0.661 / 0.888 / 0.758, holdout 0.660 / 0.890 /
+      0.758; final dev 0.793 / 0.851 / 0.821, holdout 0.796 / 0.851 /
+      0.823. Cambios adoptados, medidos uno a uno en dev:
+      (1) soporte de borde a lo largo de toda la recta (subfranjas de
+      1/4 de franja; el 70% debe tener un salto de al menos 0.5 veces
+      la referencia de su franja): F1 0.758 -> 0.796, elimina la mayoría
+      de las diagonales falsas; (2) un borde a menos de la separación
+      mínima entre repisas (7% del alto) del borde superior de la foto
+      no se informa como repisa (sin espacio para productos encima;
+      SHARD anota ahí el 0.1% de sus repisas y el método ponía 536
+      líneas en 1000 fotos, ~1% correctas), pero sigue limitando la ROI:
+      -> 0.821; (3) la ROI se extiende de a una franja hacia los lados
+      mientras haya textura (antes era la unión de los tramos de las
+      líneas y, con menos líneas, quedaba a media imagen): no cambia el
+      F1 y mantiene las anotaciones dentro de la ROI en 0.99-1.00.
+      Descartados porque bajan el F1: coherencia de la pendiente con las
+      repisas vecinas (ajuste ángulo vs. altura; con umbral de 1-3°, F1
+      0.695-0.790: las pendientes ajustadas con 6 puntos son ruidosas),
+      patrón de franja de repisa (dos bordes cercanos de signo opuesto:
+      no separa repisas de filas de productos, AUC 0.50; uniformidad y
+      saturación de la franja: AUC 0.62-0.67, todo umbral baja el F1),
+      más franjas, menor `min_edge` y menor separación mínima. Métricas
+      aproximadas en los otros 5 datasets (100 fotos c/u): anotaciones
+      dentro de la ROI y área de la ROI sin cambios; repisas con
+      productos encima sube (SKU-110K 0.76 -> 0.80) y productos
+      apoyados en una repisa baja (0.52 -> 0.48), coherente con más
+      precisión y algo menos de recall. Una foto de Out Of Stock (de
+      100) queda sin repisas (`found=False`, contingencia de análisis
+      global). Lo que sigue: ítem #17.
 - [x] **#10** (dueño: Francisco) Descargar datasets candidatos (ver
       `docs/datasets.md`): SKU-110K, grocery-shelves (UniDataPro),
       supermarket-shelves (Kaggle), Out Of Stock detection y Empty Shelf
