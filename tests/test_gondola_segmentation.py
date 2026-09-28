@@ -6,6 +6,7 @@ import pytest
 
 from src.preprocessing.gondola_segmentation import (
     GondolaSegmentation,
+    SegmentationParams,
     ShelfLine,
     segment_gondola,
 )
@@ -131,3 +132,66 @@ def test_shelf_line_evaluates_its_equation():
     line = ShelfLine(x_min=0, x_max=100, slope=0.1, intercept=50)
     assert line.y_at(20) == pytest.approx(52)
     assert line.y_range(0, 100) == pytest.approx((50, 60))
+
+
+def _staircase_and_shelf() -> np.ndarray:
+    """Fondo con ruido, una repisa real de lado a lado (y=400) y una
+    'escalera' de barras cortas, una por franja y cada una mas abajo: en
+    cada franja hay un salto, y los saltos quedan alineados en una recta
+    inclinada que en realidad cruza zonas sin borde (como una diagonal
+    falsa que salta entre bordes de productos)."""
+    rng = np.random.default_rng(1)
+    image = rng.normal(90, 6, size=(HEIGHT, WIDTH)).clip(0, 255).astype(np.uint8)
+    image[400:412] = 245
+    strip_width = WIDTH / SegmentationParams().strips
+    for strip in range(SegmentationParams().strips):
+        center = (strip + 0.5) * strip_width
+        top = 150 + 15 * strip
+        image[top : top + 12, int(center - strip_width / 4) : int(center + strip_width / 4)] = 245
+    return image
+
+
+def test_rejects_lines_without_edge_along_their_whole_length():
+    image = _staircase_and_shelf()
+    heights = [line.y_at(WIDTH / 2) for line in segment_gondola(image).shelf_lines]
+    assert heights == [pytest.approx(400, abs=LIP_THICKNESS + 3)]
+    # Sin exigir borde a lo largo de la recta, la escalera sale como repisa.
+    unchecked = segment_gondola(image, SegmentationParams(min_support=0.0))
+    assert len(unchecked.shelf_lines) == 2
+
+
+def test_ignores_edges_too_close_to_the_top_of_the_image():
+    # Un borde a 2% del alto: una repisa cuyos productos quedan fuera de
+    # cuadro (o el borde de la foto), sin espacio para un nivel encima.
+    image, _ = _gondola()
+    image[:12] = 20  # franja oscura sobre el techo claro: salto fuerte en y=12
+    heights = _line_heights(segment_gondola(image))
+    assert all(h > 0.07 * HEIGHT for h in heights)
+    assert len(heights) == len(EDGES)
+
+
+def test_roi_covers_products_beyond_partial_shelf_lines():
+    # El tercio derecho es textura sin ningun borde horizontal (franjas
+    # verticales de colores, ej. repisas tapadas por productos altos): las
+    # repisas solo se detectan a la izquierda, pero la ROI igual cubre la
+    # gondola completa.
+    image, _ = _gondola()
+    right = WIDTH - 2 * WIDTH // 3
+    stripes = np.random.default_rng(2).integers(40, 220, size=(right // 6 + 1, 3), dtype=np.uint8)
+    image[:, -right:] = np.repeat(stripes, 6, axis=0)[:right]
+    result = segment_gondola(image)
+    assert result.shelf_lines
+    assert all(line.x_max <= WIDTH - right + 1 for line in result.shelf_lines)
+    assert result.roi[0] == 0 and result.roi[2] == WIDTH
+
+
+def test_edge_near_the_top_still_bounds_the_roi():
+    # El borde pegado arriba no es repisa, pero si limite de la gondola: el
+    # nivel entre el y la primera repisa (ej. espacios vacios, sin textura)
+    # queda dentro de la ROI.
+    image, _ = _gondola()
+    image[:12] = 20
+    image[12:LIPS[0]] = 200  # nivel superior vacio (liso)
+    result = segment_gondola(image)
+    assert all(line.y_at(WIDTH / 2) > 0.07 * HEIGHT for line in result.shelf_lines)
+    assert result.roi[1] <= 15

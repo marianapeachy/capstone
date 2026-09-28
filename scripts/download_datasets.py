@@ -32,6 +32,8 @@ import zipfile
 from pathlib import Path
 from urllib.request import Request, urlopen
 
+import py7zr
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.datasets.sources import (  # noqa: E402
@@ -103,10 +105,12 @@ def download_file(url: str, dest: Path, expected_size: int | None = None) -> Pat
 
 
 def extract_archive(archive: Path, dest_dir: Path, root: str = "") -> None:
-    """Descomprime `archive` en `dest_dir`. En un .zip, `root` es una
-    carpeta raiz que se quita de las rutas (ver `archive_root`)."""
+    """Descomprime `archive` (.zip, .tar.gz o .7z) en `dest_dir`. En un
+    .zip, `root` es una carpeta raiz que se quita de las rutas (ver
+    `archive_root`)."""
     dest_dir.mkdir(parents=True, exist_ok=True)
-    print(f"  descomprimiendo {archive.name} en {dest_dir.relative_to(ROOT)}")
+    shown = dest_dir.relative_to(ROOT) if dest_dir.is_relative_to(ROOT) else dest_dir
+    print(f"  descomprimiendo {archive.name} en {shown}")
     if zipfile.is_zipfile(archive):
         with zipfile.ZipFile(archive) as zf:
             # Se validan todas las rutas antes de escribir nada.
@@ -123,6 +127,16 @@ def extract_archive(archive: Path, dest_dir: Path, root: str = "") -> None:
         return
     if root:
         raise ValueError(f"archive_root solo se admite en .zip: {archive.name}")
+    if py7zr.is_7zfile(archive):
+        with py7zr.SevenZipFile(archive) as sz:
+            # Igual que en el .zip: se validan todas las rutas antes de
+            # escribir nada, y no se aceptan enlaces.
+            for entry in sz.list():
+                safe_destination(dest_dir, entry.filename)
+                if entry.is_symlink:
+                    raise ValueError(f"enlace no permitido en {archive.name}: {entry.filename}")
+            sz.extractall(dest_dir)
+        return
     with tarfile.open(archive) as tf:
         if hasattr(tarfile, "data_filter"):
             tf.extractall(dest_dir, filter="data")
@@ -139,6 +153,8 @@ def download_archive(source: DatasetSource, dataset_dir: Path, keep_archive: boo
     extract_archive(archive, dataset_dir, source.archive_root)
     if not keep_archive:
         archive.unlink()
+    for extra in source.extra_files:
+        download_file(extra.url, safe_destination(dataset_dir, extra.name), extra.size)
 
 
 def download_huggingface(source: DatasetSource, dataset_dir: Path) -> None:
@@ -244,7 +260,7 @@ def main() -> None:
     parser.add_argument(
         "--keep-archives",
         action="store_true",
-        help="No borra los .zip/.tar.gz de data/raw/.downloads/ despues de descomprimir",
+        help="No borra los .zip/.tar.gz/.7z de data/raw/.downloads/ despues de descomprimir",
     )
     args = parser.parse_args()
 

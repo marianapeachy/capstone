@@ -24,7 +24,7 @@ de cada integrante.
 > reportado previamente **no existe** (confirmado vía API de Hugging Face:
 > repo inexistente). Se descarta de la lista.
 
-## Candidatos tipo cámara de sala (sin descargar)
+## Candidatos tipo cámara de sala
 
 Búsqueda del 2026-09-27 (ítem #14 de `PROGRESS.md`): imágenes con vista
 alta, oblicua o gran angular/fisheye, parecidas a las cámaras de
@@ -34,7 +34,7 @@ del problema.
 
 | Dataset | Qué aporta | Anotación | Licencia / acceso |
 | --- | --- | --- | --- |
-| [SHARD](https://figshare.com/articles/dataset/SHARD_-_SHelf_mAnagement_Row_Dataset/24100695) | ~22K fotos de góndolas de ~2000 supermercados de Italia. Es el único que **anota repisas**: sirve para medir `segment_gondola()` sin etiquetar a mano (ítem #15). Son fotos de mano, casi frontales. | Altura (Y) de cada repisa como % del alto de la imagen (`annotation.csv`) | CC BY 4.0, descarga directa (3.6 GB, `.7z`). Citar [el paper](https://doi.org/10.1016/j.eswa.2024.124635) |
+| [SHARD](https://figshare.com/articles/dataset/SHARD_-_SHelf_mAnagement_Row_Dataset/24100695) | ~22K fotos de góndolas de ~2000 supermercados de Italia. Es el único que **anota repisas**: sirve para medir `segment_gondola()` sin etiquetar a mano (ítem #15). Son fotos de mano, casi frontales. | Altura (Y) de cada repisa como fracción del alto de la imagen (`annotation.csv`, `archivo;y1,y2,...`, en cualquier orden) | CC BY 4.0, descarga directa (3.6 GB, `.7z`). Citar [el paper](https://doi.org/10.1016/j.eswa.2024.124635). **Descargado** en `data/raw/shard/` (22,743 fotos de ~1000 px de alto en `shelf_detection/` + `annotation.csv`, 3.4 GB). Se descarga con `scripts/download_datasets.py` (clave `shard`). Ojo: el `.7z` trae además un `shelf_detection/annotation.csv` truncado (10,663 filas); la anotación válida es el `annotation.csv` aparte de figshare (22,745 filas; 2 imágenes repetidas). Se mide con `scripts/evaluate_shard.py` |
 | [MMPTrack](https://iccv2021-mmp.github.io/subpage/dataset.html), entorno *retail* | Cámaras fijas en altura en una tienda de prueba con estanterías, **con calibración intrínseca y extrínseca**: prueba real de dewarping y segmentación desde vista alta. | Solo personas (bbox y posición en el piso) | Solo investigación: firmar términos y enviarlos a iccv2021mmp@outlook.com |
 | [Unitail-Det](https://unitedretail.github.io/) | 1.8M productos anotados como cuadriláteros, con set de prueba de otros dominios y ángulos; útil para robustez del detector en vistas oblicuas. | Cuadriláteros por producto | Solo académico. Ya no es público: pedir a fangyic@andrew.cmu.edu |
 | [Simuletic CCTV](https://www.kaggle.com/datasets/simuletic/cctv-shoplifting-detection-dataset-yolo-and-vlm) | 400 fotogramas + 8 videos sintéticos con ángulo alto de CCTV, incluidos pasillos de supermercado: revisión a ojo de la segmentación. | Solo personas (bbox + pose) | Muestra gratis en Kaggle; revisar términos |
@@ -56,10 +56,11 @@ sus anotaciones, y pedir a Walmart fotogramas reales de sus cámaras.
 
 ## Descarga reproducible
 
-`scripts/download_datasets.py` descarga los 5 datasets de arriba a
-`data/raw/` con la misma estructura que espera
-`scripts/prepare_datasets.py`, y verifica la cantidad de archivos de cada
-uno. El catálogo (URLs, versiones fijas, licencias y archivos esperados)
+`scripts/download_datasets.py` descarga los 5 datasets de arriba y SHARD
+a `data/raw/` con la misma estructura que espera
+`scripts/prepare_datasets.py` (SHARD no se convierte: no anota bboxes,
+sino repisas, y lo usa `scripts/evaluate_shard.py`), y verifica la
+cantidad de archivos de cada uno. El catálogo (URLs, versiones fijas, licencias y archivos esperados)
 está en `src/datasets/sources.py`.
 
 ```bash
@@ -74,8 +75,13 @@ python scripts/prepare_datasets.py            # convierte las anotaciones
   ([app.roboflow.com/settings/api](https://app.roboflow.com/settings/api))
   en `ROBOFLOW_API_KEY` o en `.env` (no versionado). Sin ella esos dos se
   omiten.
-- Kaggle y Hugging Face se descargan sin cuenta. SKU-110K se reanuda si
-  la descarga se corta (el parcial queda en `data/raw/.downloads/`).
+- Kaggle, Hugging Face y figshare (SHARD) se descargan sin cuenta.
+  SKU-110K y SHARD se reanudan si la descarga se corta (el parcial queda
+  en `data/raw/.downloads/`).
+- El `.7z` de SHARD se descomprime con `py7zr` (en `requirements.txt`):
+  funciona igual en macOS, Windows y Linux sin instalar 7-Zip, y permite
+  validar todas las rutas del archivo antes de escribir (como con los
+  `.zip`).
 - Un dataset que ya está completo no se vuelve a descargar.
 
 ### Compartir datasets entre integrantes
