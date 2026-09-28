@@ -201,6 +201,12 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       el 2026-10-19 y puede no traer Python 3.10). Protección de `main`
       aplicada: PR obligatorio, 1 aprobación, checks `tests` y `docker`,
       también para admins, sin force push ni borrado.
+- [x] **#16** (dueño: Francisco) Corregir datos desactualizados de
+      `docs/datasets.md` (licencias, tamaño de grocery-shelves y estado
+      de descarga). Licencias: supermarket-shelves es CC0 1.0 y los dos
+      de Roboflow CC BY 4.0, igual que `src/datasets/sources.py`;
+      grocery-shelves ocupa ~37 MB en disco (no 71 MB); el estado de
+      los 5 indica su clave en `scripts/download_datasets.py`.
 
 ## Notas
 
