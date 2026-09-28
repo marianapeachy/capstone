@@ -107,7 +107,9 @@ pytest tests/
   [docs/datasets.md](docs/datasets.md) y luego `python scripts/prepare_datasets.py`.
 - **Claude Code**: instalar la extensión "Claude Code" de Anthropic en VS Code
   e iniciar sesión con la cuenta propia. Claude lee `CLAUDE.md` al empezar, que
-  incluye el flujo de trabajo en equipo (ramas, PR y dueños de ítems).
+  incluye el flujo de trabajo en equipo (ramas, PR y dueños de ítems). Al abrir
+  el proyecto, aceptar la instalación de los plugins compartidos
+  (`yolo@ultralytics` y `superpowers`, declarados en `.claude/settings.json`).
 - **GitHub CLI** (`gh auth login`) para abrir Pull Requests desde la terminal.
 - **Docker Desktop** para construir y probar la imagen (ver abajo).
 
