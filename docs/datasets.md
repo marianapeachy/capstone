@@ -24,8 +24,31 @@ de cada integrante.
 > reportado previamente **no existe** (confirmado vía API de Hugging Face:
 > repo inexistente). Se descarta de la lista.
 
-> **Sin anotaciones de góndola ni repisa:** ninguno de estos datasets
-> anota la góndola ni sus repisas; solo productos, espacios vacíos y
+## Candidatos tipo cámara de sala (sin descargar)
+
+Búsqueda del 2026-09-27 (ítem #14 de `PROGRESS.md`): imágenes con vista
+alta, oblicua o gran angular/fisheye, parecidas a las cámaras de
+seguridad de Walmart. Ningún dataset público combina cámaras reales de
+sala con anotación de productos o espacios vacíos; estos cubren partes
+del problema.
+
+| Dataset | Qué aporta | Anotación | Licencia / acceso |
+| --- | --- | --- | --- |
+| [SHARD](https://figshare.com/articles/dataset/SHARD_-_SHelf_mAnagement_Row_Dataset/24100695) | ~22K fotos de góndolas de ~2000 supermercados de Italia. Es el único que **anota repisas**: sirve para medir `segment_gondola()` sin etiquetar a mano (ítem #15). Son fotos de mano, casi frontales. | Altura (Y) de cada repisa como % del alto de la imagen (`annotation.csv`) | CC BY 4.0, descarga directa (3.6 GB, `.7z`). Citar [el paper](https://doi.org/10.1016/j.eswa.2024.124635) |
+| [MMPTrack](https://iccv2021-mmp.github.io/subpage/dataset.html), entorno *retail* | Cámaras fijas en altura en una tienda de prueba con estanterías, **con calibración intrínseca y extrínseca**: prueba real de dewarping y segmentación desde vista alta. | Solo personas (bbox y posición en el piso) | Solo investigación: firmar términos y enviarlos a iccv2021mmp@outlook.com |
+| [Unitail-Det](https://unitedretail.github.io/) | 1.8M productos anotados como cuadriláteros, con set de prueba de otros dominios y ángulos; útil para robustez del detector en vistas oblicuas. | Cuadriláteros por producto | Solo académico. Ya no es público: pedir a fangyic@andrew.cmu.edu |
+| [Simuletic CCTV](https://www.kaggle.com/datasets/simuletic/cctv-shoplifting-detection-dataset-yolo-and-vlm) | 400 fotogramas + 8 videos sintéticos con ángulo alto de CCTV, incluidos pasillos de supermercado: revisión a ojo de la segmentación. | Solo personas (bbox + pose) | Muestra gratis en Kaggle; revisar términos |
+| [WEPDTOF](https://vip.bu.edu/projects/vsns/cossy/datasets/wepdtof/) | Cámaras fisheye cenitales en interiores reales (no necesariamente tiendas): estresa el dewarping fisheye. | Solo personas | CC BY 4.0, no comercial |
+| [ShelfRectSet](https://arxiv.org/abs/2511.20335) | Rectificación de góndolas por homografía (la corrección de perspectiva que falta en el ítem #4). | Homografía / esquinas | Anunciado por los autores (nov. 2025); sin link publicado aún |
+
+Complemento recomendado: generar imágenes "tipo CCTV" a partir de
+SKU-110K y SHARD (distorsión fisheye con `LensCalibration`, homografía
+oblicua, baja resolución, compresión JPEG, ruido), transformando también
+sus anotaciones, y pedir a Walmart fotogramas reales de sus cámaras.
+
+> **Sin anotaciones de góndola ni repisa:** ninguno de los datasets
+> descargados anota la góndola ni sus repisas (SHARD, arriba, sí anota
+> repisas); solo productos, espacios vacíos y
 > precios (grocery-shelves solo trae la clase `Box`). Sirven para
 > entrenar el detector, pero no para evaluar la segmentación automática
 > de la ROI. Para eso hace falta un set de validación etiquetado a mano
