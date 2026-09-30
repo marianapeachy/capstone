@@ -99,15 +99,30 @@ git clone https://github.com/marianapeachy/capstone.git && cd capstone
 python -m venv .venv            # activar: .venv\Scripts\activate (Windows) / source .venv/bin/activate
 pip install -r requirements.txt
 pip install graphifyy==0.9.70   # grafo del código; lo exigen los hooks de Claude Code
+graphify --version               # confirmar que resuelve a 0.9.70 (ver nota de PATH abajo)
 graphify update .               # genera graphify-out/ (no se versiona)
 pytest tests/
 ```
 
+- **`graphify --version` no da 0.9.70 en Windows**: `pip install` deja el
+  ejecutable en la carpeta `Scripts` del Python activo (el mensaje de pip
+  al instalar dice cuál), y si esa carpeta no está en el `PATH` puede
+  quedar activa una copia vieja de `graphify` instalada antes en otra
+  ubicación (p. ej. `%USERPROFILE%\.local\bin`, típico de un `pip install
+  --user` previo). Con `Get-Command graphify` (PowerShell) o `which
+  graphify` (bash) se ve qué ejecutable resuelve el `PATH`; lo más simple
+  es sobrescribir esa copia vieja con la nueva (mismo nombre de archivo)
+  o agregar la carpeta `Scripts` correcta al `PATH` por delante de la
+  vieja.
 - **Datos** (no se versionan): `python scripts/download_datasets.py` los
   descarga a `data/raw/` (Roboflow pide `ROBOFLOW_API_KEY`; ver
   [docs/datasets.md](docs/datasets.md)) y luego `python scripts/prepare_datasets.py`.
   `python scripts/evaluate_shard.py` mide la segmentación de repisas contra
-  SHARD (`--dataset shard`, 3.6 GB).
+  SHARD (`--dataset shard`, 3.6 GB). SKU-110K (12.2 GB) y SHARD (3.6 GB)
+  son descargas grandes y pueden cortarse por timeout o reinicio de
+  conexión; el script reanuda desde donde quedó, así que basta con
+  volver a correr `python scripts/download_datasets.py` las veces que
+  haga falta hasta que termine.
 - **Claude Code**: instalar la extensión "Claude Code" de Anthropic en VS Code
   e iniciar sesión con la cuenta propia. Claude lee `CLAUDE.md` al empezar, que
   incluye el flujo de trabajo en equipo (ramas, PR y dueños de ítems). Al abrir
