@@ -44,15 +44,19 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
   reporting`. Cada etapa vive en su propio paquete y no debe importar
   directamente detalles internos de otra etapa; se comunican mediante
   estructuras de datos simples (arrays, dicts, dataclasses).
-- **Umbral de disponibilidad crítica**: `< 30%` de espacio disponible en
-  la góndola dispara alerta (MVP Nivel 2, ver README).
+- **Umbral de quiebre de stock**: se alerta cuando el espacio **libre** es
+  `>= 30%` del frente de la góndola (disponibilidad `<= 70%`; MVP Nivel
+  2, ver README). El espacio libre se mide como cobertura horizontal por
+  repisa: huecos de al menos un ancho de producto, sin medir la altura
+  de los productos, en la góndola acotada a los productos detectados
+  (`src/postprocessing/availability.py`, decidido 2026-09-30).
 
 ## Estructura relevante
 
 ```
 src/preprocessing/   # Filtros CLAHE, dewarping, segmentación automática y recorte de ROI
 src/models/           # Inferencia YOLO26 (Ultralytics)
-src/postprocessing/    # Cálculo de disponibilidad y umbral <30%
+src/postprocessing/    # Cálculo de disponibilidad y alerta (libre >= 30%)
 src/reporting/         # Reportes en Excel, CSV y PDF
 src/evaluation/        # Métricas de evaluación (no es etapa del pipeline)
 scripts/               # CLI de ejecución del pipeline
