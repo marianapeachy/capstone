@@ -31,7 +31,7 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 | Criterio | Solución Óptima (Nivel 1) | MVP Alternativo (Nivel 2) |
 | :--- | :--- | :--- |
 | **Objetivo Principal** | Medición espacial y volumétrica exacta del espacio libre (profundidad constante de 25 cm) | Alerta macro por umbral binario de stock |
-| **Métrica de Salida** | Centímetros o porcentaje exacto de espacio vacío por repisa | ¿Disponibilidad < 30% en la góndola? (Sí / No) |
+| **Métrica de Salida** | Centímetros o porcentaje exacto de espacio vacío por repisa | ¿Espacio libre ≥ 30% del frente de la góndola? (Sí / No) |
 | **Granularidad** | Segmentado nivel por nivel de la góndola (Nivel 1, 2, 3...), con repisas detectadas automáticamente | Análisis global de la góndola detectada automáticamente |
 | **Complejidad** | Alta (Segmentación espacial + Visión Computacional) | Media (Detección por umbral de píxeles / parches) |
 
@@ -41,7 +41,7 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 * **RF01 - Ingesta de Imágenes**: Procesamiento estático de fotogramas en formato imagen (tiempo de inferencia objetivo: 2 a 5 segundos por imagen).
 * **RF02 - Detección de Espacios Vacíos**: Identificación de regiones sin producto dentro de las regiones de interés (ROI) correspondientes a la góndola, que el sistema segmenta automáticamente.
-* **RF03 - Cálculo de Disponibilidad**: Estimación cuantitativa del espacio libre (porcentaje/cm o clasificación por umbral <30%), asumiendo profundidad de góndola constante (25 cm).
+* **RF03 - Cálculo de Disponibilidad**: Estimación cuantitativa del espacio libre (porcentaje/cm o alerta cuando el espacio libre llega al 30% del frente de la góndola), asumiendo profundidad de góndola constante (25 cm).
 * **RF04 - Generación de Alertas**: Emisión de notificaciones prioritarias para el equipo de reposición cuando se detecte un quiebre de stock.
 * **RF05 - Módulo de Reportería**: Exportación de datos analíticos auditados en formatos **Excel (.xlsx)**, **CSV** y **PDF**.
 
@@ -78,7 +78,7 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 ├── src/                    # Código fuente en scripts Python modulares
 │   ├── preprocessing/      # Filtros de imagen, segmentación automática y recorte de ROI
 │   ├── models/             # Módulos de inferencia (YOLO26 / CV Clásico)
-│   ├── postprocessing/     # Cálculo de métricas y lógica de umbrales (<30%)
+│   ├── postprocessing/     # Cálculo de disponibilidad y alerta (libre ≥ 30%)
 │   ├── reporting/          # Generadores de reportes (Excel, CSV, PDF)
 │   └── evaluation/         # Métricas de evaluación (fuera del pipeline)
 ├── scripts/                # CLI del pipeline y visor de segmentación

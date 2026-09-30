@@ -12,7 +12,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | --- | --- | --- |
 | `src/preprocessing/` | Hecho: corrección de imagen, segmentación de góndola y recorte de ROI | #1, #2, #3, #4 |
 | `src/models/` | En curso: `ProductDetector` y scripts de entrenamiento listos; falta entrenar en GPU | #5 |
-| `src/postprocessing/` | Pendiente | #6 |
+| `src/postprocessing/` | Hecho: disponibilidad por repisa y alerta de quiebre (libre >= 30%) | #6 |
 | `src/reporting/` | Pendiente | #7 |
 | `scripts/run_pipeline.py` | Pendiente | #8 |
 | Datasets | 5 descargados y convertidos al estándar, con descarga reproducible | #10, #11, #12 |
@@ -70,11 +70,6 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       en el PC con GPU NVIDIA (sin GPU en el portátil de Francisco),
       comparar las dos variantes en `val`, evaluar la ganadora en `test` y
       registrar aquí las métricas.
-- [ ] **#6** Implementar cálculo de disponibilidad y evaluación de umbral
-      `<30%` en `src/postprocessing/`. La profundidad de góndola es una
-      constante global fija de 25 cm (decidido 2026-09-27, ver
-      CLAUDE.md) y no se estima: el cálculo es 2D sobre la vista
-      frontal, y el volumen del Nivel 1 = área frontal libre x 25 cm.
 - [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`.
 - [ ] **#8** Implementar `scripts/run_pipeline.py` como CLI que orquesta
@@ -223,6 +218,37 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       precisión y algo menos de recall. Una foto de Out Of Stock (de
       100) queda sin repisas (`found=False`, contingencia de análisis
       global). Lo que sigue: ítem #17.
+- [x] **#6** (dueño: Francisco) Cálculo de disponibilidad y alerta de
+      quiebre de stock en `src/postprocessing/availability.py`:
+      `compute_availability(productos, niveles)` ->
+      `GondolaAvailability` (espacio libre de la góndola, alerta y
+      `ShelfAvailability` por repisa con sus huecos, área libre en px y
+      `level_index`) y `free_volume_cm3()` (área libre x 25 cm, cuando
+      haya escala cm/px). Recibe cajas y niveles como tuplas o arrays
+      (no importa `src/preprocessing` ni `src/models`); sin repisas, la
+      ROI es el único nivel. Criterio (decidido 2026-09-30, reemplaza
+      "disponibilidad < 30%", que leído al pie de la letra alertaba con la
+      góndola llena): alerta si el espacio **libre** es >= 30% del
+      frente de la góndola. Métrica: cobertura horizontal por repisa;
+      hueco = tramo sin producto de al menos 1 ancho de producto (mediana
+      de la repisa). No mide la altura de los productos: pilas con pocas
+      unidades o productos bajos siguen disponibles, y el eje vertical es
+      el que más deforma una cámara de sala. Una caja cubre todo nivel
+      con el que comparte >= 30% del alto menor, así una repisa falsa a
+      media altura de una fila de productos (#17) no crea un nivel vacío.
+      La góndola se acota a los productos (del primer al último nivel con
+      productos, y del producto más a la izquierda al más a la derecha):
+      la ROI de la segmentación incluye pasillo, techo y carteles. Medido
+      con `scripts/evaluate_availability.py` (SKU-110K `val`, 300 fotos,
+      anotaciones como detector y recall simulado 0.9): falsas alertas
+      con la góndola llena 24.7% con la ROI -> 4.0% acotada; quiebre
+      simulado en el interior de 30% del frente detectado 87%, de 40%
+      99.7%. Umbral: 20% / 25% / 30% / 35% dan 20.7% / 8.7% / 4.0% / 1.0%
+      de falsas alertas; se mantiene 30%. Costo del acotado: una repisa
+      extrema vacía entera, o una franja vacía en todas las repisas en un
+      extremo, no se cuentan (quiebre de 40% en cualquier parte: 88%).
+      24 tests en `tests/test_availability.py`. Pendiente: medir con el
+      detector entrenado (#5) y con fotos de cámaras de sala (#14).
 - [x] **#10** (dueño: Francisco) Descargar datasets candidatos (ver
       `docs/datasets.md`): SKU-110K, grocery-shelves (UniDataPro),
       supermarket-shelves (Kaggle), Out Of Stock detection y Empty Shelf
