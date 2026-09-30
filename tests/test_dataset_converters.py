@@ -5,6 +5,7 @@ from src.datasets.converters import (
     polyline_to_bbox,
     sku110k_row_to_bbox,
     supervisely_rect_to_xyxy,
+    xyxy_to_yolo,
 )
 
 
@@ -40,6 +41,20 @@ def test_clip_bbox_swaps_inverted_coordinates():
 
 def test_clip_bbox_clamps_to_image_bounds():
     assert clip_bbox((-20, -5, 150, 90), width=100, height=80) == (0, 0, 100, 80)
+
+
+def test_xyxy_to_yolo_returns_normalized_center_and_size():
+    assert xyxy_to_yolo((100, 50, 300, 150), width=400, height=200) == (0.5, 0.5, 0.5, 0.5)
+
+
+def test_xyxy_to_yolo_clips_to_image_before_normalizing():
+    # SKU-110K trae algunas cajas que se salen de la imagen.
+    assert xyxy_to_yolo((-100, 0, 200, 400), width=400, height=200) == (0.25, 0.5, 0.5, 1.0)
+
+
+def test_xyxy_to_yolo_drops_boxes_without_area():
+    assert xyxy_to_yolo((10, 10, 10, 50), width=100, height=100) is None
+    assert xyxy_to_yolo((150, 10, 180, 50), width=100, height=100) is None
 
 
 def test_class_group_maps_known_classes():

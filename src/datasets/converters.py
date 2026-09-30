@@ -82,6 +82,24 @@ def sku110k_row_to_bbox(x1: float, y1: float, x2: float, y2: float) -> BBox:
     return min(x1, x2), min(y1, y2), max(x1, x2), max(y1, y2)
 
 
+def xyxy_to_yolo(
+    bbox: BBox, width: float, height: float
+) -> tuple[float, float, float, float] | None:
+    """Convierte un bbox estandar al formato de etiqueta de Ultralytics:
+    (x_centro, y_centro, ancho, alto) normalizados a [0, 1]. Primero lo
+    recorta a la imagen; devuelve None si queda sin area, porque una caja
+    degenerada no sirve como etiqueta de entrenamiento."""
+    x_min, y_min, x_max, y_max = clip_bbox(bbox, width, height)
+    if x_max <= x_min or y_max <= y_min:
+        return None
+    return (
+        (x_min + x_max) / 2 / width,
+        (y_min + y_max) / 2 / height,
+        (x_max - x_min) / width,
+        (y_max - y_min) / height,
+    )
+
+
 def parse_shard_shelf_coords(text: str) -> tuple[float, ...]:
     """Alturas de repisa de una fila de annotation.csv de SHARD (columna
     shelfCoord: fracciones del alto separadas por coma, en cualquier
