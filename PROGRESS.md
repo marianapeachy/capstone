@@ -298,6 +298,15 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       se reanudan volviendo a correr el script si la descarga se corta;
       `docs/datasets.md` explica la descarga manual de los 2 datasets
       de Roboflow (sin API key) y dónde descomprimirlos.
+- [x] **#19** (dueño: Francisco) Plan de pruebas en `docs/test-plan.md`:
+      para cada etapa ya hecha, qué requisito cumple, cómo se prueba,
+      criterio de aceptación y resultado actual; trazabilidad con
+      RF01-RF05 y lo que aún no se puede probar. Primera ejecución
+      completa tras mergear #6 (2026-09-30, `main` 9cd8286): 131 tests
+      OK; SEG-02 F1 0.823, SEG-03 0.99-1.00, AV-02 4.0% y AV-03 99.7%,
+      todo dentro de criterio (detalle en el registro del plan).
+      Volver a ejecutarlo con el detector entrenado (#5) y con el
+      pipeline completo (#8).
 
 ## Notas
 
