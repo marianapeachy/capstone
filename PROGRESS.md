@@ -254,6 +254,12 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       de Roboflow CC BY 4.0, igual que `src/datasets/sources.py`;
       grocery-shelves ocupa ~37 MB en disco (no 71 MB); el estado de
       los 5 indica su clave en `scripts/download_datasets.py`.
+- [x] **#18** (dueño: Francisco) Notas de instalación en un entorno
+      nuevo (Windows): README explica cómo detectar una copia vieja de
+      `graphify` que tapa la 0.9.70 en el `PATH`, y que SKU-110K y SHARD
+      se reanudan volviendo a correr el script si la descarga se corta;
+      `docs/datasets.md` explica la descarga manual de los 2 datasets
+      de Roboflow (sin API key) y dónde descomprimirlos.
 
 ## Notas
 
