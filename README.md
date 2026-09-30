@@ -130,6 +130,8 @@ pytest tests/
   (`yolo@ultralytics` y `superpowers`, declarados en `.claude/settings.json`).
 - **GitHub CLI** (`gh auth login`) para abrir Pull Requests desde la terminal.
 - **Docker Desktop** para construir y probar la imagen (ver abajo).
+- **Entrenamiento del detector** (PC con GPU NVIDIA): ver
+  [docs/training.md](docs/training.md).
 
 ### Ejecución local
 

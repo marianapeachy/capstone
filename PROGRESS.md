@@ -11,7 +11,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | Etapa | Estado | Ítems |
 | --- | --- | --- |
 | `src/preprocessing/` | Hecho: corrección de imagen, segmentación de góndola y recorte de ROI | #1, #2, #3, #4 |
-| `src/models/` | En curso: YOLO26 integrado y validado; falta el fine-tuning | #5 |
+| `src/models/` | En curso: `ProductDetector` y scripts de entrenamiento listos; falta entrenar en GPU | #5 |
 | `src/postprocessing/` | Pendiente | #6 |
 | `src/reporting/` | Pendiente | #7 |
 | `scripts/run_pipeline.py` | Pendiente | #8 |
@@ -48,16 +48,28 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 
 ## Pendientes (priorizados)
 
-- [ ] **#5** Integrar inferencia YOLO26 en `src/models/` (se decidió
+- [ ] **#5** (dueño: Francisco) Integrar inferencia YOLO26 en `src/models/` (se decidió
       YOLO26 sobre YOLOv8/YOLO11 por su cabeza sin NMS y mejor manejo de
       objetos chicos, clave en productos apilados). Validado en local:
       `ultralytics` 8.4.164 + `yolo26n.pt` corre sobre SKU-110K y se
       encadena con `crop_roi()`/`to_original()`; `tests/test_models.py`
       fija el contrato (versión >= 8.4.0, `nms=False` activa el modo
-      end-to-end y respeta `max_det`). Pendiente: fine-tuning sobre
-      SKU-110K (los pesos COCO no tienen clase "producto") y comparar
-      `yolo26s` vs la variante `yolo26-p2.yaml` (cabeza extra para
-      objetos chicos) en la validación de SKU-110K.
+      end-to-end y respeta `max_det`). Hecho (2026-09-29): inferencia en
+      `src/models/detector.py` (`ProductDetector.detect()` -> lista de
+      `Detection` con bbox estándar, fija `nms=False`, `max_det=1000` e
+      `imgsz=1280`, y rechaza modelos sin cabeza sin NMS). Dataset YOLO con
+      `scripts/prepare_yolo_dataset.py` (`xyxy_to_yolo()` en
+      `converters.py`). Las imágenes se enlazan desde `data/raw/`; los 712
+      JPEG truncados de SKU-110K se copian, porque Ultralytics los
+      reescribe al repararlos. Entrenamiento, reanudación y evaluación en
+      `scripts/train_detector.py` (variantes `yolo26s` y `yolo26s-p2`,
+      entrena y valida con `nms=False` y `max_det=1000`: por defecto
+      Ultralytics mide la cabeza con NMS y corta en 300 cajas). Guía para
+      el PC con GPU en `docs/training.md`. Todo el flujo verificado con
+      una prueba corta en CPU (16 imágenes, 1 época). Pendiente: entrenar
+      en el PC con GPU NVIDIA (sin GPU en el portátil de Francisco),
+      comparar las dos variantes en `val`, evaluar la ganadora en `test` y
+      registrar aquí las métricas.
 - [ ] **#6** Implementar cálculo de disponibilidad y evaluación de umbral
       `<30%` en `src/postprocessing/`. La profundidad de góndola es una
       constante global fija de 25 cm (decidido 2026-09-27, ver
