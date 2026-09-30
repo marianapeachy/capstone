@@ -34,7 +34,12 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
 - **Detector YOLO26** (`ultralytics>=8.4.0`, pesos `yolo26*.pt`). En
   góndolas densas/apiladas inferir con `nms=False` (activa la cabeza sin
   NMS; por defecto Ultralytics aplica NMS igual), `max_det` >= 1000 (el
-  default 300 trunca góndolas llenas) e `imgsz=1280`.
+  default 300 trunca góndolas llenas) e `imgsz=1280`. Lo mismo al entrenar
+  y validar (`nms=False`, `max_det=1000`): si no, Ultralytics mide la
+  cabeza con NMS y elige `best.pt` con otro modelo. La inferencia pasa por
+  `ProductDetector` (`src/models/detector.py`), que ya fija estos valores;
+  el entrenamiento, por `scripts/train_detector.py` (ver
+  `docs/training.md`).
 - **Pipeline modular**: `preprocessing -> models -> postprocessing ->
   reporting`. Cada etapa vive en su propio paquete y no debe importar
   directamente detalles internos de otra etapa; se comunican mediante
