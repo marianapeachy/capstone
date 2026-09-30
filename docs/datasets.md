@@ -75,9 +75,23 @@ python scripts/prepare_datasets.py            # convierte las anotaciones
   ([app.roboflow.com/settings/api](https://app.roboflow.com/settings/api))
   en `ROBOFLOW_API_KEY` o en `.env` (no versionado). Sin ella esos dos se
   omiten.
+  - **Descarga manual sin API key:** en cada página de Roboflow Universe
+    ([Out Of Stock detection](https://universe.roboflow.com/empty-space-detection-capstone/out-of-stock-detection),
+    [Empty Shelf Detector](https://universe.roboflow.com/fyp-ormnr/empty-shelf-detector)),
+    botón "Download Dataset" -> formato **COCO** -> "download zip to
+    computer" (pide cuenta gratuita de Roboflow, sin API key). Descomprimir
+    el `.zip` completo (conserva las carpetas `train/`, `valid/`, `test/`
+    con su `_annotations.coco.json`) directo en
+    `data/raw/out-of-stock-detection-roboflow/` o
+    `data/raw/empty-shelf-detector-roboflow/` según corresponda (el `.zip`
+    no trae una carpeta raíz extra, a diferencia del de Kaggle). Confirmar
+    con `python scripts/download_datasets.py --check`.
 - Kaggle, Hugging Face y figshare (SHARD) se descargan sin cuenta.
   SKU-110K y SHARD se reanudan si la descarga se corta (el parcial queda
-  en `data/raw/.downloads/`).
+  en `data/raw/.downloads/`); son descargas grandes (12.2 GB y 3.6 GB) y
+  es normal que un timeout o corte de conexión interrumpa alguna, basta
+  con volver a correr `python scripts/download_datasets.py` para
+  continuar donde quedó.
 - El `.7z` de SHARD se descomprime con `py7zr` (en `requirements.txt`):
   funciona igual en macOS, Windows y Linux sin instalar 7-Zip, y permite
   validar todas las rutas del archivo antes de escribir (como con los
