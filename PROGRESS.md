@@ -69,7 +69,10 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       una prueba corta en CPU (16 imágenes, 1 época). Pendiente: entrenar
       en el PC con GPU NVIDIA (sin GPU en el portátil de Francisco),
       comparar las dos variantes en `val`, evaluar la ganadora en `test` y
-      registrar aquí las métricas.
+      registrar aquí las métricas. Para 8 GB bajo Windows (2026-10-01):
+      límite de VRAM con asignador en CPU ante OOM (`src/models/vram.py`),
+      EcoQoS desactivado (`src/models/power.py`) y `resume --batch`; P2
+      entrena con batch 1.
 - [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`.
 - [ ] **#8** Implementar `scripts/run_pipeline.py` como CLI que orquesta
