@@ -77,6 +77,10 @@ python scripts/train_detector.py train --variant yolo26s-p2
   veces más lenta hasta que termina. El pico viene de las imágenes con
   cientos de productos; con el límite, ese caso se resuelve en CPU
   (`src/models/vram.py`).
+- El script desactiva EcoQoS de Windows para su proceso
+  (`src/models/power.py`). Lanzado en segundo plano (sin ventana),
+  Windows 11 lo manda a los núcleos de eficiencia y, con batch 1, P2 baja
+  de ~7 a ~3,7 it/s con la GPU a la mitad.
 - Cada corrida queda en `data/processed/training/<variante>/`. Ahí,
   `results.csv` va registrando las métricas por época; la primera época da
   una estimación del tiempo total.

@@ -31,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from ultralytics import YOLO  # noqa: E402
 
 from src.models.detector import IMGSZ, MAX_DET  # noqa: E402
+from src.models.power import disable_eco_qos  # noqa: E402
 from src.models.vram import limit_vram  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -64,6 +65,9 @@ def prepare_process(device: str, reserve_gib: float) -> None:
     # vez de fallar, y la epoca sigue ~18 veces mas lenta (ver src/models/vram.py).
     if reserve_gib > 0 and (summary := limit_vram(device, reserve_gib)):
         print(summary)
+    # Lanzado en segundo plano, Windows lo mandaria a los nucleos de eficiencia.
+    if disable_eco_qos():
+        print("EcoQoS de Windows desactivado para este proceso")
 
 
 def build_model(variant: str) -> YOLO:
@@ -108,6 +112,7 @@ def resume(args: argparse.Namespace) -> None:
 
 def val(args: argparse.Namespace) -> None:
     require_cuda(args.device)
+    disable_eco_qos()
     # Absoluta: Ultralytics anida un `project` relativo dentro de runs/detect/.
     weights = Path(args.weights).resolve()
     run_dir = weights.parent.parent
