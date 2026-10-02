@@ -58,7 +58,7 @@ python scripts/train_detector.py val --weights <best.pt> --split test   # DET-04
 | COR-01 | CLAHE mejora el detalle en sombras sin alterar colores | `tests/test_image_correction.py` | Pasan | Pasan |
 | COR-02 | El dewarping endereza una repisa curvada (distorsión sintética) y `to_original()` vuelve a la imagen original | `tests/test_image_correction.py` | Pasan | Pasan |
 | COR-03 | Sin calibración solo se aplica CLAHE y las coordenadas no cambian | `tests/test_image_correction.py` | Pasan | Pasan |
-| COR-04 | El dewarping funciona con una cámara real | Fotos de un tablero de ajedrez o la calibración de Walmart | Repisas rectas a ojo; error de reproyección < 1 px **(por acordar)** | **No probado**: no hay calibración real |
+| COR-04 | El dewarping funciona con una cámara real | Parámetros de calibración que entregue Walmart (calibrando ellos con un tablero de ajedrez; no comparten imágenes de sus cámaras, #21) | Repisas rectas a ojo; error de reproyección < 1 px **(por acordar)** | **No probado**: no hay calibración real |
 
 ## 3. Segmentación de góndola y repisas (ítems #4, #15)
 
@@ -131,9 +131,13 @@ python scripts/train_detector.py val --weights <best.pt> --split test   # DET-04
 ## 10. Lo que aún no se puede probar
 
 - **Dataset oculto de Walmart**: se reserva para la evaluación ciega
-  final; nunca se usa para ajustar.
-- **Cámaras reales de sala**: sin fotogramas ni calibración de Walmart
-  (COR-04, SEG-05). Mientras tanto, imágenes sintéticas tipo CCTV (#14).
+  final; nunca se usa para ajustar. Walmart no comparte imágenes de sus
+  cámaras (privacidad, #21): la evaluación solo puede correrla Walmart en
+  sus instalaciones, con nuestra imagen Docker, y entregar las métricas.
+- **Cámaras reales de sala**: Walmart no comparte fotogramas y la
+  calibración está por confirmar (COR-04, SEG-05). Mientras tanto,
+  imágenes sintéticas tipo CCTV (#14) desde datasets cuya licencia lo
+  permite (no SKU-110K).
 - **Escala en centímetros** (RF03 en cm): depende de cada cámara.
 - **Tiempo en el hardware final** (RF01): no se conoce el equipo donde
   correrá el sistema.

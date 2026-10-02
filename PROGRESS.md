@@ -85,11 +85,13 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       sala"): ninguno público combina cámara de sala real con anotación
       de productos. Siguientes pasos: (1) descargar SHARD; (2) pedir
       MMPTrack (entorno *retail*, cámaras fijas calibradas); (3) generar
-      imágenes "tipo CCTV" sintéticas a partir de SKU-110K y SHARD
+      imágenes "tipo CCTV" sintéticas a partir de SHARD y Kaggle (no de
+      SKU-110K: su licencia prohíbe modificar sus fotos)
       (distorsión fisheye con `LensCalibration`, homografía oblicua,
       baja resolución, compresión JPEG, ruido), transformando también
-      sus anotaciones. Pedir también a Walmart una muestra de fotogramas
-      reales.
+      sus anotaciones. Walmart no comparte fotogramas reales de sus
+      cámaras (#21), así que el paso (3) es ahora el principal sustituto
+      de la cámara de sala y sube de prioridad.
 - [ ] **#17** Limitaciones de la segmentación que siguen tras #15 (F1
       de repisas 0.82 en SHARD):
       - Líneas sobre filas de productos iguales (bandas de color o
@@ -141,8 +143,9 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       `tests/test_image_correction.py` (entre ellos, una repisa curvada
       con distorsión sintética que vuelve a quedar recta). Validaciones
       de imagen compartidas en `_validation.py`. Pendiente: pedir a
-      Walmart el modelo y la calibración de sus cámaras (o fotos de un
-      tablero de ajedrez para calibrar). Los datasets públicos no traen
+      Walmart el modelo de cámara y lente, o los parámetros de
+      calibración si ellos calibran con un tablero de ajedrez (no
+      comparten imágenes de sus cámaras, #21). Los datasets públicos no traen
       distorsión de lente: con ellos se usa solo CLAHE (sin
       calibración).
 - [x] **#4** (dueño: Francisco) Implementar la segmentación automática
@@ -168,7 +171,8 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       superior de la góndola y las repisas vacías son líneas correctas
       sin productos encima. Limitaciones conocidas y cómo atacarlas: ver
       ítem #15. Pendientes: set de validación con góndolas/repisas, y
-      evaluarlo con imágenes reales de Walmart.
+      evaluarlo en condiciones de cámara de sala (imágenes sintéticas,
+      #14; Walmart no comparte imágenes reales, #21).
       Especificación original: debe entregar la ROI de la góndola
       (entrada de `crop_roi()`) y, para el Nivel 1, los límites de cada
       repisa. Corre después de `correct_image()`, sobre la imagen
@@ -367,6 +371,34 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       hay control con ángulo). Pendiente: usar `shelf_levels()` en
       `scripts/run_pipeline.py` (#8) y medir con el detector entrenado y
       fotos reales en ángulo.
+- [x] **#21** (dueño: Francisco) Ajustar la documentación a que Walmart
+      Chile no puede compartir imágenes reales de sus cámaras de
+      seguridad, por privacidad (informado 2026-10-01). README
+      ("Estrategia de Datos y Evaluación"), `docs/datasets.md` y los
+      ítems #3, #4 y #14: la validación en condiciones de cámara de sala
+      se hace con imágenes sintéticas tipo CCTV generadas desde datasets
+      públicos (#14, paso 3), y la prueba ciega con el Dataset Oculto
+      solo es posible si Walmart corre el sistema en sus instalaciones
+      y entrega las métricas. Por confirmar con Walmart: si aceptan esa
+      modalidad, y qué datos sin imágenes pueden entregar (modelo de
+      cámara y lente, campo de visión, altura y ángulo de montaje,
+      resolución y compresión de los fotogramas).
+- [x] **#20** (dueño: Francisco) Dejar el repositorio listo para clonar
+      e inicializar en un PC nuevo (Nicko, 2026-10-01). README: versión de
+      Python, graphify con `uv tool` fuera del venv (instalado en el venv,
+      los hooks de Claude Code no lo encuentran), `.env.example` para
+      `ROBOFLOW_API_KEY`, activar el venv en PowerShell, `Integrante:
+      <nombre>` en `CLAUDE.local.md`, PyTorch con CUDA solo para entrenar,
+      y que `run_pipeline.py` aún no corre (#8). `CLAUDE.md`: cada sesión
+      se orienta por `PROGRESS.md` (ítem en curso de la persona o el
+      siguiente sin dueño; nada fuera del backlog). `docs/training.md` ya
+      no manda a la rama del PR #15 (mergeada). Verificado con un clon
+      limpio, venv nuevo en Python 3.14 y `pip install -r
+      requirements.txt` (torch 2.14.1 CPU, ultralytics 8.4.171, pandas
+      3.0.6): imports de todas las librerías y de `src/`, `--help` de los
+      7 scripts, `graphify update .` y `pytest tests/` 137 OK. En un PR
+      aparte, `tests/test_models.py` deja de fallar en PCs con GPU NVIDIA
+      (`.cpu().numpy()`).
 
 ## Notas
 

@@ -65,8 +65,9 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ## 📊 Estrategia de Datos y Evaluación
 
-* **Dataset de Entrenamiento**: Ccuraduría propia mediante fuentes públicas open-source (ej. *Hugging Face Grocery Shelves*, *Kaggle Supermarket Shelves*) con estandarización estricta de coordenadas de anotación (`[x_min, y_min, x_max, y_max]`).
-* **Prueba Ciega (Dataset Oculto)**: Evaluación iterativa contra un **Dataset Oculto** de Walmart Chile que contiene imágenes reales de sala con condiciones complejas no visibles para el equipo de desarrollo.
+* **Dataset de Entrenamiento**: Curaduría propia mediante fuentes públicas open-source (ej. *SKU-110K*, *Hugging Face Grocery Shelves*, *Kaggle Supermarket Shelves*) con estandarización estricta de coordenadas de anotación (`[x_min, y_min, x_max, y_max]`).
+* **Sin imágenes reales de Walmart**: por privacidad, Walmart Chile no puede compartir imágenes de sus cámaras de seguridad (informado el 2026-10-01). Las condiciones de cámara de sala (vista alta y oblicua, lente gran angular/*fisheye*, baja resolución, compresión) se simulan generando imágenes sintéticas desde los datasets públicos, transformando también sus anotaciones (ver [docs/datasets.md](docs/datasets.md)).
+* **Prueba Ciega (Dataset Oculto)**: la evaluación contra el **Dataset Oculto** de Walmart Chile (imágenes reales de sala con condiciones complejas) solo es posible si Walmart ejecuta el sistema en sus instalaciones (imagen Docker) y entrega las métricas, sin que las imágenes salgan de la empresa. Modalidad por confirmar con Walmart.
 
 ---
 
@@ -94,26 +95,52 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ### Configuración de un entorno nuevo
 
+Requisitos: git, Python 3.10 o superior (el CI y la imagen Docker usan
+3.10; también se usa 3.14 en local) y acceso de escritura al repositorio
+(invitación de GitHub aceptada).
+
+**1. graphify, una vez por PC y fuera del venv.** Los hooks de Claude Code
+(`.claude/settings.json`) llaman a `graphify` en cada búsqueda o lectura
+sin activar el venv, así que tiene que estar en el `PATH` del sistema.
+Se instala con [uv](https://docs.astral.sh/uv/), sin el venv activado:
+
+```bash
+winget install astral-sh.uv        # o: python -m pip install uv
+uv tool install graphifyy==0.9.70
+uv tool update-shell               # agrega ~/.local/bin al PATH; cerrar y reabrir la terminal y VS Code
+graphify --version                 # debe decir 0.9.70
+```
+
+**2. Proyecto:**
+
 ```bash
 git clone https://github.com/marianapeachy/capstone.git && cd capstone
 python -m venv .venv            # activar: .venv\Scripts\activate (Windows) / source .venv/bin/activate
 pip install -r requirements.txt
-pip install graphifyy==0.9.70   # grafo del código; lo exigen los hooks de Claude Code
-graphify --version               # confirmar que resuelve a 0.9.70 (ver nota de PATH abajo)
 graphify update .               # genera graphify-out/ (no se versiona)
+cp .env.example .env            # opcional: API key de Roboflow (Windows: copy .env.example .env)
 pytest tests/
 ```
 
-- **`graphify --version` no da 0.9.70 en Windows**: `pip install` deja el
-  ejecutable en la carpeta `Scripts` del Python activo (el mensaje de pip
-  al instalar dice cuál), y si esa carpeta no está en el `PATH` puede
-  quedar activa una copia vieja de `graphify` instalada antes en otra
-  ubicación (p. ej. `%USERPROFILE%\.local\bin`, típico de un `pip install
-  --user` previo). Con `Get-Command graphify` (PowerShell) o `which
-  graphify` (bash) se ve qué ejecutable resuelve el `PATH`; lo más simple
-  es sobrescribir esa copia vieja con la nueva (mismo nombre de archivo)
-  o agregar la carpeta `Scripts` correcta al `PATH` por delante de la
-  vieja.
+`pytest tests/` no necesita datasets, pesos ni GPU: construye YOLO26 desde
+su YAML, sin conexión. Si todo pasa, el entorno quedó listo.
+
+**3. Claude Code:** crear `CLAUDE.local.md` en la raíz (no se versiona)
+con la línea `Integrante: <nombre>` (el mismo nombre que se usa en
+`(dueño: <nombre>)` de `PROGRESS.md`). Con eso Claude sabe qué ítems son
+de cada uno y cuál proponer después (ver "Trabajo en equipo" en
+`CLAUDE.md`).
+
+- **PowerShell no deja activar el venv** ("la ejecución de scripts está
+  deshabilitada"): correr una vez
+  `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` y volver a
+  activar.
+- **`graphify --version` no da 0.9.70**: otra copia de `graphify` tapa
+  la de `uv tool` en el `PATH` (p. ej. una instalada con `pip` en el
+  Python global o en un venv). `where.exe graphify` (Windows) o
+  `which -a graphify` (bash) lista todas en orden; la primera debe ser
+  la de `%USERPROFILE%\.local\bin`. Quitar las otras con
+  `pip uninstall graphifyy` en el Python donde estén.
 - **Datos** (no se versionan): `python scripts/download_datasets.py` los
   descarga a `data/raw/` (Roboflow pide `ROBOFLOW_API_KEY`; ver
   [docs/datasets.md](docs/datasets.md)) y luego `python scripts/prepare_datasets.py`.
@@ -131,15 +158,24 @@ pytest tests/
 - **GitHub CLI** (`gh auth login`) para abrir Pull Requests desde la terminal.
 - **Docker Desktop** para construir y probar la imagen (ver abajo).
 - **Entrenamiento del detector** (PC con GPU NVIDIA): ver
-  [docs/training.md](docs/training.md).
+  [docs/training.md](docs/training.md). En Windows, `pip install -r
+  requirements.txt` instala PyTorch sin CUDA; para usar la GPU hay que
+  reinstalarlo como indica esa guía (paso 1). Para el resto del proyecto
+  basta el PyTorch sin CUDA.
+- **Antes de tomar trabajo**: leer la sección "Trabajo en equipo" de
+  `CLAUDE.md` y elegir un ítem sin dueño de [PROGRESS.md](PROGRESS.md).
 
 ### Ejecución local
 
 ```bash
 pip install -r requirements.txt
 pytest tests/
-python scripts/run_pipeline.py
+python scripts/run_pipeline.py   # aún sin implementar (ítem #8): termina con NotImplementedError
 ```
+
+Mientras el ítem #8 esté pendiente, las etapas se prueban por separado:
+`python scripts/visualize_segmentation.py` (segmentación, requiere
+datasets en `data/raw/`) y los scripts `evaluate_*.py`.
 
 El CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) corre `pytest` y el `docker build` (con los tests dentro de la imagen) en cada Pull Request hacia `main` y en cada push a `main`; un PR solo se puede mergear con ambos checks en verde.
 
@@ -147,7 +183,7 @@ El CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) corre `pytest` y el
 
 ```bash
 docker build -t shelfvision-ai .
-docker run --rm shelfvision-ai
+docker run --rm shelfvision-ai   # corre run_pipeline.py: NotImplementedError hasta el ítem #8
 # Pruebas dentro del contenedor (tests/ no se copia a la imagen, se monta):
 docker run --rm -v "$(pwd)/tests:/app/tests" shelfvision-ai python -m pytest tests/
 ```
@@ -157,7 +193,7 @@ docker run --rm -v "$(pwd)/tests:/app/tests" shelfvision-ai python -m pytest tes
 ## 📅 Planificación y Cronograma (Carta Gantt)
 
 * **Fase 1 (Semanas 1 - 4 / 20%)**: Inscripción, reunión con cliente, levantamiento de RF y definición de arquitectura.
-* **Fase 2 (Semanas 5 - 16 / 50%)**: Desarrollo modular, integración, pruebas continuas en Dataset Oculto y Pre-examen.
+* **Fase 2 (Semanas 5 - 16 / 50%)**: Desarrollo modular, integración, pruebas continuas con imágenes sintéticas tipo cámara de sala (y con el Dataset Oculto, si Walmart lo ejecuta en sus instalaciones) y Pre-examen.
 * **Fase 3 (Semanas 17 - 18 / 30%)**: Ajustes finales, manuales de usuario/instalación y Exposición ante Comisión Evaluadora.
 
 ---
