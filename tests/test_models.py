@@ -32,7 +32,7 @@ def test_yolo26_nms_false_uses_end2end_head_and_respects_max_det(yolo26):
     image = np.zeros((240, 320, 3), dtype=np.uint8)
     result = yolo26.predict(image, nms=False, conf=0.0, max_det=5, imgsz=320, verbose=False)[0]
     assert yolo26.predictor.model.end2end
-    boxes = result.boxes.xyxy.numpy()
+    boxes = result.boxes.xyxy.cpu().numpy()
     assert boxes.shape == (5, 4)
     # Salida en [x_min, y_min, x_max, y_max] absolutos de la imagen de entrada.
     assert (boxes[:, 0] <= boxes[:, 2]).all() and (boxes[:, 1] <= boxes[:, 3]).all()
