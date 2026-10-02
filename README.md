@@ -94,6 +94,10 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ### Configuración de un entorno nuevo
 
+Requisitos: git, Python 3.10 o superior (el CI y la imagen Docker usan
+3.10; también se usa 3.14 en local) y acceso de escritura al repositorio
+(invitación de GitHub aceptada).
+
 ```bash
 git clone https://github.com/marianapeachy/capstone.git && cd capstone
 python -m venv .venv            # activar: .venv\Scripts\activate (Windows) / source .venv/bin/activate
@@ -101,8 +105,20 @@ pip install -r requirements.txt
 pip install graphifyy==0.9.70   # grafo del código; lo exigen los hooks de Claude Code
 graphify --version               # confirmar que resuelve a 0.9.70 (ver nota de PATH abajo)
 graphify update .               # genera graphify-out/ (no se versiona)
+cp .env.example .env            # opcional: API key de Roboflow (Windows: copy .env.example .env)
 pytest tests/
 ```
+
+`pytest tests/` no necesita datasets, pesos ni GPU: construye YOLO26 desde
+su YAML, sin conexión. Si todo pasa, el entorno quedó listo.
+
+- **PowerShell no deja activar el venv** ("la ejecución de scripts está
+  deshabilitada"): correr una vez
+  `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` y volver a
+  activar.
+- **Instalar graphify antes de abrir Claude Code** en el proyecto: los
+  hooks de `.claude/settings.json` lo llaman en cada búsqueda o lectura,
+  y sin él fallan.
 
 - **`graphify --version` no da 0.9.70 en Windows**: `pip install` deja el
   ejecutable en la carpeta `Scripts` del Python activo (el mensaje de pip
@@ -131,15 +147,24 @@ pytest tests/
 - **GitHub CLI** (`gh auth login`) para abrir Pull Requests desde la terminal.
 - **Docker Desktop** para construir y probar la imagen (ver abajo).
 - **Entrenamiento del detector** (PC con GPU NVIDIA): ver
-  [docs/training.md](docs/training.md).
+  [docs/training.md](docs/training.md). En Windows, `pip install -r
+  requirements.txt` instala PyTorch sin CUDA; para usar la GPU hay que
+  reinstalarlo como indica esa guía (paso 1). Para el resto del proyecto
+  basta el PyTorch sin CUDA.
+- **Antes de tomar trabajo**: leer la sección "Trabajo en equipo" de
+  `CLAUDE.md` y elegir un ítem sin dueño de [PROGRESS.md](PROGRESS.md).
 
 ### Ejecución local
 
 ```bash
 pip install -r requirements.txt
 pytest tests/
-python scripts/run_pipeline.py
+python scripts/run_pipeline.py   # aún sin implementar (ítem #8): termina con NotImplementedError
 ```
+
+Mientras el ítem #8 esté pendiente, las etapas se prueban por separado:
+`python scripts/visualize_segmentation.py` (segmentación, requiere
+datasets en `data/raw/`) y los scripts `evaluate_*.py`.
 
 El CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) corre `pytest` y el `docker build` (con los tests dentro de la imagen) en cada Pull Request hacia `main` y en cada push a `main`; un PR solo se puede mergear con ambos checks en verde.
 
@@ -147,7 +172,7 @@ El CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) corre `pytest` y el
 
 ```bash
 docker build -t shelfvision-ai .
-docker run --rm shelfvision-ai
+docker run --rm shelfvision-ai   # corre run_pipeline.py: NotImplementedError hasta el ítem #8
 # Pruebas dentro del contenedor (tests/ no se copia a la imagen, se monta):
 docker run --rm -v "$(pwd)/tests:/app/tests" shelfvision-ai python -m pytest tests/
 ```

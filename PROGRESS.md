@@ -310,6 +310,14 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       todo dentro de criterio (detalle en el registro del plan).
       Volver a ejecutarlo con el detector entrenado (#5) y con el
       pipeline completo (#8).
+- [x] **#20** (dueño: Francisco) Dejar el repositorio listo para clonar
+      e inicializar en un PC nuevo (Nicko, 2026-10-01). README: versión de
+      Python, `.env.example` para `ROBOFLOW_API_KEY`, activar el venv en
+      PowerShell, instalar graphify antes de abrir Claude Code, PyTorch
+      con CUDA solo para entrenar, y que `run_pipeline.py` aún no corre
+      (#8). `docs/training.md` ya no manda a la rama del PR #15
+      (mergeada). En un PR aparte, `tests/test_models.py` deja de fallar
+      en PCs con GPU NVIDIA (`.cpu().numpy()`).
 
 ## Notas
 

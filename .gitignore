@@ -16,6 +16,7 @@ ENV/
 # --- Variables de entorno / secretos ---
 .env
 .env.*
+!.env.example
 
 # --- Datos del proyecto (no versionar contenido, solo estructura) ---
 data/raw/*
