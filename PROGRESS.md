@@ -326,6 +326,22 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       modalidad, y qué datos sin imágenes pueden entregar (modelo de
       cámara y lente, campo de visión, altura y ángulo de montaje,
       resolución y compresión de los fotogramas).
+- [x] **#20** (dueño: Francisco) Dejar el repositorio listo para clonar
+      e inicializar en un PC nuevo (Nicko, 2026-10-01). README: versión de
+      Python, graphify con `uv tool` fuera del venv (instalado en el venv,
+      los hooks de Claude Code no lo encuentran), `.env.example` para
+      `ROBOFLOW_API_KEY`, activar el venv en PowerShell, `Integrante:
+      <nombre>` en `CLAUDE.local.md`, PyTorch con CUDA solo para entrenar,
+      y que `run_pipeline.py` aún no corre (#8). `CLAUDE.md`: cada sesión
+      se orienta por `PROGRESS.md` (ítem en curso de la persona o el
+      siguiente sin dueño; nada fuera del backlog). `docs/training.md` ya
+      no manda a la rama del PR #15 (mergeada). Verificado con un clon
+      limpio, venv nuevo en Python 3.14 y `pip install -r
+      requirements.txt` (torch 2.14.1 CPU, ultralytics 8.4.171, pandas
+      3.0.6): imports de todas las librerías y de `src/`, `--help` de los
+      7 scripts, `graphify update .` y `pytest tests/` 137 OK. En un PR
+      aparte, `tests/test_models.py` deja de fallar en PCs con GPU NVIDIA
+      (`.cpu().numpy()`).
 
 ## Notas
 
