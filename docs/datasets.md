@@ -42,9 +42,12 @@ del problema.
 | [ShelfRectSet](https://arxiv.org/abs/2511.20335) | Rectificación de góndolas por homografía (la corrección de perspectiva que falta en el ítem #4). | Homografía / esquinas | Anunciado por los autores (nov. 2025); sin link publicado aún |
 
 Complemento recomendado: generar imágenes "tipo CCTV" a partir de
-SKU-110K y SHARD (distorsión fisheye con `LensCalibration`, homografía
+SHARD y Kaggle supermarket-shelves (no de SKU-110K: su licencia prohíbe
+modificar sus fotos) (distorsión fisheye con `LensCalibration`, homografía
 oblicua, baja resolución, compresión JPEG, ruido), transformando también
-sus anotaciones, y pedir a Walmart fotogramas reales de sus cámaras.
+sus anotaciones. Walmart Chile no puede compartir fotogramas reales de
+sus cámaras, por privacidad (informado el 2026-10-01): estas imágenes
+sintéticas son el principal sustituto de la cámara de sala.
 
 > **Sin anotaciones de góndola ni repisa:** ninguno de los datasets
 > descargados anota la góndola ni sus repisas (SHARD, arriba, sí anota
@@ -131,6 +134,9 @@ redistribuirlo): cada integrante lo descarga con el script.
 6. **Nunca mezclar con el Dataset Oculto de Walmart Chile.** Estos
    datasets públicos son solo para entrenamiento/validación interna; el
    dataset oculto se reserva exclusivamente para la evaluación ciega
-   final (ver README, sección "Estrategia de Datos y Evaluación").
+   final (ver README, sección "Estrategia de Datos y Evaluación"). Como
+   Walmart no comparte imágenes de sus cámaras, esa evaluación solo
+   puede correrla Walmart en sus instalaciones; sus imágenes nunca
+   llegan al equipo.
 7. **Registrar en este archivo** cualquier dataset nuevo que se agregue,
    junto con su licencia y el motivo de uso.
