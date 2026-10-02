@@ -65,8 +65,9 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ## 📊 Estrategia de Datos y Evaluación
 
-* **Dataset de Entrenamiento**: Ccuraduría propia mediante fuentes públicas open-source (ej. *Hugging Face Grocery Shelves*, *Kaggle Supermarket Shelves*) con estandarización estricta de coordenadas de anotación (`[x_min, y_min, x_max, y_max]`).
-* **Prueba Ciega (Dataset Oculto)**: Evaluación iterativa contra un **Dataset Oculto** de Walmart Chile que contiene imágenes reales de sala con condiciones complejas no visibles para el equipo de desarrollo.
+* **Dataset de Entrenamiento**: Curaduría propia mediante fuentes públicas open-source (ej. *SKU-110K*, *Hugging Face Grocery Shelves*, *Kaggle Supermarket Shelves*) con estandarización estricta de coordenadas de anotación (`[x_min, y_min, x_max, y_max]`).
+* **Sin imágenes reales de Walmart**: por privacidad, Walmart Chile no puede compartir imágenes de sus cámaras de seguridad (informado el 2026-10-01). Las condiciones de cámara de sala (vista alta y oblicua, lente gran angular/*fisheye*, baja resolución, compresión) se simulan generando imágenes sintéticas desde los datasets públicos, transformando también sus anotaciones (ver [docs/datasets.md](docs/datasets.md)).
+* **Prueba Ciega (Dataset Oculto)**: la evaluación contra el **Dataset Oculto** de Walmart Chile (imágenes reales de sala con condiciones complejas) solo es posible si Walmart ejecuta el sistema en sus instalaciones (imagen Docker) y entrega las métricas, sin que las imágenes salgan de la empresa. Modalidad por confirmar con Walmart.
 
 ---
 
@@ -192,7 +193,7 @@ docker run --rm -v "$(pwd)/tests:/app/tests" shelfvision-ai python -m pytest tes
 ## 📅 Planificación y Cronograma (Carta Gantt)
 
 * **Fase 1 (Semanas 1 - 4 / 20%)**: Inscripción, reunión con cliente, levantamiento de RF y definición de arquitectura.
-* **Fase 2 (Semanas 5 - 16 / 50%)**: Desarrollo modular, integración, pruebas continuas en Dataset Oculto y Pre-examen.
+* **Fase 2 (Semanas 5 - 16 / 50%)**: Desarrollo modular, integración, pruebas continuas con imágenes sintéticas tipo cámara de sala (y con el Dataset Oculto, si Walmart lo ejecuta en sus instalaciones) y Pre-examen.
 * **Fase 3 (Semanas 17 - 18 / 30%)**: Ajustes finales, manuales de usuario/instalación y Exposición ante Comisión Evaluadora.
 
 ---
