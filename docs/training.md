@@ -20,7 +20,6 @@ Se entrena en un PC con GPU NVIDIA. En CPU, una sola época de SKU-110K a
 
 ```bash
 git clone https://github.com/marianapeachy/capstone.git && cd capstone
-git switch feat/yolo26-detector   # mientras el PR no esté mergeado en main
 python -m venv .venv              # activar: .venv\Scripts\activate (Windows) / source .venv/bin/activate
 pip install -r requirements.txt
 ```
