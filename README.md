@@ -98,12 +98,24 @@ Requisitos: git, Python 3.10 o superior (el CI y la imagen Docker usan
 3.10; también se usa 3.14 en local) y acceso de escritura al repositorio
 (invitación de GitHub aceptada).
 
+**1. graphify, una vez por PC y fuera del venv.** Los hooks de Claude Code
+(`.claude/settings.json`) llaman a `graphify` en cada búsqueda o lectura
+sin activar el venv, así que tiene que estar en el `PATH` del sistema.
+Se instala con [uv](https://docs.astral.sh/uv/), sin el venv activado:
+
+```bash
+winget install astral-sh.uv        # o: python -m pip install uv
+uv tool install graphifyy==0.9.70
+uv tool update-shell               # agrega ~/.local/bin al PATH; cerrar y reabrir la terminal y VS Code
+graphify --version                 # debe decir 0.9.70
+```
+
+**2. Proyecto:**
+
 ```bash
 git clone https://github.com/marianapeachy/capstone.git && cd capstone
 python -m venv .venv            # activar: .venv\Scripts\activate (Windows) / source .venv/bin/activate
 pip install -r requirements.txt
-pip install graphifyy==0.9.70   # grafo del código; lo exigen los hooks de Claude Code
-graphify --version               # confirmar que resuelve a 0.9.70 (ver nota de PATH abajo)
 graphify update .               # genera graphify-out/ (no se versiona)
 cp .env.example .env            # opcional: API key de Roboflow (Windows: copy .env.example .env)
 pytest tests/
@@ -112,24 +124,22 @@ pytest tests/
 `pytest tests/` no necesita datasets, pesos ni GPU: construye YOLO26 desde
 su YAML, sin conexión. Si todo pasa, el entorno quedó listo.
 
+**3. Claude Code:** crear `CLAUDE.local.md` en la raíz (no se versiona)
+con la línea `Integrante: <nombre>` (el mismo nombre que se usa en
+`(dueño: <nombre>)` de `PROGRESS.md`). Con eso Claude sabe qué ítems son
+de cada uno y cuál proponer después (ver "Trabajo en equipo" en
+`CLAUDE.md`).
+
 - **PowerShell no deja activar el venv** ("la ejecución de scripts está
   deshabilitada"): correr una vez
   `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` y volver a
   activar.
-- **Instalar graphify antes de abrir Claude Code** en el proyecto: los
-  hooks de `.claude/settings.json` lo llaman en cada búsqueda o lectura,
-  y sin él fallan.
-
-- **`graphify --version` no da 0.9.70 en Windows**: `pip install` deja el
-  ejecutable en la carpeta `Scripts` del Python activo (el mensaje de pip
-  al instalar dice cuál), y si esa carpeta no está en el `PATH` puede
-  quedar activa una copia vieja de `graphify` instalada antes en otra
-  ubicación (p. ej. `%USERPROFILE%\.local\bin`, típico de un `pip install
-  --user` previo). Con `Get-Command graphify` (PowerShell) o `which
-  graphify` (bash) se ve qué ejecutable resuelve el `PATH`; lo más simple
-  es sobrescribir esa copia vieja con la nueva (mismo nombre de archivo)
-  o agregar la carpeta `Scripts` correcta al `PATH` por delante de la
-  vieja.
+- **`graphify --version` no da 0.9.70**: otra copia de `graphify` tapa
+  la de `uv tool` en el `PATH` (p. ej. una instalada con `pip` en el
+  Python global o en un venv). `where.exe graphify` (Windows) o
+  `which -a graphify` (bash) lista todas en orden; la primera debe ser
+  la de `%USERPROFILE%\.local\bin`. Quitar las otras con
+  `pip uninstall graphifyy` en el Python donde estén.
 - **Datos** (no se versionan): `python scripts/download_datasets.py` los
   descarga a `data/raw/` (Roboflow pide `ROBOFLOW_API_KEY`; ver
   [docs/datasets.md](docs/datasets.md)) y luego `python scripts/prepare_datasets.py`.

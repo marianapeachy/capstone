@@ -122,6 +122,25 @@ ni trabajo:
    `finishing-a-development-branch` de superpowers), elegir siempre la
    opción de Pull Request: estas reglas tienen prioridad.
 
+### `PROGRESS.md` guía el trabajo de cada integrante
+
+Cada sesión de Claude trabaja sobre un ítem de `PROGRESS.md`, para que
+cada integrante sepa siempre qué le toca y no se pierda:
+
+- **Quién es la persona**: la línea `Integrante: <nombre>` de
+  `CLAUDE.local.md`. Si falta, preguntarle el nombre y agregarla.
+- **Al empezar la sesión**, después de leer `PROGRESS.md`, decirle a la
+  persona en qué está: su ítem en curso (con `(dueño: <nombre>)` y sin
+  `[x]`), o, si no tiene ninguno, proponerle el primer ítem sin dueño de
+  "Pendientes (priorizados)" (van en orden de prioridad). Se toma solo
+  cuando la persona confirma.
+- **Nada fuera del backlog**: si la persona pide algo que no es un ítem,
+  agregarlo primero como ítem nuevo (número siguiente al mayor que
+  exista), con su dueño, y recién ahí escribir código.
+- **Si el ítem queda a medias** al cerrar la sesión, anotar en el ítem
+  qué está hecho y qué falta, para retomarlo (o que lo retome otro).
+- **Al terminarlo** (regla 7), proponer el siguiente ítem sin dueño.
+
 Setup de un entorno nuevo: ver "Configuración de un entorno nuevo" en el
 README.
 
@@ -152,9 +171,10 @@ lo hecho, agregar lo nuevo pendiente) antes de cerrar la sesión.
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
 
 **El grafo no se versiona** (`graphify-out/` está en `.gitignore`): cada
-integrante lo regenera en su máquina. Requiere graphify instalado
-(`pip install graphifyy==0.9.70`); sin él, los hooks de
-`.claude/settings.json` fallan en cada búsqueda o lectura de Claude.
+integrante lo regenera en su máquina. Requiere graphify instalado fuera
+del venv (`uv tool install graphifyy==0.9.70`, ver README): los hooks de
+`.claude/settings.json` lo llaman sin activar el venv, y sin él fallan en
+cada búsqueda o lectura de Claude.
 Regenerarlo con `graphify update .` al clonar, después de cada
 `git pull` o cambio de rama, y después de modificar código. Si
 `graphify-out/graph.json` no existe, crearlo con `graphify update .`
