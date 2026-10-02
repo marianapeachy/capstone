@@ -69,13 +69,25 @@ python scripts/train_detector.py train --variant yolo26s-p2
 
 - Por defecto: 50 épocas, `imgsz=1280`, y se detiene si pasan 15 épocas
   sin mejorar. El batch se ajusta solo a ~60% de la VRAM (`--batch -1`).
-  Si se queda sin memoria, fijarlo a mano (`--batch 4`).
+  Si se queda sin memoria, fijarlo a mano (`--batch 4`). En 8 GB: `yolo26s`
+  con `--batch 2` y `yolo26s-p2` con `--batch 1` (con 2 pide 10-14 GB).
+- PyTorch usa la VRAM menos 1.5 GiB (`--vram-reserve`, 0 lo desactiva).
+  En Windows, si no, un pico de memoria no da error: el driver pagina a la
+  RAM compartida, la GPU marca 100% pero baja a ~40 W y la época va ~18
+  veces más lenta hasta que termina. El pico viene de las imágenes con
+  cientos de productos; con el límite, ese caso se resuelve en CPU
+  (`src/models/vram.py`).
+- El script desactiva EcoQoS de Windows para su proceso
+  (`src/models/power.py`). Lanzado en segundo plano (sin ventana),
+  Windows 11 lo manda a los núcleos de eficiencia y, con batch 1, P2 baja
+  de ~7 a ~3,7 it/s con la GPU a la mitad.
 - Cada corrida queda en `data/processed/training/<variante>/`. Ahí,
   `results.csv` va registrando las métricas por época; la primera época da
   una estimación del tiempo total.
 - Si se corta (por un corte de luz, un reinicio o un Ctrl+C), se continúa
   donde quedó:
   `python scripts/train_detector.py resume data/processed/training/yolo26s`.
+  Para bajar el batch guardado al reanudar: `resume <carpeta> --batch 1`.
 - El entrenamiento y la validación usan `nms=False` y `max_det=1000`, igual
   que la inferencia del pipeline (`src/models/detector.py`). Con los
   valores por defecto, Ultralytics mediría la cabeza con NMS y cortaría en

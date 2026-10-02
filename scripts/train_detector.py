@@ -11,6 +11,7 @@ Uso (en un PC con GPU NVIDIA; ver docs/training.md):
     python scripts/train_detector.py train --variant yolo26s
     python scripts/train_detector.py train --variant yolo26s-p2
     python scripts/train_detector.py resume data/processed/training/yolo26s
+    python scripts/train_detector.py resume data/processed/training/yolo26s-p2 --batch 1
     python scripts/train_detector.py val --weights data/processed/training/yolo26s/weights/best.pt
 
 Prueba corta en CPU (verifica el flujo, no entrena en serio):
@@ -30,6 +31,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from ultralytics import YOLO  # noqa: E402
 
 from src.models.detector import IMGSZ, MAX_DET  # noqa: E402
+from src.models.power import disable_eco_qos  # noqa: E402
+from src.models.vram import limit_vram  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_DATA = ROOT / "data" / "processed" / "yolo" / "sku110k" / "data.yaml"
@@ -57,6 +60,16 @@ def require_cuda(device: str) -> None:
         )
 
 
+def prepare_process(device: str, reserve_gib: float) -> None:
+    # Sin esto, en Windows un pico de memoria pagina a la RAM compartida en
+    # vez de fallar, y la epoca sigue ~18 veces mas lenta (ver src/models/vram.py).
+    if reserve_gib > 0 and (summary := limit_vram(device, reserve_gib)):
+        print(summary)
+    # Lanzado en segundo plano, Windows lo mandaria a los nucleos de eficiencia.
+    if disable_eco_qos():
+        print("EcoQoS de Windows desactivado para este proceso")
+
+
 def build_model(variant: str) -> YOLO:
     source, transfer = VARIANTS[variant]
     model = YOLO(source)
@@ -67,6 +80,7 @@ def build_model(variant: str) -> YOLO:
 
 def train(args: argparse.Namespace) -> None:
     require_cuda(args.device)
+    prepare_process(args.device, args.vram_reserve)
     build_model(args.variant).train(
         data=str(args.data),
         epochs=args.epochs,
@@ -89,12 +103,16 @@ def resume(args: argparse.Namespace) -> None:
     if not last.exists():
         sys.exit(f"No existe {last}")
     overrides = {"device": args.device} if args.device else {}
+    if args.batch:
+        overrides["batch"] = args.batch
     require_cuda(args.device or "0")
+    prepare_process(args.device or "0", args.vram_reserve)
     YOLO(str(last)).train(resume=True, **overrides)
 
 
 def val(args: argparse.Namespace) -> None:
     require_cuda(args.device)
+    disable_eco_qos()
     # Absoluta: Ultralytics anida un `project` relativo dentro de runs/detect/.
     weights = Path(args.weights).resolve()
     run_dir = weights.parent.parent
@@ -137,8 +155,12 @@ def main() -> None:
     common.add_argument("--imgsz", type=int, default=IMGSZ)
     common.add_argument("--device", default="0", help='GPU ("0", "0,1") o "cpu"')
     common.add_argument("--workers", type=int, default=8)
+    vram = argparse.ArgumentParser(add_help=False)
+    vram.add_argument(
+        "--vram-reserve", type=float, default=1.5, help="GiB de la GPU que PyTorch deja libres (0: sin limite)"
+    )
 
-    p_train = sub.add_parser("train", parents=[common], help="entrenar una variante")
+    p_train = sub.add_parser("train", parents=[common, vram], help="entrenar una variante")
     p_train.add_argument("--variant", choices=VARIANTS, required=True)
     p_train.add_argument("--epochs", type=int, default=50)
     p_train.add_argument("--batch", type=int, default=-1, help="-1: el mayor que quepa en ~60%% de la GPU")
@@ -146,9 +168,10 @@ def main() -> None:
     p_train.add_argument("--name", help="nombre de la corrida (default: la variante)")
     p_train.set_defaults(func=train)
 
-    p_resume = sub.add_parser("resume", help="continuar una corrida cortada")
+    p_resume = sub.add_parser("resume", parents=[vram], help="continuar una corrida cortada")
     p_resume.add_argument("run", help="carpeta de la corrida o su weights/last.pt")
     p_resume.add_argument("--device", help="cambiar el dispositivo guardado en la corrida")
+    p_resume.add_argument("--batch", type=int, help="cambiar el batch guardado (ej. 1 si no cabe en la GPU)")
     p_resume.set_defaults(func=resume)
 
     p_val = sub.add_parser("val", parents=[common], help="evaluar pesos entrenados")
