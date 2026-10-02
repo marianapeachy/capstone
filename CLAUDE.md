@@ -25,6 +25,17 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
   `crop_roi(imagen_corregida, segmentacion.roi)`. Las detecciones vuelven
   a la imagen original con `RoiCrop.to_original()` y luego
   `CorrectedImage.to_original()`.
+- **Niveles de repisa híbridos** (decidido 2026-10-01, ítem #22): los
+  niveles que mide la disponibilidad salen de `shelf_levels()`
+  (`src/postprocessing/shelf_levels.py`), que combina las filas de
+  productos detectados (sus bases marcan la repisa aunque esté inclinada)
+  con `segmentacion.shelf_lines` (aportan las repisas vacías), como
+  franjas inclinadas. Flujo: detecciones en coordenadas de la imagen
+  corregida (`RoiCrop.to_original()`) -> `shelf_levels(cajas,
+  [astuple(l) for l in segmentacion.shelf_lines], segmentacion.roi)` ->
+  `compute_availability(cajas, niveles)`. `GondolaSegmentation.shelves`
+  (rectángulos horizontales) queda para recortar la ROI, no para medir:
+  con la cámara en ángulo mezcla repisas vecinas.
 - **Profundidad constante**: toda góndola se asume de **25 cm** de
   profundidad (valor fijo, dentro del rango real de 20-30 cm). No se
   estima profundidad (sin modelos de profundidad ni visión estéreo): el
@@ -46,10 +57,19 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
   estructuras de datos simples (arrays, dicts, dataclasses).
 - **Umbral de quiebre de stock**: se alerta cuando el espacio **libre** es
   `>= 30%` del frente de la góndola (disponibilidad `<= 70%`; MVP Nivel
-  2, ver README). El espacio libre se mide como cobertura horizontal por
-  repisa: huecos de al menos un ancho de producto, sin medir la altura
-  de los productos, en la góndola acotada a los productos detectados
+  2, ver README). El espacio libre se mide como cobertura a lo largo de
+  cada repisa (en X, sobre las franjas de `shelf_levels()`): huecos de
+  al menos un ancho de producto, sin medir la altura de los productos,
+  en la góndola acotada a los productos detectados
   (`src/postprocessing/availability.py`, decidido 2026-09-30).
+- **Licencias de datos**: SKU-110K es solo para uso académico y no
+  comercial, y su licencia prohíbe distribuir, mostrar a terceros o
+  **modificar** sus fotos (crear obras derivadas). Se usa para entrenar
+  y evaluar, nunca para generar imágenes sintéticas (vistas en ángulo,
+  distorsión de lente) ni para demos ante Walmart u otros externos: para
+  eso, datasets que lo permitan (Kaggle supermarket-shelves CC0, SHARD y
+  Roboflow CC BY 4.0). Ver `src/datasets/sources.py` y
+  `docs/datasets.md`.
 
 ## Estructura relevante
 

@@ -16,7 +16,7 @@ de cada integrante.
 
 | Dataset | Fuente | Por qué aporta valor | Licencia | Estado |
 | --- | --- | --- | --- | --- |
-| [SKU-110K](https://docs.ultralytics.com/datasets/detect/sku-110k/) | [Trax Retail / eg4000/SKU110K_CVPR19](https://github.com/eg4000/SKU110K_CVPR19) | Benchmark académico estándar (CVPR'19) para detección en góndolas densamente pobladas: 11,743 imágenes, 1.7M+ bounding boxes de producto en clase única. **Soporte nativo en Ultralytics** (YAML de config `SKU-110K.yaml` incluido en la librería `ultralytics`, compatible con YOLO26). Ideal para pre-entrenar/afinar el detector base antes del dataset oculto de Walmart Chile. | Académico y no comercial, sin redistribución | Descargado (12.2 GB) en `data/raw/sku-110k/SKU110K_fixed/` (train/val/test + anotaciones CSV). Se descarga con `scripts/download_datasets.py` (clave `sku110k`) |
+| [SKU-110K](https://docs.ultralytics.com/datasets/detect/sku-110k/) | [Trax Retail / eg4000/SKU110K_CVPR19](https://github.com/eg4000/SKU110K_CVPR19) | Benchmark académico estándar (CVPR'19) para detección en góndolas densamente pobladas: 11,743 imágenes, 1.7M+ bounding boxes de producto en clase única. **Soporte nativo en Ultralytics** (YAML de config `SKU-110K.yaml` incluido en la librería `ultralytics`, compatible con YOLO26). Ideal para pre-entrenar/afinar el detector base antes del dataset oculto de Walmart Chile. | Académico y no comercial, de uso exclusivo de quien lo descarga: prohíbe distribuir, dar acceso a terceros y **modificar** las fotos (obras derivadas); son información confidencial de Trax (`LICENSE.txt` del dataset) | Descargado (12.2 GB) en `data/raw/sku-110k/SKU110K_fixed/` (train/val/test + anotaciones CSV). Se descarga con `scripts/download_datasets.py` (clave `sku110k`) |
 | [Out Of Stock detection](https://universe.roboflow.com/empty-space-detection-capstone/out-of-stock-detection) | Roboflow Universe | Anota directamente la clase **"Empty-space"**, no productos. Es el único dataset de la lista alineado 1:1 con RF02/RF03 (alerta con espacio libre `>= 30%`), en vez de inferir el vacío por ausencia de producto. | CC BY 4.0 | Descargado (346 MB, formato COCO) en `data/raw/out-of-stock-detection-roboflow/train/` (3024 imágenes, `_annotations.coco.json`). Solo trae split `train`, sin `valid`/`test`. Se descarga con `scripts/download_datasets.py` (clave `roboflow_out_of_stock`; requiere `ROBOFLOW_API_KEY`) |
 | [Empty Shelf Detector](https://universe.roboflow.com/fyp-ormnr/empty-shelf-detector) | Roboflow Universe | Complementa al anterior con más variabilidad de ángulos/iluminación en la misma clase "empty". | CC BY 4.0 | Descargado (31 MB, formato COCO) en `data/raw/empty-shelf-detector-roboflow/` (train: 291, valid: 24, test: 18 imágenes). Se descarga con `scripts/download_datasets.py` (clave `roboflow_empty_shelf`; requiere `ROBOFLOW_API_KEY`) |
 
@@ -117,7 +117,11 @@ redistribuirlo): cada integrante lo descarga con el script.
 1. **Verificar licencia antes de descargar.** Todos deben permitir uso
    académico/no comercial. SKU-110K lo permite explícitamente pero
    prohíbe redistribución: no subir las imágenes a este repo ni a
-   ningún servicio externo, solo referenciarlas por URL.
+   ningún servicio externo, solo referenciarlas por URL. Tampoco se
+   pueden modificar sus fotos ni mostrarlas a terceros: las vistas
+   sintéticas en ángulo (`src/datasets/synthetic.py`) y las demos ante
+   Walmart usan datasets que lo permiten (Kaggle supermarket-shelves,
+   CC0; SHARD y Roboflow, CC BY 4.0).
 2. **Descargar a `data/raw/<nombre-dataset>/`**, nunca a la raíz del
    repo. Esa carpeta está en `.gitignore`, así que no se versiona.
 3. **Estandarizar anotaciones** al formato definido en `CLAUDE.md`:

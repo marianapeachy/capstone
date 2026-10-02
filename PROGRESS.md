@@ -314,6 +314,63 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       todo dentro de criterio (detalle en el registro del plan).
       Volver a ejecutarlo con el detector entrenado (#5) y con el
       pipeline completo (#8).
+- [x] **#22** (dueño: Francisco) Repisas inclinadas (fotos en ángulo
+      o cámara de sala). Problema: con perspectiva, `segment_gondola()`
+      pierde repisas (acepta 8° de inclinación como máximo y en vista
+      oblicua cada repisa da varios bordes: superficie, borde frontal y
+      sombra) y sus niveles son rectángulos horizontales que se meten en
+      los niveles vecinos: los productos de una repisa tapan los huecos
+      de otra y aparecen huecos falsos. Hecho: `src/postprocessing/
+      shelf_levels.py` con `shelf_levels(productos, líneas de la
+      segmentación, ROI)` -> niveles como franjas inclinadas
+      (cuadriláteros de lados verticales), y `compute_availability()`
+      acepta esas franjas además de los bbox (cobertura medida a lo largo
+      de la repisa). Repisas = (1) filas de productos: rectas por las
+      bases de al menos 3 productos (búsqueda tipo Hough en la pendiente,
+      hasta 35°), descartando las que cruzan productos por la mitad, las
+      capas de una pila (la mayoría de sus productos apoyados directo
+      sobre otro, sin borde de repisa) y las que no calzan con un mismo
+      punto de fuga (pendiente lineal en la altura; tolerancia 3°); más
+      (2) las líneas de la segmentación que no cruzan productos (ataca la
+      primera limitación de #17) ni quedan a menos del 40% de la
+      distancia típica entre filas (la tira de precios bajo los
+      productos), que aportan las repisas vacías. Cada nivel se mide solo
+      donde su línea central queda dentro de la ROI (la repisa puede
+      salir de la foto) y se descartan los niveles vacíos de menos de la
+      mitad del alto típico (bordes de repisa). Vistas en ángulo
+      sintéticas: `src/datasets/synthetic.py` (`oblique_view()`: giro de
+      cámara como homografía K R K^-1, anotaciones transformadas,
+      recortada sin bordes negros); solo con fotos que se pueden
+      modificar (Kaggle CC0): la licencia de SKU-110K prohíbe obras
+      derivadas. `scripts/evaluate_availability.py` ahora acepta
+      `--dataset kaggle`, `--yaw`/`--pitch` y compara la variante
+      `hibrido` con `segmentacion` (anotaciones como detector, ver #6).
+      Resultados, alerta con libre >= 30% (híbrido / segmentación):
+      SKU-110K `val` de frente (300 fotos usadas para ajustar / 288 de
+      control), recall 0.9: falsas alertas con la góndola llena 6% / 4%
+      y 6% / 3%; quiebre de 30% en el interior detectado 93% / 87% y
+      94% / 88%. Kaggle (45 fotos), recall 0.9: de frente, falsas
+      alertas 4% / 2% y quiebre de 30% 71% / 53%; girada 20° y 15° hacia
+      abajo, 2% / 2% y 69% / 67%; girada 35° y 15° hacia abajo, 2% / 7%
+      y 38% / 33% (quiebre de 40%: 91% / 93%). En resumen: de frente
+      detecta más quiebres con algo más de falsas alertas (sus niveles
+      no esconden huecos); con ángulo, la alerta global queda pareja,
+      pero los niveles siguen las repisas, así que el detalle por repisa
+      (Nivel 1) deja de mezclarlas. Foto real en ángulo (Kaggle 039, con
+      `yolo26s` entrenado): 3 franjas que siguen las repisas, 5% libre y
+      sin alerta (con la segmentación sola: 5 niveles cruzados, huecos
+      falsos de 77% y 36%). Tests: 28 nuevos (18 en
+      `tests/test_shelf_levels.py`, 6 en `tests/test_synthetic_views.py`
+      y 4 nuevos en `tests/test_availability.py`). Limitaciones: el
+      espacio libre se mide en píxeles de la imagen, y con perspectiva
+      el tramo lejano de la repisa pesa menos que el cercano (corregirlo
+      pide enderezar la góndola, la opción 3 que quedó pendiente); una
+      última repisa con menos de 3 productos y sin borde visible no se
+      mide; parámetros ajustados con las mismas fotos de SKU-110K y
+      Kaggle (las 288 de control confirman SKU-110K de frente, pero no
+      hay control con ángulo). Pendiente: usar `shelf_levels()` en
+      `scripts/run_pipeline.py` (#8) y medir con el detector entrenado y
+      fotos reales en ángulo.
 - [x] **#21** (dueño: Francisco) Ajustar la documentación a que Walmart
       Chile no puede compartir imágenes reales de sus cámaras de
       seguridad, por privacidad (informado 2026-10-01). README

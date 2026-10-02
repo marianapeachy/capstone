@@ -68,7 +68,7 @@ python scripts/train_detector.py val --weights <best.pt> --split test   # DET-04
 | SEG-02 | Las repisas detectadas coinciden con las anotadas en SHARD (tolerancia 3% del alto) | `evaluate_shard.py --split holdout` | F1 >= 0.80 **(por acordar)**; no bajar de la última medición | P 0.796 / R 0.851 / F1 0.823 (2026-09-30; igual que en #15) |
 | SEG-03 | La ROI contiene los productos | `visualize_segmentation.py` (`metrics.csv`, `annotations_inside_roi`) | >= 0.99 en cada dataset | 0.99-1.00 (2026-09-30) |
 | SEG-04 | Revisión visual de 30 láminas por dataset | `visualize_segmentation.py` | Las líneas rojas caen sobre bordes de repisa reales; sin diagonales; la ROI cubre los productos. Anotar los casos que fallan | Hecho en #15; limitaciones en #17 |
-| SEG-05 | Funciona con vista de cámara de sala (alta, oblicua, fisheye) | Imágenes tipo CCTV (#14) | Por definir con #14 | **No probado** |
+| SEG-05 | Funciona con vista de cámara de sala (alta, oblicua, fisheye) | Imágenes tipo CCTV (#14) | Por definir con #14 | **Parcial** (#22): con giro de cámara la segmentación sola pierde repisas; los niveles de la disponibilidad salen de `shelf_levels()` (AV-06). Sin probar: fisheye y cámaras reales |
 
 ## 4. Recorte de ROI (ítems #1, #2)
 
@@ -87,14 +87,16 @@ python scripts/train_detector.py val --weights <best.pt> --split test   # DET-04
 | DET-04 | La variante ganadora en `test` (una sola vez) | `train_detector.py val --split test` | Recall >= 0.90 con `conf=0.25` **(por acordar)**: la tasa de falsas alertas de AV-02 (4%) se midió con recall 0.9, y con 0.8 sube a 11.7%. `map50_95` se informa | **Pendiente** |
 | DET-05 | Revisión visual de las detecciones | Láminas `val_batch*_pred.jpg` de Ultralytics | Cajas ajustadas a cada producto, sin cajas sobre carteles ni pilares | **Pendiente** |
 
-## 6. Disponibilidad y alerta (ítem #6, PR #16)
+## 6. Disponibilidad y alerta (ítems #6 y #22)
 
 | ID | Qué se verifica | Cómo | Criterio | Último resultado |
 | --- | --- | --- | --- | --- |
-| AV-01 | Huecos, acotado a los productos, niveles, umbral inclusivo de 30%, volumen con 25 cm | `tests/test_availability.py` | Pasan | Pasan (24 tests) |
-| AV-02 | Falsas alertas con la góndola llena (anotaciones de SKU-110K como detector, recall simulado 0.9) | `evaluate_availability.py` | <= 5% **(por acordar)** | 4.0% (2026-09-30) |
-| AV-03 | Detección de un quiebre simulado de 40% del frente en el interior | `evaluate_availability.py` | >= 95% **(por acordar)** | 99.7% (2026-09-30) |
+| AV-01 | Huecos, acotado a los productos, niveles (bbox y franjas inclinadas), umbral inclusivo de 30%, volumen con 25 cm | `tests/test_availability.py` | Pasan | Pasan (28 tests) |
+| AV-02 | Falsas alertas con la góndola llena (anotaciones de SKU-110K como detector, recall simulado 0.9) | `evaluate_availability.py` | <= 5% **(por acordar)** | 4.0% (2026-09-30). Con los niveles de `shelf_levels()` (variante `hibrido`, #22): 6% en las mismas 300 fotos y en 288 de control (2026-10-01), **sobre el criterio** |
+| AV-03 | Detección de un quiebre simulado de 40% del frente en el interior | `evaluate_availability.py` | >= 95% **(por acordar)** | 99.7% (2026-09-30); `hibrido`: 100% (2026-10-01) |
 | AV-04 | AV-02 y AV-03 con las detecciones del modelo entrenado en vez de las anotaciones | `evaluate_availability.py` con detector (hay que agregarle esa opción) | Mismos criterios | **Pendiente**: #5 |
+| AV-05 | Niveles desde filas de productos: repisas inclinadas, repisa vacía aportada por la segmentación, pilas, diagonales, recorte a la ROI; vistas sintéticas en ángulo | `tests/test_shelf_levels.py`, `tests/test_synthetic_views.py` | Pasan | Pasan (18 + 6 tests, 2026-10-01) |
+| AV-06 | AV-02 y AV-03 con la cámara girada (vistas sintéticas de Kaggle, 45 fotos, giro 20° y 35° y 15° hacia abajo) | `evaluate_availability.py --dataset kaggle --yaw 0 20 35 --pitch -15` | Mismos criterios **(por acordar)** | `hibrido`, recall 0.9: falsas alertas 2% / 2% (20° / 35°); quiebre de 40% detectado 96% / 91% (2026-10-01) |
 
 ## 7. Integración entre etapas
 
