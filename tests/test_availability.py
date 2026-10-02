@@ -183,3 +183,52 @@ def test_free_volume_uses_the_constant_depth():
     assert free_volume_cm3(400 * 200, 0.1) == pytest.approx(20000.0)
     with pytest.raises(ValueError):
         free_volume_cm3(100, 0)
+
+
+# Niveles inclinados (cuadrilateros de lados verticales, item #22).
+
+
+def as_quad(bbox):
+    x0, y0, x1, y1 = bbox
+    return ((x0, y0), (x1, y0), (x1, y1), (x0, y1))
+
+
+def test_quad_level_matches_its_bbox():
+    products = [(0, 50, 100, 200), (100, 50, 200, 200), (600, 50, 700, 200)]
+    flat = compute_availability(products, LEVELS[:1])
+    quad = compute_availability(products, [as_quad(LEVELS[0])])
+    assert quad.free_fraction == pytest.approx(flat.free_fraction)
+    assert quad.shelves[0].gaps == flat.shelves[0].gaps
+    assert quad.shelves[0].bbox == flat.shelves[0].bbox
+    assert quad.free_area_px == pytest.approx(flat.free_area_px)
+
+
+def test_tilted_level_covers_products_along_the_shelf():
+    # Repisa con pendiente 0.3: de y=100..300 en x=0 a y=400..600 en x=1000.
+    level = ((0, 100), (1000, 400), (1000, 600), (0, 300))
+    products = [(x, 0.3 * (x + 50) + 150, x + 100, 0.3 * (x + 50) + 300) for x in range(0, 1000, 100)]
+    del products[4:7]  # hueco de 300 px en el medio
+    result = compute_availability(products, [level])
+    shelf = result.shelves[0]
+    assert shelf.product_count == 7
+    assert shelf.gaps == ((400.0, 700.0),)
+    assert shelf.polygon == level
+    assert shelf.bbox == (0.0, 100.0, 1000.0, 600.0)
+    assert shelf.height == pytest.approx(200)
+    assert shelf.free_area_px == pytest.approx(300 * 200)
+
+
+def test_tilted_level_ignores_products_of_the_shelf_above():
+    level = ((0, 100), (1000, 400), (1000, 600), (0, 300))
+    above = [(400, 0, 500, 230)]  # a la altura de su centro, el nivel empieza en y=235
+    result = compute_availability(above, [level], AvailabilityParams(trim_to_products=False))
+    assert result.shelves[0].product_count == 0
+
+
+def test_tilted_level_validation():
+    with pytest.raises(ValueError):  # lados no verticales
+        compute_availability([], [((0, 0), (100, 0), (120, 50), (0, 50))])
+    with pytest.raises(ValueError):  # borde inferior sobre el superior en un extremo
+        compute_availability([], [((0, 0), (100, 80), (100, 60), (0, 50))])
+    with pytest.raises(ValueError):  # ni bbox ni cuadrilatero
+        compute_availability([], [(0, 0, 100)])
