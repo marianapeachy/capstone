@@ -419,6 +419,14 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       la tarea: Evaluación 2 (Avance) de la Fase 2 y cierre del Sprint 1
       la semana del 2026-10-28, Fase 3 por definir, y decidir la versión
       de Python de la imagen a más tardar 2026-10-16.
+- [x] **#25** (dueño: Francisco) Registro de requisitos y plazos del
+      curso en `docs/curso.md` (próximos hitos, requisitos vigentes,
+      anuncios pendientes, preguntas abiertas y registro por semana),
+      con la skill `/mensaje-profesor` que normaliza cada mensaje del
+      profesor. Flujo en `CLAUDE.md` ("Mensajes del profesor"). Primer
+      mensaje registrado: semana 8 (Evaluación 2 y documentos de la Fase
+      2). Los enlaces no se versionan (repositorio público): se anota la
+      fecha del mensaje que los trae.
 
 ## Notas
 
