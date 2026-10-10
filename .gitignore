@@ -33,6 +33,10 @@ data/processed/*
 !docs/**/*.png
 !Anexos/**/*.png
 
+# --- Minutas de reuniones con Walmart: confidenciales, nunca versionar ---
+# (se comparten por Drive; ver "Minutas de reuniones con Walmart" en CLAUDE.md)
+/minutas-walmart/
+
 # --- Checkpoints y pesos de modelos (YOLO26 / PyTorch / ONNX) ---
 *.pt
 *.onnx
