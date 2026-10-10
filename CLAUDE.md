@@ -77,9 +77,10 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
 src/preprocessing/   # Filtros CLAHE, dewarping, segmentación automática y recorte de ROI
 src/models/           # Inferencia YOLO26 (Ultralytics)
 src/postprocessing/    # Cálculo de disponibilidad y alerta (libre >= 30%)
-src/reporting/         # Reportes en Excel, CSV y PDF
-src/evaluation/        # Métricas de evaluación (no es etapa del pipeline)
-scripts/               # CLI de ejecución del pipeline
+src/reporting/         # Vista anotada (annotate.py) y reportes en Excel, CSV y PDF
+src/evaluation/        # Métricas de evaluación, ej. IoU de detección (no es etapa del pipeline)
+src/pipeline.py        # Encadena las etapas para una foto (run_image); no es una etapa
+scripts/               # CLI de ejecución del pipeline (run_pipeline.py) y de evaluación
 tests/                 # Pruebas unitarias con pytest
 data/raw/              # Imágenes de entrada (no versionadas)
 data/processed/        # Salidas intermedias/procesadas (no versionadas)
@@ -89,7 +90,7 @@ data/processed/        # Salidas intermedias/procesadas (no versionadas)
 
 ```bash
 pytest tests/
-python scripts/run_pipeline.py
+python scripts/run_pipeline.py FOTOS_O_CARPETAS... [--annotations CSV]   # vista limpia + JSON (+ métricas IoU)
 python scripts/visualize_segmentation.py   # revisar la segmentación a ojo
 ```
 
