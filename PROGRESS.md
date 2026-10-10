@@ -1,7 +1,9 @@
 # Bitácora de Sprint 1 - ShelfVision AI
 
 El Sprint 1 cierra con la demo de la Evaluación 2 (Avance) de la Fase
-2: semana del 2026-10-28, con el 50% de los C.U de la fase resueltos.
+2: semana del 2026-10-28, con el 50% de los C.U de la fase resueltos,
+y debe servir como primer demo operativo ante Walmart (a más tardar
+2026-10-31). Ver `docs/curso.md`.
 
 Cada ítem tiene un número fijo (**#N**) que no cambia al reordenar: los
 PR y otros documentos lo citan. Para tomar un ítem, agregar
@@ -51,6 +53,50 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 
 ## Pendientes (priorizados)
 
+Los cuatro primeros responden al mensaje del profesor de la semana 8
+(ver "Próximos hitos" en `docs/curso.md`).
+
+- [ ] **#26** (dueño: Mariana) Plan de mejoras de la Fase 1: elaborarlo
+      y empezar a implementarlo a más tardar 2026-10-09, según las
+      observaciones de la evaluación y rúbrica de la Fase 1.
+- [ ] **#27** (dueño: Nicko) Informe de estado de avance para el
+      profesor, con los puntos que pidió su correo de la semana 7. Ya
+      atrasado: el profesor lo está esperando.
+- [ ] **#28** (dueño: Francisco) Aplicación web mínima: login por
+      perfil (Reponedor, Jefe de Salón, Administrador; CU00), CRUD de
+      usuarios y roles (CU06) y base de datos. Ya atrasado: el profesor
+      espera CRUD y Login operativos. Primero elegir el stack (ej.
+      FastAPI o Django con SQLite).
+- [ ] **#29** (dueño: Nicko) Primer demo operativo ante Walmart, a más
+      tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
+      del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
+      y reportes (#7), integrados con la aplicación web (#28). Para la
+      demo, solo fotos que se pueden mostrar a terceros (no SKU-110K).
+- [ ] **#5** (dueño: Francisco) Integrar inferencia YOLO26 en `src/models/` (se decidió
+      YOLO26 sobre YOLOv8/YOLO11 por su cabeza sin NMS y mejor manejo de
+      objetos chicos, clave en productos apilados). Validado en local:
+      `ultralytics` 8.4.164 + `yolo26n.pt` corre sobre SKU-110K y se
+      encadena con `crop_roi()`/`to_original()`; `tests/test_models.py`
+      fija el contrato (versión >= 8.4.0, `nms=False` activa el modo
+      end-to-end y respeta `max_det`). Hecho (2026-09-29): inferencia en
+      `src/models/detector.py` (`ProductDetector.detect()` -> lista de
+      `Detection` con bbox estándar, fija `nms=False`, `max_det=1000` e
+      `imgsz=1280`, y rechaza modelos sin cabeza sin NMS). Dataset YOLO con
+      `scripts/prepare_yolo_dataset.py` (`xyxy_to_yolo()` en
+      `converters.py`). Las imágenes se enlazan desde `data/raw/`; los 712
+      JPEG truncados de SKU-110K se copian, porque Ultralytics los
+      reescribe al repararlos. Entrenamiento, reanudación y evaluación en
+      `scripts/train_detector.py` (variantes `yolo26s` y `yolo26s-p2`,
+      entrena y valida con `nms=False` y `max_det=1000`: por defecto
+      Ultralytics mide la cabeza con NMS y corta en 300 cajas). Guía para
+      el PC con GPU en `docs/training.md`. Todo el flujo verificado con
+      una prueba corta en CPU (16 imágenes, 1 época). Pendiente: entrenar
+      en el PC con GPU NVIDIA (sin GPU en el portátil de Francisco),
+      comparar las dos variantes en `val`, evaluar la ganadora en `test` y
+      registrar aquí las métricas. Para 8 GB bajo Windows (2026-10-01):
+      límite de VRAM con asignador en CPU ante OOM (`src/models/vram.py`),
+      EcoQoS desactivado (`src/models/power.py`) y `resume --batch`; P2
+      entrena con batch 1.
 - [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#26, acuerdos con Walmart en el
       README): % libre por góndola y por repisa, y alerta sí/no; así sirve
