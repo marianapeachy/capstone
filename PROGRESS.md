@@ -14,7 +14,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | Etapa | Estado | Ítems |
 | --- | --- | --- |
 | `src/preprocessing/` | Hecho: corrección de imagen, segmentación de góndola y recorte de ROI | #1, #2, #3, #4 |
-| `src/models/` | En curso: `ProductDetector` y scripts de entrenamiento listos; falta entrenar en GPU | #5 |
+| `src/models/` | Hecho: `ProductDetector` y detector `yolo26s` entrenado (mAP50-95 0.610 en test de SKU-110K) | #5 |
 | `src/postprocessing/` | Hecho: disponibilidad por repisa y alerta de quiebre (libre >= 30%) | #6 |
 | `src/reporting/` | Pendiente | #7 |
 | `scripts/run_pipeline.py` | Pendiente | #8 |
@@ -51,31 +51,6 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 
 ## Pendientes (priorizados)
 
-- [ ] **#5** (dueño: Francisco) Integrar inferencia YOLO26 en `src/models/` (se decidió
-      YOLO26 sobre YOLOv8/YOLO11 por su cabeza sin NMS y mejor manejo de
-      objetos chicos, clave en productos apilados). Validado en local:
-      `ultralytics` 8.4.164 + `yolo26n.pt` corre sobre SKU-110K y se
-      encadena con `crop_roi()`/`to_original()`; `tests/test_models.py`
-      fija el contrato (versión >= 8.4.0, `nms=False` activa el modo
-      end-to-end y respeta `max_det`). Hecho (2026-09-29): inferencia en
-      `src/models/detector.py` (`ProductDetector.detect()` -> lista de
-      `Detection` con bbox estándar, fija `nms=False`, `max_det=1000` e
-      `imgsz=1280`, y rechaza modelos sin cabeza sin NMS). Dataset YOLO con
-      `scripts/prepare_yolo_dataset.py` (`xyxy_to_yolo()` en
-      `converters.py`). Las imágenes se enlazan desde `data/raw/`; los 712
-      JPEG truncados de SKU-110K se copian, porque Ultralytics los
-      reescribe al repararlos. Entrenamiento, reanudación y evaluación en
-      `scripts/train_detector.py` (variantes `yolo26s` y `yolo26s-p2`,
-      entrena y valida con `nms=False` y `max_det=1000`: por defecto
-      Ultralytics mide la cabeza con NMS y corta en 300 cajas). Guía para
-      el PC con GPU en `docs/training.md`. Todo el flujo verificado con
-      una prueba corta en CPU (16 imágenes, 1 época). Pendiente: entrenar
-      en el PC con GPU NVIDIA (sin GPU en el portátil de Francisco),
-      comparar las dos variantes en `val`, evaluar la ganadora en `test` y
-      registrar aquí las métricas. Para 8 GB bajo Windows (2026-10-01):
-      límite de VRAM con asignador en CPU ante OOM (`src/models/vram.py`),
-      EcoQoS desactivado (`src/models/power.py`) y `resume --batch`; P2
-      entrena con batch 1.
 - [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`.
 - [ ] **#8** Implementar `scripts/run_pipeline.py` como CLI que orquesta
@@ -196,6 +171,42 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       oblicuo (llevar el contorno de la góndola a un rectángulo) va
       aquí, porque necesita ese contorno; `image_correction.py` no la
       hace.
+- [x] **#5** (dueño: Francisco) Integrar inferencia YOLO26 en `src/models/` (se decidió
+      YOLO26 sobre YOLOv8/YOLO11 por su cabeza sin NMS y mejor manejo de
+      objetos chicos, clave en productos apilados). Validado en local:
+      `ultralytics` 8.4.164 + `yolo26n.pt` corre sobre SKU-110K y se
+      encadena con `crop_roi()`/`to_original()`; `tests/test_models.py`
+      fija el contrato (versión >= 8.4.0, `nms=False` activa el modo
+      end-to-end y respeta `max_det`). Hecho (2026-09-29): inferencia en
+      `src/models/detector.py` (`ProductDetector.detect()` -> lista de
+      `Detection` con bbox estándar, fija `nms=False`, `max_det=1000` e
+      `imgsz=1280`, y rechaza modelos sin cabeza sin NMS). Dataset YOLO con
+      `scripts/prepare_yolo_dataset.py` (`xyxy_to_yolo()` en
+      `converters.py`). Las imágenes se enlazan desde `data/raw/`; los 712
+      JPEG truncados de SKU-110K se copian, porque Ultralytics los
+      reescribe al repararlos. Entrenamiento, reanudación y evaluación en
+      `scripts/train_detector.py` (variantes `yolo26s` y `yolo26s-p2`,
+      entrena y valida con `nms=False` y `max_det=1000`: por defecto
+      Ultralytics mide la cabeza con NMS y corta en 300 cajas). Guía para
+      el PC con GPU en `docs/training.md`. Todo el flujo verificado con
+      una prueba corta en CPU (16 imágenes, 1 época). Para 8 GB bajo
+      Windows (2026-10-01): límite de VRAM con asignador en CPU ante OOM
+      (`src/models/vram.py`), EcoQoS desactivado (`src/models/power.py`) y
+      `resume --batch`.
+      Entrenado (2026-09-30 a 2026-10-07) en RTX 5060 8 GB, 50 épocas,
+      `imgsz=1280`, SKU-110K (mejor época de ambas: 40):
+
+      | Variante | Batch | Tiempo aprox. | P | R | mAP50 | mAP50-95 |
+      | --- | --- | --- | --- | --- | --- | --- |
+      | `yolo26s` (val) | 2 | ~7,5 h (~9 min/época) | 0.915 | 0.884 | 0.947 | **0.606** |
+      | `yolo26s-p2` (val) | 1 | ~17 h (~20 min/época, 6 tramos) | 0.910 | 0.879 | 0.941 | 0.596 |
+      | `yolo26s` (test, 2.935 imágenes) | 2 | - | 0.915 | 0.885 | 0.950 | **0.610** |
+
+      Ganadora: `yolo26s` (mejor mAP50-95 y recall en val; la cabeza P2,
+      pensada para objetos chicos, no mejora en SKU-110K y cuesta el doble).
+      Inferencia en GPU: ~15 ms por imagen a 1280. Los pesos (`best.pt`) se
+      comparten solo con el equipo (Drive/OneDrive), no en git: uso
+      académico y no comercial por venir de SKU-110K.
 - [x] **#15** (dueño: Francisco) Limitaciones de la segmentación (ítem
       #4), medidas contra las repisas anotadas de SHARD. Hecho: SHARD en
       el catálogo (`shard`: figshare, CC BY 4.0, `.7z` de 3.6 GB que se
