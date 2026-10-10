@@ -176,3 +176,20 @@ python scripts/run_pipeline.py FOTOS_O_CARPETAS...
 Trabajo en el worktree `../capstone-pipeline` (rama `feat/run-pipeline`).
 Nada en la GPU (`CUDA_VISIBLE_DEVICES=-1`). La corrida de RF01 con YOLO en
 CPU, con prioridad baja, 4 hilos y solo con al menos 2 GB de RAM libres.
+
+## Cambios al implementar (2026-10-10)
+
+- **Evaluación por lotes incluida** (CU07, RF06; decidido con Francisco):
+  `--annotations CSV` (formato estándar de `data/processed/annotations/`,
+  filas `class_group == "product"`, emparejadas por nombre de archivo) y
+  `--iou`. Métricas de detección en `src/evaluation/detection_metrics.py`
+  (emparejamiento greedy por IoU) y la alerta de referencia con
+  `src.pipeline.measure_boxes()`, que mide la anotación con la misma
+  segmentación y el mismo cálculo. Escribe `<out>/metrics.csv`.
+- `conf` es opcional: sin `--conf` se usa el valor por defecto del
+  detector (no se duplica la constante en `src/pipeline.py`).
+- El tiempo de `detection` incluye el recorte a la ROI.
+- Ya no aplican las restricciones de "mientras entrena": el entrenamiento
+  terminó (#5) y se trabaja en la carpeta principal, no en un worktree.
+- RF01 se midió con 6 fotos crudas de Kaggle: las de `data/processed/demo/`
+  son vistas ya anotadas.
