@@ -83,6 +83,24 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       pide un formato: dejar en el README por qué se eligieron estos.
 - [ ] **#8** Implementar `scripts/run_pipeline.py` como CLI que orquesta
       el pipeline completo.
+- [ ] **#29** Verificar el detector `yolo26s` fuera de SKU-110K, en las
+      condiciones con que evaluará Walmart (IoU contra anotación a mano;
+      fotos frontales, en ángulo y desde arriba). Hoy solo está medido en
+      el test de SKU-110K, que es igual al entrenamiento. Depende del modo
+      por lotes de #8 (CU07). Con datos ya descargados:
+      (1) Kaggle supermarket-shelves (45 fotos con productos anotados,
+      CC0, no usadas al entrenar): P, R, mAP50 y mAP50-95;
+      (2) las mismas fotos giradas con `oblique_view()` a 20° y 35° (#22);
+      (3) Roboflow Out Of Stock y Empty Shelf (espacios vacíos anotados):
+      IoU entre los huecos de `compute_availability()` y los vacíos
+      anotados; (4) revisión a ojo de botellas y envases cilíndricos
+      frente a cajas (los datos no etiquetan la forma). Después, el set
+      propio de #28. Criterio: reentrenar (fine-tuning con Kaggle CC0,
+      fotos propias y aumentación de giros chicos, color y ruido) solo si
+      alguna medición queda bajo mAP50 0.70 (referencia de Walmart: con
+      ~70% el problema está casi resuelto); nunca generar imágenes
+      sintéticas desde SKU-110K (licencia). Registrar los resultados en
+      `docs/test-plan.md` (#19).
 - [ ] **#27** Excluir de la medición la bodega de reserva que hay sobre
       la góndola de venta (Walmart no la evalúa; acuerdo del 2026-09-16
       en el README). Hoy `compute_availability()` acota la góndola "del
@@ -487,7 +505,8 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       Dataset Oculto). Los textos se editaron sin cambiar el formato y
       los 8 archivos se verificaron abriéndolos en Word. Falta: los
       diagramas PNG (en #9). `docs/curso.md` lista los 8 C.U. Ítems
-      nuevos: #27 (bodega superior) y #28 (fotos propias y set anotado).
+      nuevos: #27 (bodega superior), #28 (fotos propias y set anotado)
+      y #29 (verificar el detector fuera de SKU-110K).
 
 ## Notas
 
