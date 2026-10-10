@@ -20,7 +20,30 @@ El proyecto aborda la automatización de la auditoría de espacios en salas de v
 
 ### 2. Supuestos del Dominio
 * **Segmentación automática de ROI**: El sistema detecta por sí solo la góndola y sus repisas en cada imagen. Ningún usuario dibuja ni configura zonas ROI por cámara.
-* **Profundidad constante de góndola**: Las góndolas reales tienen entre 20 y 30 cm de profundidad; el sistema usa un valor fijo de **25 cm** para todos los casos. No estima profundidad: analiza la vista frontal 2D de la góndola, y en el Nivel 1 el volumen libre se obtiene del área frontal libre multiplicada por esos 25 cm.
+* **Profundidad constante de góndola**: Las góndolas reales tienen entre 20 y 30 cm de profundidad; el sistema usa un valor fijo de **25 cm** para todos los casos. No estima profundidad: analiza la vista frontal 2D de la góndola, y en el Nivel 1 el volumen libre se obtiene del área frontal libre multiplicada por esos 25 cm. Walmart confirmó que el análisis 2D basta y que la profundidad no es necesaria. También indicó que las góndolas tienen medidas estándar y quedó de enviarlas: si la profundidad estándar no es 25 cm, se cambia esta constante (sigue siendo una sola, global).
+* **Fachada visible**: se mide solo lo que la cámara ve de frente. Si el frente de una repisa está lleno, se supone que detrás también hay producto: es lo que ve el cliente, y la cámara no da información del fondo.
+* **Sin apilamiento**: no se mide la altura de los productos. Ningún producto se considera apilable, así que el espacio vertical sobre un producto no cuenta como hueco. Es la respuesta del sistema a "La Trampa del Apilamiento".
+* **Una sola clase de producto**: basta saber si hay producto o no; no se identifica el SKU ni la categoría.
+* **Qué se mide**: la góndola de venta que ve el cliente. Quedan fuera la bodega de reserva sobre la góndola y las islas centrales del pasillo (excluir la bodega superior está pendiente, #27).
+
+### 3. Acuerdos con el Cliente (Walmart)
+
+Resumen de lo acordado en las reuniones con Walmart Chile (las minutas no se versionan). Las preguntas por confirmar van en el ítem #24 de [PROGRESS.md](PROGRESS.md).
+
+| Tema | Acuerdo | Reunión | Estado |
+| :--- | :--- | :--- | :--- |
+| Problema | Detectar espacios vacíos (quiebres de stock) en góndolas; la pregunta central es si hay quiebre o no | 2026-09-03, 2026-09-30 | Vigente |
+| Alcance | La primera reunión propuso partir, en principio, con góndolas de pan y pollo. El equipo eligió no perecibles porque son los que tienen datasets públicos anotados, y después Walmart recomendó partir por la categoría con más datos | 2026-09-03, 2026-09-16 | Por confirmar (#24) |
+| Métrica | Porcentaje de espacio libre por góndola, con detalle por repisa (Nivel 1); como mínimo, alerta por umbral del 30% (Nivel 2) | 2026-09-03 | Vigente |
+| Sentido del umbral | El acta lo plantea como "menos del 30% de productos disponibles"; el sistema alerta con **espacio libre >= 30%** del frente (decidido 2026-09-30, #6). El umbral es configurable (`AvailabilityParams.critical_free_fraction`) y los reportes informan el % libre, así que sirven para cualquiera de las dos lecturas | 2026-09-03 | Por confirmar (#24) |
+| Nivel de la alerta | Lo elige el equipo, justificándolo. El sistema alerta por góndola (es la unidad que se repone) y muestra el detalle por repisa | 2026-09-30 | Vigente |
+| Criterios | Todo criterio del equipo (fachada visible, sin apilamiento, hueco de al menos un ancho de producto) es válido si se justifica ante el negocio | 2026-09-16 | Vigente |
+| Imágenes | Las fotos de Walmart son de muchos tipos (frontales, en ángulo, desde arriba) y no vienen recortadas a la góndola. Walmart no comparte fotogramas de sus cámaras (ver "Estrategia de Datos y Evaluación") | 2026-09-16, 2026-10-01 | Vigente |
+| Fotos propias | El equipo debe tomar fotos reales de góndolas; sirven para entrenar si se clasifican por ángulo (#28) | 2026-09-03, 2026-09-16 | Pendiente |
+| Evaluación de Walmart | Mide IoU contra una anotación hecha a mano y evalúa el criterio de la solución; no exige un resultado perfecto. La nota la ponen los docentes | 2026-09-16 | Vigente |
+| Interfaz | Es opcional y debe justificarse: lo primero es que la lógica funcione | 2026-09-16 | Vigente |
+| Modelo | Libre; se prefiere uno que el equipo pueda explicar a uno con más rendimiento | 2026-09-03, 2026-09-30 | Vigente |
+| Repositorio | En GitHub, público y actualizado de forma continua | 2026-09-03 | Vigente |
 
 ---
 
@@ -39,15 +62,18 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ## 🛠️ Requerimientos Funcionales (RF)
 
-* **RF01 - Ingesta de Imágenes**: Procesamiento estático de fotogramas en formato imagen (tiempo de inferencia objetivo: 2 a 5 segundos por imagen).
+* **RF01 - Ingesta de Imágenes**: Procesamiento estático de fotogramas en formato imagen, de una cámara de sala o de un lote de fotos (frontales, en ángulo o desde arriba). Tiempo de inferencia objetivo: 2 a 5 segundos por imagen.
 * **RF02 - Detección de Espacios Vacíos**: Identificación de regiones sin producto dentro de las regiones de interés (ROI) correspondientes a la góndola, que el sistema segmenta automáticamente.
 * **RF03 - Cálculo de Disponibilidad**: Estimación cuantitativa del espacio libre (porcentaje/cm o alerta cuando el espacio libre llega al 30% del frente de la góndola), asumiendo profundidad de góndola constante (25 cm).
-* **RF04 - Generación de Alertas**: Emisión de notificaciones prioritarias para el equipo de reposición cuando se detecte un quiebre de stock.
-* **RF05 - Módulo de Reportería**: Exportación de datos analíticos auditados en formatos **Excel (.xlsx)**, **CSV** y **PDF**.
+* **RF04 - Generación de Alertas**: Emisión de notificaciones prioritarias para el equipo de reposición cuando se detecte un quiebre de stock (una alerta por góndola, con el detalle de las repisas afectadas). Opcional: alerta de cámara defectuosa cuando la imagen tiene colores imposibles.
+* **RF05 - Módulo de Reportería**: Exportación de datos analíticos auditados en formatos **Excel (.xlsx)**, **CSV** y **PDF**. Contenido mínimo: % libre por góndola y por repisa, y alerta sí/no. Walmart no pide un formato: los tres son decisión del equipo.
+* **RF06 - Evaluación por Lotes**: Ejecutar el sistema sobre un lote de imágenes anotadas a mano y entregar métricas (IoU de detección y acierto de la alerta) sin que las imágenes salgan de la máquina donde corre. Es la forma en que Walmart puede evaluar con su Dataset Oculto.
 
 ---
 
 ## 👥 Perfiles de Usuario
+
+La interfaz (dashboard y alertas) va después del pipeline: Walmart pidió priorizar que la lógica funcione. Los casos de uso CU00-CU07 están en `Anexos/Diseño/`.
 
 1. **Reponedor de Tienda**: Recibe alertas inmediatas en dispositivos móviles para acudir a los pasillos con quiebre crítico.
 2. **Jefe de Salón / Supervisor**: Visualiza dashboards de disponibilidad por pasillo y exporta reportes periódicos de desempeño.
@@ -67,7 +93,9 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 * **Dataset de Entrenamiento**: Curaduría propia mediante fuentes públicas open-source (ej. *SKU-110K*, *Hugging Face Grocery Shelves*, *Kaggle Supermarket Shelves*) con estandarización estricta de coordenadas de anotación (`[x_min, y_min, x_max, y_max]`).
 * **Sin imágenes reales de Walmart**: por privacidad, Walmart Chile no puede compartir imágenes de sus cámaras de seguridad (informado el 2026-10-01). Las condiciones de cámara de sala (vista alta y oblicua, lente gran angular/*fisheye*, baja resolución, compresión) se simulan generando imágenes sintéticas desde los datasets públicos, transformando también sus anotaciones (ver [docs/datasets.md](docs/datasets.md)).
-* **Prueba Ciega (Dataset Oculto)**: la evaluación contra el **Dataset Oculto** de Walmart Chile (imágenes reales de sala con condiciones complejas) solo es posible si Walmart ejecuta el sistema en sus instalaciones (imagen Docker) y entrega las métricas, sin que las imágenes salgan de la empresa. Modalidad por confirmar con Walmart.
+* **Prueba Ciega (Dataset Oculto)**: la evaluación contra el **Dataset Oculto** de Walmart Chile (imágenes reales de sala con condiciones complejas) solo es posible si Walmart ejecuta el sistema en sus instalaciones (imagen Docker) y entrega las métricas, sin que las imágenes salgan de la empresa (RF06, CU07). Modalidad por confirmar con Walmart. Sus imágenes no son solo de cámaras de sala: hay fotos frontales, en ángulo y desde arriba.
+* **Cómo evalúa Walmart**: IoU contra una anotación hecha a mano, más una evaluación cualitativa del criterio de la solución. Para medirnos igual, el plan de pruebas debe incluir un set propio anotado a mano (#28).
+* **Fotos propias**: el equipo debe tomar fotos reales de góndolas (con permiso de la tienda), clasificadas por ángulo (frontal, lateral, desde arriba, gran angular). Sirven para entrenar, como control de vistas en ángulo y como material de demo que no es SKU-110K (#28).
 
 ---
 

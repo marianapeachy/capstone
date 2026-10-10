@@ -21,11 +21,12 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
 ## Requisitos vigentes
 
 - **Evaluación 2 (Avance)**: el 50% de los casos de uso de la fase
-  resueltos. Los C.U del diseño son 7 (CU00-CU06, en
+  resueltos. Los C.U del diseño son 8 (CU00-CU07, en
   `Anexos/Diseño/Plantilla de C.U 0X.docx`): CU00 autenticar usuario,
   CU01 ingestar y analizar imagen, CU02 notificar alerta de quiebre,
   CU03 dashboard de disponibilidad, CU04 exportar reporte, CU05
-  configurar cámara y umbrales, CU06 gestionar cuentas y roles.
+  configurar cámara y umbrales, CU06 gestionar cuentas y roles, y CU07
+  evaluar el sistema con un lote de imágenes (agregado en #26).
 - **Documentos de la Fase 2**: las plantillas están en Drive (enlace en
   el mensaje del profesor de la semana 8, 2026-10-05 a 2026-10-09).
   - Evidencias individuales (cada integrante):
@@ -52,7 +53,7 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
 ## Preguntas abiertas para el profesor
 
 - ¿Qué cuenta como "C.U resuelto" para la Evaluación 2? ¿Sirve un C.U
-  del motor de visión (CU01, CU02, CU04) funcionando de punta a punta
+  del motor de visión (CU01, CU02, CU04, CU07) funcionando de punta a punta
   sin la parte web (CU00, CU03, CU05, CU06)?
 - ¿Qué día de la semana del 2026-10-28 es la Evaluación 2, y es
   presentación, entrega de documentos o ambas?
