@@ -52,9 +52,45 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 ## Pendientes (priorizados)
 
 - [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
-      `src/reporting/`.
+      `src/reporting/`. Contenido mínimo (#26, acuerdos con Walmart en el
+      README): % libre por góndola y por repisa, y alerta sí/no; así sirve
+      para cualquiera de las dos lecturas del umbral (#24). Walmart no
+      pide un formato: dejar en el README por qué se eligieron estos.
 - [ ] **#8** Implementar `scripts/run_pipeline.py` como CLI que orquesta
       el pipeline completo.
+- [ ] **#29** Verificar el detector `yolo26s` fuera de SKU-110K, en las
+      condiciones con que evaluará Walmart (IoU contra anotación a mano;
+      fotos frontales, en ángulo y desde arriba). Hoy solo está medido en
+      el test de SKU-110K, que es igual al entrenamiento. Depende del modo
+      por lotes de #8 (CU07). Con datos ya descargados:
+      (1) Kaggle supermarket-shelves (45 fotos con productos anotados,
+      CC0, no usadas al entrenar): P, R, mAP50 y mAP50-95;
+      (2) las mismas fotos giradas con `oblique_view()` a 20° y 35° (#22);
+      (3) Roboflow Out Of Stock y Empty Shelf (espacios vacíos anotados):
+      IoU entre los huecos de `compute_availability()` y los vacíos
+      anotados; (4) revisión a ojo de botellas y envases cilíndricos
+      frente a cajas (los datos no etiquetan la forma). Después, el set
+      propio de #28. Criterio: reentrenar (fine-tuning con Kaggle CC0,
+      fotos propias y aumentación de giros chicos, color y ruido) solo si
+      alguna medición queda bajo mAP50 0.70 (referencia de Walmart: con
+      ~70% el problema está casi resuelto); nunca generar imágenes
+      sintéticas desde SKU-110K (licencia). Registrar los resultados en
+      `docs/test-plan.md` (#19).
+- [ ] **#27** Excluir de la medición la bodega de reserva que hay sobre
+      la góndola de venta (Walmart no la evalúa; acuerdo del 2026-09-16
+      en el README). Hoy `compute_availability()` acota la góndola "del
+      primer al último nivel con productos", y las cajas de la bodega
+      cuentan como productos: sus huecos pueden disparar alertas falsas.
+      Opciones: descartar el nivel sobre la última repisa de venta, o
+      cortar por altura en la imagen. Las islas del pasillo tampoco se
+      miden (ya quedó en el README).
+- [ ] **#28** Fotos propias de góndolas en tienda (con permiso),
+      clasificadas por ángulo (frontal, lateral, desde arriba, gran
+      angular), y un set chico anotado a mano en el formato estándar.
+      Las pide el acta de la primera reunión con Walmart y sirven para:
+      (1) medir IoU contra anotación a mano, como evaluará Walmart
+      (agregarlo a `docs/test-plan.md`, #19); (2) control con ángulo real,
+      que #22 no tiene; (3) demos sin SKU-110K. Probar CU07 con este set.
 - [ ] **#9** Documentar especificaciones técnicas y diagramas en `docs/`.
 - [ ] **#14** Datasets con imágenes tipo cámara de seguridad (vista alta,
       oblicua, gran angular/fisheye, pasillo completo) para validar
@@ -102,6 +138,18 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
         ángulo de montaje, resolución y compresión de los fotogramas.
       - ¿Tienen parámetros de calibración de lente (ej. con tablero de
         ajedrez)? Los usaría `LensCalibration` (#3).
+      - Umbral: el acta de la primera reunión dice "menos del 30% de
+        productos disponibles", y el sistema alerta con espacio libre
+        >= 30%. ¿Cuál de las dos lecturas quieren? (#26)
+      - Alcance: la primera reunión propuso pan y pollo "en principio".
+        ¿Aceptan no perecibles?
+      - Medidas estándar de la góndola que iban a enviar (profundidad,
+        alto y ancho de módulo). El ancho de módulo daría la escala cm/px
+        del Nivel 1.
+      - Su IoU, ¿se mide sobre los productos o sobre los espacios vacíos?
+      - El par de imágenes de ejemplo difíciles que ofrecieron.
+      - ¿Qué hito es "antes del 18" (mencionado en la reunión del
+        2026-09-30)?
 
 ## Hecho
 
@@ -438,6 +486,39 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       mensaje registrado: semana 8 (Evaluación 2 y documentos de la Fase
       2). Los enlaces no se versionan (repositorio público): se anota la
       fecha del mensaje que los trae.
+- [x] **#26** (dueño: Francisco) Documentación alineada con las
+      reuniones con Walmart (2026-09-03, 2026-09-16 y 2026-09-30). Las
+      minutas no se versionan (son confidenciales y el repositorio es
+      público): el README resume los acuerdos sin transcribirlos.
+      README: supuestos de fachada visible, sin apilamiento, una sola
+      clase y qué se mide (sin bodega superior ni islas); profundidad de
+      25 cm a la espera de las medidas estándar; tabla "Acuerdos con el
+      Cliente" con fecha y estado (el sentido del umbral y el alcance
+      quedan por confirmar, #24); RF01 acepta lotes de fotos; RF04 alerta
+      por góndola; RF05 con contenido mínimo; RF06 nuevo (evaluación por
+      lotes); evaluación de Walmart por IoU y fotos propias (#28).
+      Casos de uso (`Anexos/Diseño/Plantilla de C.U 0X.docx`): CU01 con
+      el pipeline real (YOLO26, segmentación, sin bodega ni islas,
+      excepciones de góndola no encontrada y cámara defectuosa) y sin
+      exigir 1 cámara = 1 góndola; CU02 y CU03 con el umbral expresado
+      como espacio libre configurable, canal de alerta definido,
+      confirmación de la reposición con la captura siguiente y
+      postcondición propia; CU03 sin "tiempo real"; CU04 sin
+      "categoría" (el detector tiene una sola clase), con el actor del
+      diagrama y una excepción; CU05 con calibración de lente y
+      profundidad fija; CU06 sin enviar contraseñas por correo; CU07
+      nuevo: evaluar el sistema con un lote de imágenes (cubre el
+      Dataset Oculto). Los textos se editaron sin cambiar el formato y
+      los 8 archivos se verificaron abriéndolos en Word. Diagramas
+      regenerados (CU00 sin cambios): el general, con CU07, CU02
+      `<<extend>>` de CU01 y CU07 `<<include>>` de CU01, y los de
+      secuencia de CU01 a CU07, alineados con las plantillas (CU05 ya no
+      dibuja ROI). Sus fuentes quedan en `Anexos/Diseño/Diagramas fuente
+      (Mermaid)/` (`.drawio` del general y `.mmd` de cada C.U, con
+      `LEEME.md`); `.gitignore` deja versionar los PNG de `Anexos/`.
+      `docs/curso.md` lista los 8 C.U. Ítems
+      nuevos: #27 (bodega superior), #28 (fotos propias y set anotado)
+      y #29 (verificar el detector fuera de SKU-110K).
 
 ## Notas
 
@@ -448,9 +529,9 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
   desactualizados estos anexos de diseño, que no se modificaron:
   `Anexos/Diseño/Mockups/Mockup Admin-1.jpg` (pantalla "Editor de Región
   de Interés (ROI)" con el botón "Guardar Máscara ROI"),
-  `Mockup Admin-4.jpg` (log "Actualizó máscara ROI") y
-  `Plantilla de C.U 01.docx` (menciona YOLOv8 en vez de YOLO26).
-  Actualizarlos quedó postergado para más adelante (decidido 2026-09-27).
+  y `Mockup Admin-4.jpg` (log "Actualizó máscara ROI"). Actualizarlos
+  quedó postergado para más adelante (decidido 2026-09-27). Las
+  plantillas de C.U ya están al día (#26).
 - Riesgos de Docker resueltos y verificados con `docker build` real
   (2026-09-27, Docker Desktop 4.92): imagen de 2.49 GB, 27/27 tests OK
   dentro del contenedor. El build real destapó un cuarto problema: el pip

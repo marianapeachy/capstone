@@ -1,0 +1,16 @@
+sequenceDiagram
+    autonumber
+    actor U as Jefe de Salón / Reponedor
+    participant Web as Dashboard Web
+    participant API as API Backend
+    participant BD as Base de Datos
+    U->>Web: Accede a la vista de góndolas
+    Web->>API: GET /api/v1/gondolas/status (token JWT)
+    API->>BD: Consulta la última captura analizada de cada góndola
+    BD-->>API: % libre por góndola y repisa, hora de la captura
+    API-->>Web: Estados (Verde menos de 15% / Amarillo 15-30% / Rojo 30% o más libre / Sin datos)
+    Web-->>U: Mapa de pasillos con indicadores
+    U->>Web: Selecciona una góndola
+    Web->>API: GET /api/v1/gondolas/{id}
+    API-->>Web: Espacio libre por repisa, imagen analizada e historial de capturas
+    Web-->>U: Detalle de la góndola

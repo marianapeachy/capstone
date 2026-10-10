@@ -1,0 +1,15 @@
+sequenceDiagram
+    autonumber
+    actor Adm as Administrador del Sistema
+    participant Web as Panel de Usuarios Web
+    participant Svc as Servicio de Usuarios
+    participant BD as Base de Datos
+    participant Mail as Servicio de Correo
+    Adm->>Web: Ingresa datos del nuevo usuario y selecciona el rol
+    Web->>Svc: POST /api/v1/users (datos + rol)
+    Svc->>BD: Inserta el usuario (sin contraseña) y sus permisos
+    BD-->>Svc: ID del usuario creado
+    Svc->>Mail: Envía enlace de un solo uso para definir la contraseña
+    Svc-->>Web: Confirma la creación
+    Web-->>Adm: Muestra el nuevo usuario en la lista
+    Note over Svc,BD: El usuario define su contraseña con el enlace y se guarda con hash (bcrypt)

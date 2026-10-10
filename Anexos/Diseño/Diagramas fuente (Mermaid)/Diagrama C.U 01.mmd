@@ -1,0 +1,23 @@
+sequenceDiagram
+    autonumber
+    participant Cam as Cámara de sala / lote de fotos
+    participant Pre as Preprocesamiento (OpenCV)
+    participant Det as Detector YOLO26
+    participant Post as Postprocesamiento
+    participant BD as Base de Datos de Resultados
+    Cam->>Pre: Envía foto estática (.jpg / .png)
+    opt Colores imposibles (cámara defectuosa)
+        Pre->>BD: Registra alerta de cámara y no analiza la imagen
+    end
+    Pre->>Pre: Corrige lente (dewarping) y contraste (CLAHE)
+    Pre->>Pre: Segmenta góndola y repisas y recorta la ROI
+    Note over Pre: Sin repisas: imagen completa como un solo nivel (análisis global)
+    Pre->>Det: ROI de la imagen corregida
+    Det->>Det: Detecta productos (una sola clase)
+    Det->>Post: Cajas en coordenadas de la imagen corregida
+    Post->>Post: Niveles de repisa, sin bodega superior ni islas
+    Post->>Post: Calcula espacio libre por repisa y de la góndola
+    Post->>BD: Guarda % libre por góndola y por repisa
+    alt Espacio libre >= umbral (30% por defecto)
+        Post->>BD: Registra alerta de quiebre (CU02)
+    end
