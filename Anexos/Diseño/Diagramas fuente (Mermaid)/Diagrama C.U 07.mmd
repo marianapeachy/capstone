@@ -1,0 +1,18 @@
+sequenceDiagram
+    autonumber
+    actor Ev as Evaluador (Walmart o equipo)
+    participant CLI as run_pipeline (imagen Docker)
+    participant Pipe as Pipeline (CU01)
+    participant Met as Módulo de Evaluación
+    Ev->>CLI: Ejecuta sobre carpeta de imágenes + anotaciones [x_min, y_min, x_max, y_max]
+    loop Cada imagen
+        CLI->>Pipe: Analiza la imagen
+        Pipe-->>CLI: Productos, % libre por repisa y alerta
+        alt Imagen con anotación
+            CLI->>Met: Compara con la anotación manual (IoU)
+        else Sin anotación
+            CLI->>CLI: Informa el resultado, fuera de las métricas
+        end
+    end
+    Met-->>CLI: Métricas de detección y de alerta
+    CLI-->>Ev: Reporte de métricas (CSV), sin copiar las imágenes

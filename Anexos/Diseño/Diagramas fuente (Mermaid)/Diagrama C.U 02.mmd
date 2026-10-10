@@ -1,0 +1,22 @@
+sequenceDiagram
+    autonumber
+    participant Eng as Motor de Visión (CU01)
+    participant Not as Módulo de Notificaciones
+    participant BD as Base de Datos
+    actor Rep as Reponedor de Sala (Dashboard Web en el teléfono)
+    Eng->>Not: Góndola con espacio libre >= umbral (30% por defecto)
+    Not->>BD: Verifica si existe alerta activa (menos de 15 min)
+    alt No existe alerta activa
+        Not->>BD: Registra alerta (pasillo, góndola, % libre, repisas con huecos)
+        Not->>Rep: Muestra la alerta en la vista de alertas
+    else Alerta ya notificada
+        Not->>BD: Consolida en la alerta existente
+    end
+    Rep->>Not: Marca la alerta "En Proceso" o "Completada"
+    Not->>BD: Actualiza el estado de la alerta
+    Eng->>Not: Siguiente captura de la misma góndola
+    alt Espacio libre sigue >= umbral
+        Not->>BD: Reabre la alerta
+    else Bajo el umbral
+        Not->>BD: Confirma la reposición y cierra la alerta
+    end

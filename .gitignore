@@ -31,6 +31,7 @@ data/processed/*
 !docs/**/*.jpg
 !docs/**/*.jpeg
 !docs/**/*.png
+!Anexos/**/*.png
 
 # --- Checkpoints y pesos de modelos (YOLO26 / PyTorch / ONNX) ---
 *.pt

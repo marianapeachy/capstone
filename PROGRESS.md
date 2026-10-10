@@ -117,11 +117,6 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       (agregarlo a `docs/test-plan.md`, #19); (2) control con ángulo real,
       que #22 no tiene; (3) demos sin SKU-110K. Probar CU07 con este set.
 - [ ] **#9** Documentar especificaciones técnicas y diagramas en `docs/`.
-      Incluye actualizar los diagramas de casos de uso de
-      `Anexos/Diseño/` (PNG sin fuente en el repo): agregar CU07 al
-      diagrama general y su diagrama particular, y cambiar la relación
-      CU01 -> CU02 de `<<include>>` a `<<extend>>` (la alerta solo ocurre
-      si se alcanza el umbral).
 - [ ] **#14** Datasets con imágenes tipo cámara de seguridad (vista alta,
       oblicua, gran angular/fisheye, pasillo completo) para validar
       dewarping y segmentación en condiciones parecidas a Walmart.
@@ -503,8 +498,14 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       profundidad fija; CU06 sin enviar contraseñas por correo; CU07
       nuevo: evaluar el sistema con un lote de imágenes (cubre el
       Dataset Oculto). Los textos se editaron sin cambiar el formato y
-      los 8 archivos se verificaron abriéndolos en Word. Falta: los
-      diagramas PNG (en #9). `docs/curso.md` lista los 8 C.U. Ítems
+      los 8 archivos se verificaron abriéndolos en Word. Diagramas
+      regenerados (CU00 sin cambios): el general, con CU07, CU02
+      `<<extend>>` de CU01 y CU07 `<<include>>` de CU01, y los de
+      secuencia de CU01 a CU07, alineados con las plantillas (CU05 ya no
+      dibuja ROI). Sus fuentes quedan en `Anexos/Diseño/Diagramas fuente
+      (Mermaid)/` (`.drawio` del general y `.mmd` de cada C.U, con
+      `LEEME.md`); `.gitignore` deja versionar los PNG de `Anexos/`.
+      `docs/curso.md` lista los 8 C.U. Ítems
       nuevos: #27 (bodega superior), #28 (fotos propias y set anotado)
       y #29 (verificar el detector fuera de SKU-110K).
 
