@@ -77,8 +77,8 @@ Los cuatro primeros responden al mensaje del profesor de la semana 8
       README): % libre por góndola y por repisa, y alerta sí/no; así sirve
       para cualquiera de las dos lecturas del umbral (#24). Walmart no
       pide un formato: dejar en el README por qué se eligieron estos.
-- [ ] **#8** Implementar `scripts/run_pipeline.py` como CLI que orquesta
-      el pipeline completo.
+- [ ] **#8** (dueño: Francisco) Implementar `scripts/run_pipeline.py`
+      como CLI que orquesta el pipeline completo.
 - [ ] **#33** Verificar el detector `yolo26s` fuera de SKU-110K, en las
       condiciones con que evaluará Walmart (IoU contra anotación a mano;
       fotos frontales, en ángulo y desde arriba). Hoy solo está medido en
