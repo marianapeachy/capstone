@@ -1,0 +1,18 @@
+sequenceDiagram
+    autonumber
+    actor Adm as Administrador del Sistema
+    participant Web as Panel de Configuración Web
+    participant API as API Backend
+    participant BD as Base de Datos
+    Adm->>Web: Asocia cámara a pasillo y góndola, carga calibración de lente, fija umbral y tolerancia
+    Note over Adm,Web: No se dibuja ROI (segmentación automática) ni se configura la profundidad (25 cm global)
+    Web->>API: PUT /api/v1/config/cameras/{id}
+    alt Umbral fuera de 1%-100%
+        API-->>Web: 400 Umbral inválido
+        Web-->>Adm: Mantiene el valor anterior
+    else Valores válidos
+        API->>BD: Guarda asociación, calibración, umbral y tolerancia
+        BD-->>API: Confirmación
+        API-->>Web: 200 OK
+        Web-->>Adm: Muestra "Parámetros actualizados"
+    end
