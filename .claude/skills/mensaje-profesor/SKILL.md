@@ -17,7 +17,10 @@ textual.
 1. Si la fecha del mensaje no viene, preguntarla (sirve "semana N").
    Para traducir semanas a fechas, usar el registro de `docs/curso.md`
    (ej. "Semana 8 (2026-10-05 a 2026-10-09)"); si la semana no aparece
-   ahí, preguntar sus fechas.
+   ahí, preguntar sus fechas. Si la fecha dada no calza con la semana
+   que dice el mensaje (o con el registro), preguntar cuál es la
+   correcta antes de registrar: de ella dependen los plazos relativos
+   ("a fines de este mes").
 2. Rama: respetar "Trabajo en equipo" de `CLAUDE.md`. Si ya se está en
    una rama de trabajo propia, seguir ahí; si no, desde `main`
    actualizado crear `docs/curso-<YYYY-MM-DD>` (fecha del mensaje).
@@ -60,8 +63,9 @@ textual.
 ## 4. Actualizar `docs/curso.md`
 
 - **Registro de mensajes**: nueva subsección arriba de las anteriores,
-  `### Semana N (YYYY-MM-DD)` o con el rango de la semana, con un punto
-  por idea del mensaje.
+  `### Semana N (YYYY-MM-DD): <tema corto>` o con el rango de la semana,
+  con un punto por idea del mensaje. El tema distingue los mensajes de
+  una misma semana.
 - **Próximos hitos**: agregar o actualizar filas, ordenadas por fecha
   ("Por definir" al final), con la semana del mensaje como fuente. Si
   un hito cambia, actualizar la fila y anotar en el registro

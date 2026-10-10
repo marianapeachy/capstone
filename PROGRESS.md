@@ -1,7 +1,9 @@
 # Bitácora de Sprint 1 - ShelfVision AI
 
 El Sprint 1 cierra con la demo de la Evaluación 2 (Avance) de la Fase
-2: semana del 2026-10-28, con el 50% de los C.U de la fase resueltos.
+2: semana del 2026-10-28, con el 50% de los C.U de la fase resueltos,
+y debe servir como primer demo operativo ante Walmart (a más tardar
+2026-10-31). Ver `docs/curso.md`.
 
 Cada ítem tiene un número fijo (**#N**) que no cambia al reordenar: los
 PR y otros documentos lo citan. Para tomar un ítem, agregar
