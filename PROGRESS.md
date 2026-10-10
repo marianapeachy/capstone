@@ -1,5 +1,8 @@
 # Bitácora de Sprint 1 - ShelfVision AI
 
+El Sprint 1 cierra con la demo de la Evaluación 2 (Avance) de la Fase
+2: semana del 2026-10-28, con el 50% de los C.U de la fase resueltos.
+
 Cada ítem tiene un número fijo (**#N**) que no cambia al reordenar: los
 PR y otros documentos lo citan. Para tomar un ítem, agregar
 `(dueño: <nombre>)` antes de empezar; al terminarlo, marcarlo `[x]` y
@@ -112,6 +115,18 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
         cámaras de sala: siguen en #14. Para lo que SHARD no cubre
         (repisas inclinadas, contorno de la góndola), set chico
         etiquetado a mano (polilíneas, ej. en CVAT o Label Studio).
+- [ ] **#24** (dueño: Francisco) Preguntas para la próxima reunión con
+      Walmart (fecha: por definir). Hasta ahora no han dicho nada de sus
+      cámaras, y del Dataset Oculto probablemente no puedan decir nada
+      (#21):
+      - ¿Aceptan correr el sistema (imagen Docker) en sus instalaciones
+        con el Dataset Oculto y entregarnos solo las métricas?
+      - Si no pueden mostrar el Dataset Oculto, ¿pueden describirlo sin
+        imágenes (cantidad de fotos, tipo de góndolas, condiciones)?
+      - Cámaras: modelo de cámara y lente, campo de visión, altura y
+        ángulo de montaje, resolución y compresión de los fotogramas.
+      - ¿Tienen parámetros de calibración de lente (ej. con tablero de
+        ajedrez)? Los usaría `LensCalibration` (#3).
 
 ## Hecho
 
@@ -399,6 +414,19 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
       7 scripts, `graphify update .` y `pytest tests/` 137 OK. En un PR
       aparte, `tests/test_models.py` deja de fallar en PCs con GPU NVIDIA
       (`.cpu().numpy()`).
+- [x] **#23** (dueño: Francisco) Fechas de entregas y plazos en
+      `README.md` y `PROGRESS.md`, en formato YYYY-MM-DD en la línea de
+      la tarea: Evaluación 2 (Avance) de la Fase 2 y cierre del Sprint 1
+      la semana del 2026-10-28, Fase 3 por definir, y decidir la versión
+      de Python de la imagen a más tardar 2026-10-16.
+- [x] **#25** (dueño: Francisco) Registro de requisitos y plazos del
+      curso en `docs/curso.md` (próximos hitos, requisitos vigentes,
+      anuncios pendientes, preguntas abiertas y registro por semana),
+      con la skill `/mensaje-profesor` que normaliza cada mensaje del
+      profesor. Flujo en `CLAUDE.md` ("Mensajes del profesor"). Primer
+      mensaje registrado: semana 8 (Evaluación 2 y documentos de la Fase
+      2). Los enlaces no se versionan (repositorio público): se anota la
+      fecha del mensaje que los trae.
 
 ## Notas
 
@@ -430,7 +458,8 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
     con `uv pip compile` para Linux/py3.10: `torch 2.14.0+cpu`,
     `ultralytics 8.4.164`, `opencv-python 4.14.0.94`, sin paquetes CUDA.
 - Python 3.10 llega a fin de soporte en octubre de 2026 (el entorno local
-  usa 3.14). Pendiente decidir si se sube la imagen a 3.12+.
+  usa 3.14). Pendiente decidir si se sube la imagen a 3.12+; decidir a
+  más tardar 2026-10-16.
 - La carpeta `Fase 1/` (entregables de la Fase 1 académica) no se toca.
 - README.md se actualizará incrementalmente a medida que se implementen
   los módulos.

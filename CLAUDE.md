@@ -173,6 +173,8 @@ contexto o porque se abrió aparte), leer primero, en este orden:
 1. `CLAUDE.md` (este archivo) - reglas de código y estructura.
 2. `PROGRESS.md` - qué está hecho y qué es lo pendiente priorizado.
 3. `docs/datasets.md` - estado y ubicación de los datasets descargados.
+4. `docs/curso.md` - hitos, plazos y requisitos del curso según los
+   mensajes del profesor.
 
 Con eso se recupera casi todo el contexto relevante sin necesitar el
 historial de la conversación anterior.
@@ -185,6 +187,29 @@ o se repita contexto que ya debería estar resuelto.
 
 Al terminar una tarea de esta bitácora, actualizar `PROGRESS.md` (marcar
 lo hecho, agregar lo nuevo pendiente) antes de cerrar la sesión.
+
+## Mensajes del profesor (`docs/curso.md`)
+
+`docs/curso.md` reúne lo que pide el curso: próximos hitos con fecha,
+requisitos vigentes, lo que el profesor anunció que enviará, preguntas
+abiertas y un registro por semana. Es la fuente de los plazos
+académicos; `README.md` y `PROGRESS.md` copian de ahí las fechas que
+les tocan.
+
+- Cuando alguien pega un mensaje del profesor (o dice "mensaje del
+  profesor"), usar la skill `/mensaje-profesor`
+  (`.claude/skills/mensaje-profesor/SKILL.md`): normaliza el mensaje en
+  `docs/curso.md` y lleva las fechas a `README.md` y `PROGRESS.md`.
+- Registrar un mensaje no necesita ítem en `PROGRESS.md`, pero sí rama
+  propia (`docs/curso-<YYYY-MM-DD>`) y PR, como todo cambio.
+- Fechas en formato YYYY-MM-DD; nunca inventarlas: lo que no se sabe
+  queda "Por definir" y va a "Preguntas abiertas para el profesor".
+- El repositorio es público: los enlaces que comparte el profesor
+  (Drive, formularios) no se escriben en archivos versionados. En su
+  lugar se anota la fecha del mensaje que trae el enlace, para buscarlo
+  ahí; cada integrante puede guardarlo en su `CLAUDE.local.md`.
+- Antes de proponer el siguiente ítem del backlog, mirar "Próximos
+  hitos": un requisito con fecha cercana puede cambiar la prioridad.
 
 ## graphify
 
