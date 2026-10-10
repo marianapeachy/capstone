@@ -29,7 +29,8 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
   `Anexos/Diseño/Plantilla de C.U 0X.docx`): CU00 autenticar usuario,
   CU01 ingestar y analizar imagen, CU02 notificar alerta de quiebre,
   CU03 dashboard de disponibilidad, CU04 exportar reporte, CU05
-  configurar cámara y umbrales, CU06 gestionar cuentas y roles.
+  configurar cámara y umbrales, CU06 gestionar cuentas y roles, y CU07
+  evaluar el sistema con un lote de imágenes (agregado en #30).
 - **CRUD y Login**: a esta altura el profesor espera los CRUD
   principales y el Login operativos, según los perfiles de usuario
   (Reponedor, Jefe de Salón, Administrador). Corresponde a CU00 y CU06

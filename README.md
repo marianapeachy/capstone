@@ -24,7 +24,7 @@ El proyecto aborda la automatización de la auditoría de espacios en salas de v
 * **Fachada visible**: se mide solo lo que la cámara ve de frente. Si el frente de una repisa está lleno, se supone que detrás también hay producto: es lo que ve el cliente, y la cámara no da información del fondo.
 * **Sin apilamiento**: no se mide la altura de los productos. Ningún producto se considera apilable, así que el espacio vertical sobre un producto no cuenta como hueco. Es la respuesta del sistema a "La Trampa del Apilamiento".
 * **Una sola clase de producto**: basta saber si hay producto o no; no se identifica el SKU ni la categoría.
-* **Qué se mide**: la góndola de venta que ve el cliente. Quedan fuera la bodega de reserva sobre la góndola y las islas centrales del pasillo (excluir la bodega superior está pendiente, #27).
+* **Qué se mide**: la góndola de venta que ve el cliente. Quedan fuera la bodega de reserva sobre la góndola y las islas centrales del pasillo (excluir la bodega superior está pendiente, #31).
 
 ### 3. Acuerdos con el Cliente (Walmart)
 
@@ -39,7 +39,7 @@ Resumen de lo acordado en las reuniones con Walmart Chile (las minutas no se ver
 | Nivel de la alerta | Lo elige el equipo, justificándolo. El sistema alerta por góndola (es la unidad que se repone) y muestra el detalle por repisa | 2026-09-30 | Vigente |
 | Criterios | Todo criterio del equipo (fachada visible, sin apilamiento, hueco de al menos un ancho de producto) es válido si se justifica ante el negocio | 2026-09-16 | Vigente |
 | Imágenes | Las fotos de Walmart son de muchos tipos (frontales, en ángulo, desde arriba) y no vienen recortadas a la góndola. Walmart no comparte fotogramas de sus cámaras (ver "Estrategia de Datos y Evaluación") | 2026-09-16, 2026-10-01 | Vigente |
-| Fotos propias | El equipo debe tomar fotos reales de góndolas; sirven para entrenar si se clasifican por ángulo (#28) | 2026-09-03, 2026-09-16 | Pendiente |
+| Fotos propias | El equipo debe tomar fotos reales de góndolas; sirven para entrenar si se clasifican por ángulo (#32) | 2026-09-03, 2026-09-16 | Pendiente |
 | Evaluación de Walmart | Mide IoU contra una anotación hecha a mano y evalúa el criterio de la solución; no exige un resultado perfecto. La nota la ponen los docentes | 2026-09-16 | Vigente |
 | Interfaz | Es opcional y debe justificarse: lo primero es que la lógica funcione | 2026-09-16 | Vigente |
 | Modelo | Libre; se prefiere uno que el equipo pueda explicar a uno con más rendimiento | 2026-09-03, 2026-09-30 | Vigente |
@@ -94,8 +94,8 @@ La interfaz (dashboard y alertas) va después del pipeline: Walmart pidió prior
 * **Dataset de Entrenamiento**: Curaduría propia mediante fuentes públicas open-source (ej. *SKU-110K*, *Hugging Face Grocery Shelves*, *Kaggle Supermarket Shelves*) con estandarización estricta de coordenadas de anotación (`[x_min, y_min, x_max, y_max]`).
 * **Sin imágenes reales de Walmart**: por privacidad, Walmart Chile no puede compartir imágenes de sus cámaras de seguridad (informado el 2026-10-01). Las condiciones de cámara de sala (vista alta y oblicua, lente gran angular/*fisheye*, baja resolución, compresión) se simulan generando imágenes sintéticas desde los datasets públicos, transformando también sus anotaciones (ver [docs/datasets.md](docs/datasets.md)).
 * **Prueba Ciega (Dataset Oculto)**: la evaluación contra el **Dataset Oculto** de Walmart Chile (imágenes reales de sala con condiciones complejas) solo es posible si Walmart ejecuta el sistema en sus instalaciones (imagen Docker) y entrega las métricas, sin que las imágenes salgan de la empresa (RF06, CU07). Modalidad por confirmar con Walmart. Sus imágenes no son solo de cámaras de sala: hay fotos frontales, en ángulo y desde arriba.
-* **Cómo evalúa Walmart**: IoU contra una anotación hecha a mano, más una evaluación cualitativa del criterio de la solución. Para medirnos igual, el plan de pruebas debe incluir un set propio anotado a mano (#28).
-* **Fotos propias**: el equipo debe tomar fotos reales de góndolas (con permiso de la tienda), clasificadas por ángulo (frontal, lateral, desde arriba, gran angular). Sirven para entrenar, como control de vistas en ángulo y como material de demo que no es SKU-110K (#28).
+* **Cómo evalúa Walmart**: IoU contra una anotación hecha a mano, más una evaluación cualitativa del criterio de la solución. Para medirnos igual, el plan de pruebas debe incluir un set propio anotado a mano (#32).
+* **Fotos propias**: el equipo debe tomar fotos reales de góndolas (con permiso de la tienda), clasificadas por ángulo (frontal, lateral, desde arriba, gran angular). Sirven para entrenar, como control de vistas en ángulo y como material de demo que no es SKU-110K (#32).
 
 ---
 
