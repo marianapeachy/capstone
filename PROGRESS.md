@@ -53,6 +53,25 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 
 ## Pendientes (priorizados)
 
+Los cuatro primeros responden al mensaje del profesor de la semana 8
+(ver "Próximos hitos" en `docs/curso.md`).
+
+- [ ] **#26** (dueño: Mariana) Plan de mejoras de la Fase 1: elaborarlo
+      y empezar a implementarlo a más tardar 2026-10-09, según las
+      observaciones de la evaluación y rúbrica de la Fase 1.
+- [ ] **#27** (dueño: Nicko) Informe de estado de avance para el
+      profesor, con los puntos que pidió su correo de la semana 7. Ya
+      atrasado: el profesor lo está esperando.
+- [ ] **#28** (dueño: Francisco) Aplicación web mínima: login por
+      perfil (Reponedor, Jefe de Salón, Administrador; CU00), CRUD de
+      usuarios y roles (CU06) y base de datos. Ya atrasado: el profesor
+      espera CRUD y Login operativos. Primero elegir el stack (ej.
+      FastAPI o Django con SQLite).
+- [ ] **#29** (dueño: Nicko) Primer demo operativo ante Walmart, a más
+      tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
+      del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
+      y reportes (#7), integrados con la aplicación web (#28). Para la
+      demo, solo fotos que se pueden mostrar a terceros (no SKU-110K).
 - [ ] **#5** (dueño: Francisco) Integrar inferencia YOLO26 en `src/models/` (se decidió
       YOLO26 sobre YOLOv8/YOLO11 por su cabeza sin NMS y mejor manejo de
       objetos chicos, clave en productos apilados). Validado en local:
