@@ -175,6 +175,8 @@ contexto o porque se abrió aparte), leer primero, en este orden:
 3. `docs/datasets.md` - estado y ubicación de los datasets descargados.
 4. `docs/curso.md` - hitos, plazos y requisitos del curso según los
    mensajes del profesor.
+5. `minutas-walmart/INDEX.md`, si existe (no se versiona, ver "Minutas
+   de reuniones con Walmart").
 
 Con eso se recupera casi todo el contexto relevante sin necesitar el
 historial de la conversación anterior.
@@ -210,6 +212,32 @@ les tocan.
   ahí; cada integrante puede guardarlo en su `CLAUDE.local.md`.
 - Antes de proponer el siguiente ítem del backlog, mirar "Próximos
   hitos": un requisito con fecha cercana puede cambiar la prioridad.
+
+## Minutas de reuniones con Walmart (`minutas-walmart/`, no versionada)
+
+Las minutas de las reuniones con Walmart son **confidenciales** (nombres
+de personas, transcripciones de reuniones privadas) y el repositorio es
+público: **nunca se versionan ni se suben a servicios externos** (ni
+`git add -f`, ni Artifacts, gists o conectores). `minutas-walmart/` está
+en `.gitignore`. Se comparten en una carpeta privada de Google Drive del
+equipo; el enlace no va en archivos versionados: cada integrante lo
+guarda en su `CLAUDE.local.md`.
+
+- **Instalar**: descargar los `.md` de la carpeta de Drive a
+  `minutas-walmart/` en la raíz del repo (`INDEX.md` y una minuta por
+  reunión, `AAAA-MM-DD_reunion-N.md`). Volver a descargarlos cuando
+  alguien avise de una minuta nueva.
+- **Usar**: antes de responder sobre requisitos o acuerdos con Walmart,
+  buscar con Grep en `minutas-walmart/*.md` (por `temas:` del encabezado
+  o por palabra clave). graphify no indexa la carpeta (está ignorada).
+  Si no existe en el PC, decir que faltan y usar el resumen público de
+  "Acuerdos con el Cliente (Walmart)" del README.
+- **Nueva reunión**: la minuta se escribe con las mismas secciones
+  (encabezado YAML con `temas:`, Resumen, Decisiones y acuerdos,
+  Requisitos o restricciones de Walmart, Tareas, Preguntas abiertas,
+  Transcripción limpia completa), se sube a la carpeta de Drive y se
+  actualiza `INDEX.md`. Lo que cambie requisitos va resumido, sin citas
+  ni nombres, a la tabla de acuerdos del README, por rama y PR.
 
 ## graphify
 
