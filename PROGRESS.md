@@ -53,15 +53,18 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 
 ## Pendientes (priorizados)
 
-Los cuatro primeros responden al mensaje del profesor de la semana 8
-(ver "Próximos hitos" en `docs/curso.md`).
+Los cuatro primeros responden al mensaje del profesor de la semana 8, y
+los seis siguientes (#34 a #39), al del 2026-10-16 (ver "Próximos
+hitos" en `docs/curso.md`).
 
 - [ ] **#26** (dueño: Mariana) Plan de mejoras de la Fase 1: elaborarlo
       y empezar a implementarlo a más tardar 2026-10-09, según las
       observaciones de la evaluación y rúbrica de la Fase 1.
 - [ ] **#27** (dueño: Nicko) Informe de estado de avance para el
       profesor, con los puntos que pidió su correo de la semana 7. Ya
-      atrasado: el profesor lo está esperando.
+      atrasado: el profesor lo está esperando. Ahora es el informe
+      intermedio que pide el cliente, entrega 2026-10-21 (puntos en
+      "Requisitos vigentes" de `docs/curso.md`).
 - [ ] **#28** (dueño: Francisco) Aplicación web mínima: login por
       perfil (Reponedor, Jefe de Salón, Administrador; CU00), CRUD de
       usuarios y roles (CU06) y base de datos. Ya atrasado: el profesor
@@ -72,6 +75,44 @@ Los cuatro primeros responden al mensaje del profesor de la semana 8
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
       y reportes (#7), integrados con la aplicación web (#28). Para la
       demo, solo fotos que se pueden mostrar a terceros (no SKU-110K).
+- [ ] **#34** Análisis de resultados del informe intermedio (entrega
+      2026-10-21): 10 mejores y 10 peores casos (imagen de entrada,
+      resultado, resultado esperado, error y causa, propuesta de mejora)
+      y análisis comparativo con métricas (P, R, mAP del detector, %
+      libre contra el anotado, tiempo por foto). Factores a revisar:
+      iluminación, perspectiva, sombras, reflejos, oclusiones, calidad
+      de imagen, errores de detección y de segmentación. Solo fotos que
+      se pueden mostrar (Kaggle CC0, SHARD, Roboflow; nunca SKU-110K).
+      Depende del pipeline (#8, PR #28) y de la verificación del
+      detector fuera de SKU-110K (#29 "Verificar el detector", #33 tras
+      el PR #27).
+- [ ] **#35** README completo para el informe intermedio (2026-10-21) y
+      las evidencias de avance (2026-10-26): descripción de la solución,
+      estrategia técnica y justificación de cada decisión (OpenCV antes
+      de YOLO26, cabeza sin NMS, niveles híbridos, profundidad fija,
+      umbral del 30%), diagramas de componentes y del flujo, datasets
+      (origen, cantidad de imágenes, limpieza, etiquetado y
+      preparación), estado operativo y pendiente, e instrucciones con
+      un ejemplo para que un externo reproduzca la ejecución. Se cruza
+      con #9.
+- [ ] **#36** Video de demostración de 5 a 10 minutos (entrega
+      2026-10-21): solo funcionalidades implementadas y resultados que
+      la aplicación genera hoy, con fotos que se pueden mostrar (no
+      SKU-110K). Depende de #8.
+- [ ] **#37** Evidencias de avance de la Fase 2, a más tardar
+      2026-10-26: diario de reflexión 2.1, guía 2.4 (resumen del
+      avance, plan de trabajo con estado y ajustes) e informe con el
+      formato de las pautas 2.2 y 2.3 (abstract en español e inglés;
+      conclusiones y reflexiones individuales en inglés). Todo en Git
+      con la estructura y nombres pedidos; la planilla de avance da 15%
+      al aporte de cada integrante visible en el repositorio. Detalle
+      en "Requisitos vigentes" de `docs/curso.md`.
+- [ ] **#38** Feria de informática (semana del 2026-10-26; día y hora
+      por informar): definir qué integrante va (al menos uno) y qué se
+      muestra.
+- [ ] **#39** Instalar la aplicación en el servidor del CITT. Bloqueado:
+      las instrucciones por sección llegan en los próximos días. Punto
+      de partida: la imagen Docker que ya construye la CI (#13).
 - [ ] **#5** (dueño: Francisco) Integrar inferencia YOLO26 en `src/models/` (se decidió
       YOLO26 sobre YOLOv8/YOLO11 por su cabeza sin NMS y mejor manejo de
       objetos chicos, clave en productos apilados). Validado en local:
