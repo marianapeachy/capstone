@@ -198,10 +198,25 @@ de cada uno y cuál proponer después (ver "Trabajo en equipo" en
 ```bash
 pip install -r requirements.txt
 pytest tests/
-python scripts/run_pipeline.py   # aún sin implementar (ítem #8): termina con NotImplementedError
+python scripts/run_pipeline.py FOTOS_O_CARPETAS... [--device cpu] [--out data/processed/pipeline]
 ```
 
-Mientras el ítem #8 esté pendiente, las etapas se prueban por separado:
+`run_pipeline.py` corre el pipeline completo (corrección, segmentación,
+YOLO26 y disponibilidad) sobre fotos o carpetas. Por foto escribe la
+vista limpia (`<nombre>.jpg`: huecos en rojo, % libre por repisa y la
+alerta) y el resultado completo (`<nombre>.json`), e imprime los segundos
+por etapa. Usa por defecto los pesos de
+`data/processed/training/yolo26s/weights/best.pt` (no se versionan: se
+comparten dentro del equipo, ver `docs/training.md`).
+
+Evaluación por lotes (CU07, RF06): con
+`--annotations data/processed/annotations/<dataset>.csv` compara las
+detecciones con la anotación hecha a mano por IoU (`--iou`, 0.5 por
+defecto) y la alerta con la que da la misma anotación, y escribe
+`metrics.csv` (una fila por foto anotada y el total). Las imágenes no
+salen de la máquina: solo se escriben métricas.
+
+Las etapas también se prueban por separado:
 `python scripts/visualize_segmentation.py` (segmentación, requiere
 datasets en `data/raw/`) y los scripts `evaluate_*.py`.
 
@@ -211,7 +226,9 @@ El CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) corre `pytest` y el
 
 ```bash
 docker build -t shelfvision-ai .
-docker run --rm shelfvision-ai   # corre run_pipeline.py: NotImplementedError hasta el ítem #8
+# run_pipeline.py con las fotos y los pesos montados (sin argumentos, muestra el uso):
+docker run --rm -v "$(pwd)/fotos:/app/fotos" -v "$(pwd)/data/processed/training:/app/data/processed/training" \
+  -v "$(pwd)/salida:/app/salida" shelfvision-ai python scripts/run_pipeline.py fotos --out salida
 # Pruebas dentro del contenedor (tests/ no se copia a la imagen, se monta):
 docker run --rm -v "$(pwd)/tests:/app/tests" shelfvision-ai python -m pytest tests/
 ```

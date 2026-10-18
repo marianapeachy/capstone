@@ -103,14 +103,14 @@ python scripts/train_detector.py val --weights <best.pt> --split test   # DET-04
 | ID | Qué se verifica | Cómo | Criterio | Último resultado |
 | --- | --- | --- | --- | --- |
 | INT-01 | Una detección sobre el recorte vuelve a la imagen original | `tests/test_detector.py` | Pasa | Pasa |
-| INT-02 | El pipeline completo corre sobre una imagen: `correct_image()` -> `segment_gondola()` -> `crop_roi()` -> `detect()` -> `to_original()` -> `compute_availability()` | Test de punta a punta con una imagen sintética, junto con `scripts/run_pipeline.py` (#8) | Pasa; resultado igual al de las etapas por separado | **No existe aún**: hoy solo se encadena en la guía visual local |
-| INT-03 | Sistema de coordenadas: la disponibilidad se calcula en la imagen corregida (donde se segmentaron las repisas) y el reporte usa la original | Test con calibración fisheye sintética | Los huecos coinciden con los de la imagen corregida | **No existe aún** (#8) |
+| INT-02 | El pipeline completo corre sobre una imagen: `correct_image()` -> `segment_gondola()` -> `crop_roi()` -> `detect()` -> `to_original()` -> `compute_availability()` | `tests/test_pipeline.py`: góndola sintética con un detector falso por color (`tests/pipeline_fixtures.py`); `tests/test_run_pipeline_cli.py` para el CLI | Pasa; resultado igual al de las etapas por separado | Pasa (2026-10-10): igual a las etapas encadenadas a mano; vaciar dos repisas crea sus huecos y la alerta |
+| INT-03 | Sistema de coordenadas: la disponibilidad se calcula en la imagen corregida (donde se segmentaron las repisas) y el reporte usa la original | `tests/test_pipeline.py`: la góndola sintética distorsionada con `LensCalibration.approximate(k1=-0.25)` | Los huecos coinciden con los de la imagen corregida | Pasa (2026-10-10): cajas y esquinas de repisa iguales a las calculadas en la imagen corregida y llevadas a la original; bordes densificados (curvos con lente) |
 
 ## 8. Trazabilidad con los requisitos (README)
 
 | Requisito | Cubierto por | Estado |
 | --- | --- | --- |
-| RF01 Ingesta de imágenes, 2 a 5 s por imagen | INT-02; medir el tiempo por etapa con 50 fotos en el portátil (CPU) y en el PC con GPU | **Sin medir** |
+| RF01 Ingesta de imágenes, 2 a 5 s por imagen | INT-02; tiempo por etapa de `scripts/run_pipeline.py` | **Cumple en CPU**: mediana 0.70 s por foto (6 fotos de Kaggle, i5-13400F, 4 hilos, 2026-10-10). Falta medir con más fotos y en el hardware final |
 | RF02 Espacios vacíos dentro de la ROI | SEG-03, AV-01, AV-02 | Cubierto con anotaciones; falta con el detector (AV-04) |
 | RF03 Disponibilidad en % o cm, profundidad fija de 25 cm | AV-01 (% y volumen) | % cubierto. Para cm falta la escala cm/px de cada cámara, que hoy no tiene fuente |
 | RF04 Alertas de quiebre | AV-01 a AV-03 (la decisión de alertar) | Decisión cubierta; el envío de la notificación no está implementado |
@@ -121,7 +121,7 @@ python scripts/train_detector.py val --weights <best.pt> --split test   # DET-04
 | Regla | Cómo se verifica | Estado |
 | --- | --- | --- |
 | Bounding boxes `[x_min, y_min, x_max, y_max]` en píxeles | DAT-02, ROI-02, DET-01 | Cubierta |
-| Orden híbrido: corrección -> segmentación -> recorte -> YOLO26 | INT-02 | **Sin test** hasta #8 |
+| Orden híbrido: corrección -> segmentación -> recorte -> YOLO26 | INT-02 (el detector recibe la imagen corregida recortada a la ROI) | Cubierta |
 | ROI automática, sin configuración por cámara | Revisión de código: ninguna función lee una ROI de configuración | Cubierta por diseño |
 | Profundidad constante de 25 cm | AV-01 (`GONDOLA_DEPTH_CM`) | Cubierta |
 | YOLO26 con `nms=False`, `max_det >= 1000`, `imgsz=1280` | DET-01 | Cubierta |
@@ -148,3 +148,4 @@ python scripts/train_detector.py val --weights <best.pt> --split test   # DET-04
 | --- | --- | --- | --- | --- |
 | 2026-09-30 | `main` 4848c64 + PR #16 | Francisco | `pytest`: 131 passed. AV-02 y AV-03 cumplen. SEG-02 y SEG-03 tomados de #15 (2026-09-28) | Línea base del plan. DET-03 a DET-05, AV-04, INT-02, INT-03 y RF01 pendientes |
 | 2026-09-30 | `main` 9cd8286 (PR #16 mergeado) | Francisco | `pytest`: 131 passed. DAT-01 6/6 OK; DAT-04 1,760,633; DAT-05 OK. SEG-02 F1 0.823 (P 0.796 / R 0.851); SEG-03 0.99-1.00. AV-02 4.0%; AV-03 99.7%. Todo cumple | Primera ejecución tras mergear #6. SEG-04: lámina de SKU-110K revisada, sin casos nuevos (diagonales en una foto oblicua de refrigeradores, ya en #17). Sin imports entre etapas en `src/` (revisión manual; sigue sin test). DET-02 no se repitió (OK 2026-09-29) |
+| 2026-10-10 | `feat/run-pipeline` (#8) | Francisco | `pytest`: 192 passed. INT-02 e INT-03 pasan. RF01: mediana 0.70 s por foto en CPU (corrección 0.31, segmentación 0.06, detección 0.34, disponibilidad 0.02). Evaluación por lotes (CU07) con la anotación de Kaggle, IoU >= 0.5: P 0.797, R 0.425, IoU medio 0.785, alerta correcta 5/6, error de % libre 7.8% | 6 fotos de Kaggle (001, 010, 020, 030, 039, 045), `yolo26s`. Prueba de humo, no la medición del #33. Hallazgos para #33: el recall bajo viene de la 030, un puesto de verduras sueltas (fuera del alcance de no perecibles; Kaggle anota cada verdura): 21 detectados de 546; sin ella, R 0.70. Y una falsa alerta en 020 (refrigeradores llenos, 34% libre): los marcos entre puertas, letreros y el vidrio borroso cuentan como huecos |
