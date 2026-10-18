@@ -139,13 +139,13 @@ hitos" en `docs/curso.md`).
       EcoQoS desactivado (`src/models/power.py`) y `resume --batch`; P2
       entrena con batch 1.
 - [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
-      `src/reporting/`. Contenido mínimo (#26, acuerdos con Walmart en el
+      `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre por góndola y por repisa, y alerta sí/no; así sirve
       para cualquiera de las dos lecturas del umbral (#24). Walmart no
       pide un formato: dejar en el README por qué se eligieron estos.
 - [ ] **#8** Implementar `scripts/run_pipeline.py` como CLI que orquesta
       el pipeline completo.
-- [ ] **#29** Verificar el detector `yolo26s` fuera de SKU-110K, en las
+- [ ] **#33** Verificar el detector `yolo26s` fuera de SKU-110K, en las
       condiciones con que evaluará Walmart (IoU contra anotación a mano;
       fotos frontales, en ángulo y desde arriba). Hoy solo está medido en
       el test de SKU-110K, que es igual al entrenamiento. Depende del modo
@@ -157,13 +157,13 @@ hitos" en `docs/curso.md`).
       IoU entre los huecos de `compute_availability()` y los vacíos
       anotados; (4) revisión a ojo de botellas y envases cilíndricos
       frente a cajas (los datos no etiquetan la forma). Después, el set
-      propio de #28. Criterio: reentrenar (fine-tuning con Kaggle CC0,
+      propio de #32. Criterio: reentrenar (fine-tuning con Kaggle CC0,
       fotos propias y aumentación de giros chicos, color y ruido) solo si
       alguna medición queda bajo mAP50 0.70 (referencia de Walmart: con
       ~70% el problema está casi resuelto); nunca generar imágenes
       sintéticas desde SKU-110K (licencia). Registrar los resultados en
       `docs/test-plan.md` (#19).
-- [ ] **#27** Excluir de la medición la bodega de reserva que hay sobre
+- [ ] **#31** Excluir de la medición la bodega de reserva que hay sobre
       la góndola de venta (Walmart no la evalúa; acuerdo del 2026-09-16
       en el README). Hoy `compute_availability()` acota la góndola "del
       primer al último nivel con productos", y las cajas de la bodega
@@ -171,7 +171,7 @@ hitos" en `docs/curso.md`).
       Opciones: descartar el nivel sobre la última repisa de venta, o
       cortar por altura en la imagen. Las islas del pasillo tampoco se
       miden (ya quedó en el README).
-- [ ] **#28** Fotos propias de góndolas en tienda (con permiso),
+- [ ] **#32** Fotos propias de góndolas en tienda (con permiso),
       clasificadas por ángulo (frontal, lateral, desde arriba, gran
       angular), y un set chico anotado a mano en el formato estándar.
       Las pide el acta de la primera reunión con Walmart y sirven para:
@@ -227,7 +227,7 @@ hitos" en `docs/curso.md`).
         ajedrez)? Los usaría `LensCalibration` (#3).
       - Umbral: el acta de la primera reunión dice "menos del 30% de
         productos disponibles", y el sistema alerta con espacio libre
-        >= 30%. ¿Cuál de las dos lecturas quieren? (#26)
+        >= 30%. ¿Cuál de las dos lecturas quieren? (#30)
       - Alcance: la primera reunión propuso pan y pollo "en principio".
         ¿Aceptan no perecibles?
       - Medidas estándar de la góndola que iban a enviar (profundidad,
@@ -573,7 +573,7 @@ hitos" en `docs/curso.md`).
       mensaje registrado: semana 8 (Evaluación 2 y documentos de la Fase
       2). Los enlaces no se versionan (repositorio público): se anota la
       fecha del mensaje que los trae.
-- [x] **#26** (dueño: Francisco) Documentación alineada con las
+- [x] **#30** (dueño: Francisco) Documentación alineada con las
       reuniones con Walmart (2026-09-03, 2026-09-16 y 2026-09-30). Las
       minutas no se versionan (son confidenciales y el repositorio es
       público): el README resume los acuerdos sin transcribirlos.
@@ -583,7 +583,7 @@ hitos" en `docs/curso.md`).
       Cliente" con fecha y estado (el sentido del umbral y el alcance
       quedan por confirmar, #24); RF01 acepta lotes de fotos; RF04 alerta
       por góndola; RF05 con contenido mínimo; RF06 nuevo (evaluación por
-      lotes); evaluación de Walmart por IoU y fotos propias (#28).
+      lotes); evaluación de Walmart por IoU y fotos propias (#32).
       Casos de uso (`Anexos/Diseño/Plantilla de C.U 0X.docx`): CU01 con
       el pipeline real (YOLO26, segmentación, sin bodega ni islas,
       excepciones de góndola no encontrada y cámara defectuosa) y sin
@@ -604,8 +604,10 @@ hitos" en `docs/curso.md`).
       (Mermaid)/` (`.drawio` del general y `.mmd` de cada C.U, con
       `LEEME.md`); `.gitignore` deja versionar los PNG de `Anexos/`.
       `docs/curso.md` lista los 8 C.U. Ítems
-      nuevos: #27 (bodega superior), #28 (fotos propias y set anotado)
-      y #29 (verificar el detector fuera de SKU-110K).
+      nuevos: #31 (bodega superior), #32 (fotos propias y set anotado)
+      y #33 (verificar el detector fuera de SKU-110K). Se numeraron
+      primero #26-#29 y se renumeraron (#30-#33) porque el PR de la semana
+      8 usó esos números al mismo tiempo.
 
 ## Notas
 
@@ -618,7 +620,7 @@ hitos" en `docs/curso.md`).
   de Interés (ROI)" con el botón "Guardar Máscara ROI"),
   y `Mockup Admin-4.jpg` (log "Actualizó máscara ROI"). Actualizarlos
   quedó postergado para más adelante (decidido 2026-09-27). Las
-  plantillas de C.U ya están al día (#26).
+  plantillas de C.U ya están al día (#30).
 - Riesgos de Docker resueltos y verificados con `docker build` real
   (2026-09-27, Docker Desktop 4.92): imagen de 2.49 GB, 27/27 tests OK
   dentro del contenedor. El build real destapó un cuarto problema: el pip
