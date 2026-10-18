@@ -19,7 +19,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | `src/models/` | Hecho: `ProductDetector` y detector `yolo26s` entrenado (mAP50-95 0.610 en test de SKU-110K) | #5 |
 | `src/postprocessing/` | Hecho: disponibilidad por repisa y alerta de quiebre (libre >= 30%) | #6 |
 | `src/reporting/` | Pendiente | #7 |
-| `scripts/run_pipeline.py` | Pendiente | #8 |
+| `scripts/run_pipeline.py` | Hecho: pipeline completo por foto, vista limpia, JSON y evaluación por lotes con IoU (CU07) | #8 |
 | Datasets | 5 descargados y convertidos al estándar, con descarga reproducible | #10, #11, #12 |
 | CI | Hecho: pytest + `docker build` en cada PR, `main` protegida | #13 |
 
@@ -77,8 +77,6 @@ Los cuatro primeros responden al mensaje del profesor de la semana 8
       README): % libre por góndola y por repisa, y alerta sí/no; así sirve
       para cualquiera de las dos lecturas del umbral (#24). Walmart no
       pide un formato: dejar en el README por qué se eligieron estos.
-- [ ] **#8** Implementar `scripts/run_pipeline.py` como CLI que orquesta
-      el pipeline completo.
 - [ ] **#33** Verificar el detector `yolo26s` fuera de SKU-110K, en las
       condiciones con que evaluará Walmart (IoU contra anotación a mano;
       fotos frontales, en ángulo y desde arriba). Hoy solo está medido en
@@ -95,7 +93,13 @@ Los cuatro primeros responden al mensaje del profesor de la semana 8
       fotos propias y aumentación de giros chicos, color y ruido) solo si
       alguna medición queda bajo mAP50 0.70 (referencia de Walmart: con
       ~70% el problema está casi resuelto); nunca generar imágenes
-      sintéticas desde SKU-110K (licencia). Registrar los resultados en
+      sintéticas desde SKU-110K (licencia). Primera prueba de humo con #8
+      (2026-10-10, 6 fotos de Kaggle, ver `docs/test-plan.md`): R 0.425
+      por la foto 030 (verduras sueltas, fuera del alcance: 21 de 546);
+      sin ella, R 0.70. Falsa alerta en la 020 (refrigeradores llenos,
+      34% libre contra 11% de la anotación): los marcos entre puertas,
+      letreros y vidrio borroso cuentan como huecos de al menos un ancho
+      de producto (criterio de #6). Registrar los resultados en
       `docs/test-plan.md` (#19).
 - [ ] **#31** Excluir de la medición la bodega de reserva que hay sobre
       la góndola de venta (Walmart no la evalúa; acuerdo del 2026-09-16
@@ -507,6 +511,22 @@ Los cuatro primeros responden al mensaje del profesor de la semana 8
       mensaje registrado: semana 8 (Evaluación 2 y documentos de la Fase
       2). Los enlaces no se versionan (repositorio público): se anota la
       fecha del mensaje que los trae.
+- [x] **#8** (dueño: Francisco) `scripts/run_pipeline.py`: pipeline
+      completo sobre fotos o carpetas. `src/pipeline.py` (`run_image()`)
+      encadena `correct_image()` -> `segment_gondola()` -> `crop_roi()` ->
+      detector -> `shelf_levels()` -> `compute_availability()` y lleva el
+      resultado a la foto original (polígonos densificados: con lente,
+      repisas y huecos se ven curvos). `src/reporting/annotate.py`
+      dibuja la vista limpia (huecos en rojo, % libre por repisa, cartel
+      de alerta). Por foto: `<nombre>.jpg` y `<nombre>.json`, más una
+      tabla de segundos por etapa. Incluye la evaluación por lotes de
+      CU07 (RF06): `--annotations` (CSV estándar) compara por IoU
+      (`src/evaluation/detection_metrics.py`) y la alerta con la de la
+      anotación (`measure_boxes()`), y escribe `metrics.csv`. Tests: 28
+      nuevos (góndola sintética y detector falso por color en
+      `tests/pipeline_fixtures.py`); INT-02 e INT-03 pasan. RF01 en CPU:
+      mediana 0.70 s por foto (6 fotos de Kaggle). Diseño en
+      `docs/superpowers/specs/2026-10-07-run-pipeline-design.md`.
 - [x] **#30** (dueño: Francisco) Documentación alineada con las
       reuniones con Walmart (2026-09-03, 2026-09-16 y 2026-09-30). Las
       minutas no se versionan (son confidenciales y el repositorio es
