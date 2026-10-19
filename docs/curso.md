@@ -104,6 +104,17 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
   director de carrera lo coordina entre las secciones de Capstone.
 - **Impedimentos**: toda dificultad que pueda afectar estos avances se
   informa al profesor a tiempo.
+- **Alcance del quiebre de stock** (cambio del 2026-10-19): el quiebre
+  se determina sobre la **góndola completa**, no por nivel o repisa. La
+  alerta y el porcentaje de espacio libre que entrega el sistema son los
+  de la góndola completa; las repisas quedan solo como método interno
+  para medir (con cámara en ángulo miden mejor, ítem #22). Reemplaza el
+  "análisis segmentado por repisa" del Nivel 1 (acta de la primera
+  reunión con Walmart). Trabajo en el ítem #40 de `PROGRESS.md`.
+- **SKU-110K**: se puede trabajar con él (entrenar y evaluar), confirmado
+  el 2026-10-19. Siguen las restricciones de su licencia (de Trax, el
+  dueño del dataset): sus fotos no se muestran a terceros ni se usan
+  para generar imágenes derivadas (ver `CLAUDE.md`).
 - **Documentos de la Fase 2**: las plantillas están en Drive (enlace en
   el mensaje del profesor de la semana 8, 2026-10-05 a 2026-10-09). El
   profesor volvió a compartir los de AVANCE, pedidos por auditoría, en
@@ -211,10 +222,31 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
 - ¿Qué componentes debe tener la instalación en el servidor del CITT
   (aplicación web, base de datos, modelo YOLO26)? ¿El servidor tiene
   GPU y Docker?
+- Quiebre por góndola completa (2026-10-19): ¿una foto equivale a una
+  góndola? Si la foto muestra varias góndolas o módulos (de ~1 m), o un
+  pasillo entero, ¿se da una alerta por foto o por cada góndola? ¿El
+  cambio viene del cliente (Walmart)? ¿Sigue valiendo el umbral de 30%
+  de espacio libre del frente de la góndola?
+- SKU-110K (2026-10-19): "trabajar sin problemas", ¿incluye mostrar sus
+  fotos en el informe intermedio, el video o la demo ante Walmart? Su
+  licencia lo prohíbe; mientras no haya un permiso de Trax, esos casos
+  salen de Kaggle CC0, SHARD o Roboflow.
 
 ## Registro de mensajes
 
 Del más reciente al más antiguo.
+
+### Semana 10 (2026-10-19): alcance por góndola completa y SKU-110K
+
+Mensaje contado por un integrante (sin texto literal).
+
+- Cambio de alcance: el quiebre de stock se determina sobre la góndola
+  completa, no por nivel o repisa. Cambia el Nivel 1: antes, % libre y
+  alerta por repisa; ahora, solo de la góndola completa (detalle en
+  "Requisitos vigentes"; trabajo en el ítem #40).
+- Se puede trabajar con SKU-110K sin problemas. Se registra como
+  confirmación para entrenar y evaluar; su licencia sigue impidiendo
+  mostrar sus fotos a terceros (pregunta abierta).
 
 ### Semana 9 (2026-10-16): informe intermedio, feria y servidor CITT
 

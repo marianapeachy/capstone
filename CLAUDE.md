@@ -62,10 +62,18 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
   al menos un ancho de producto, sin medir la altura de los productos,
   en la góndola acotada a los productos detectados
   (`src/postprocessing/availability.py`, decidido 2026-09-30).
+- **Quiebre por góndola completa** (cambio de alcance del 2026-10-19,
+  indicado por el profesor): la alerta y el % de espacio libre que el
+  sistema **informa** (JSON, vista, reportes, alertas, app web) son solo
+  los de la góndola completa. Las repisas de `shelf_levels()` siguen
+  siendo el método interno para medir (sumar la cobertura a lo largo de
+  cada repisa), pero no se informa alerta ni porcentaje por repisa. Ver
+  ítem #40 de `PROGRESS.md`.
 - **Licencias de datos**: SKU-110K es solo para uso académico y no
   comercial, y su licencia prohíbe distribuir, mostrar a terceros o
   **modificar** sus fotos (crear obras derivadas). Se usa para entrenar
-  y evaluar, nunca para generar imágenes sintéticas (vistas en ángulo,
+  y evaluar (confirmado por el profesor el 2026-10-19), nunca para
+  generar imágenes sintéticas (vistas en ángulo,
   distorsión de lente) ni para demos ante Walmart u otros externos: para
   eso, datasets que lo permitan (Kaggle supermarket-shelves CC0, SHARD y
   Roboflow CC BY 4.0). Ver `src/datasets/sources.py` y
