@@ -17,7 +17,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | --- | --- | --- |
 | `src/preprocessing/` | Hecho: corrección de imagen, segmentación de góndola y recorte de ROI | #1, #2, #3, #4 |
 | `src/models/` | Hecho: `ProductDetector` y detector `yolo26s` entrenado (mAP50-95 0.610 en test de SKU-110K) | #5 |
-| `src/postprocessing/` | Hecho: disponibilidad medida por repisa y alerta de quiebre (libre >= 30%). Falta: informar solo la góndola completa (#40) | #6, #40 |
+| `src/postprocessing/` | Hecho: disponibilidad medida a lo largo de cada repisa; se informan solo la alerta (libre >= 30%) y el % libre de la góndola completa | #6, #40 |
 | `src/reporting/` | Pendiente | #7 |
 | `scripts/run_pipeline.py` | Hecho: pipeline completo por foto, vista limpia, JSON y evaluación por lotes con IoU (CU07) | #8 |
 | Datasets | 5 descargados y convertidos al estándar, con descarga reproducible | #10, #11, #12 |
@@ -75,47 +75,6 @@ hitos" en `docs/curso.md`).
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
       y reportes (#7), integrados con la aplicación web (#28). Para la
       demo, solo fotos que se pueden mostrar a terceros (no SKU-110K).
-- [ ] **#40** (dueño: Francisco) Quiebre de stock por góndola completa
-      (cambio de alcance indicado por el profesor el 2026-10-19; ver
-      `docs/curso.md`, README "Supuestos del Dominio" y la regla
-      "Quiebre por góndola completa" de `CLAUDE.md`). La alerta y el %
-      libre que se **informan** son solo los de la góndola completa; las
-      repisas de `shelf_levels()` siguen como método interno para medir
-      (no se toca la medición: `compute_availability()` ya calcula la
-      alerta de la góndola). Hacerlo antes del video y el informe del
-      2026-10-21 (#34, #36), que deben mostrar la salida por góndola.
-      Dependencias a cambiar:
-      - Código: `src/postprocessing/availability.py` (quitar
-        `ShelfAvailability.critical` y `GondolaAvailability.
-        critical_shelves`; el % por repisa puede quedar como dato interno
-        si sirve para medir); `src/pipeline.py` (`ShelfResult` y el
-        JSON: sin `critical` ni % por repisa; decidir si se informan los
-        huecos como polígonos de la góndola); `src/reporting/annotate.py`
-        (quitar la etiqueta "Repisa N - x% libre"; los huecos en rojo y
-        el cartel de la góndola se mantienen); `scripts/run_pipeline.py`
-        (revisar la tabla y el JSON). `scripts/evaluate_availability.py`
-        y las métricas AV-02/AV-03 ya miden la alerta de la góndola: no
-        cambian.
-      - Tests: `tests/test_availability.py` (asserts de
-        `shelves[i].critical` y `critical_shelves`), `tests/test_pipeline.py`
-        (`ShelfResult`, JSON) y `tests/test_annotate.py` (etiqueta de
-        repisa). Primero los tests (TDD).
-      - Casos de uso (`Anexos/Diseño/Plantilla de C.U 0X.docx`): CU01
-        (descripción "por repisa (Nivel 1)", pasos 4 y 5 y postcondición),
-        CU02 ("repisas con huecos"), CU03 (detalle "espacio libre por
-        repisa") y CU04 ("% libre por góndola y por repisa"). Editar solo
-        el texto, conservando el formato, y verificar abriéndolos en Word.
-      - Diagramas (`Anexos/Diseño/Diagramas fuente (Mermaid)/`): CU01,
-        CU02, CU03, CU04 y CU07 mencionan "por repisa"; regenerar sus PNG
-        en `Anexos/Diseño/Diagramas particulares por cada C. U._/`.
-      - Docs: README ("Ejecución local": la vista ya no muestra % por
-        repisa), `docs/test-plan.md` (AV-01 y RF04: la alerta es solo de
-        la góndola), ítem #7 (contenido mínimo, ya actualizado) e ítem
-        #35 (justificar que las repisas son método de medición, no
-        salida).
-      - Preguntas abiertas (en `docs/curso.md`): si una foto con varias
-        góndolas o módulos da una o varias alertas; si sigue el umbral de
-        30%.
 - [ ] **#34** Análisis de resultados del informe intermedio (entrega
       2026-10-21): 10 mejores y 10 peores casos (imagen de entrada,
       resultado, resultado esperado, error y causa, propuesta de mejora)
@@ -644,6 +603,32 @@ hitos" en `docs/curso.md`).
       y #33 (verificar el detector fuera de SKU-110K). Se numeraron
       primero #26-#29 y se renumeraron (#30-#33) porque el PR de la semana
       8 usó esos números al mismo tiempo.
+- [x] **#40** (dueño: Francisco) Quiebre de stock por góndola completa
+      (cambio de alcance del profesor, 2026-10-19). La alerta y el %
+      libre que se informan son solo los de la góndola completa; la
+      medición no cambia (`shelf_levels()` y la cobertura a lo largo de
+      cada repisa). Código: `ShelfAvailability` sin `critical` (su %
+      libre queda como dato interno de medición) y sin
+      `GondolaAvailability.critical_shelves`; `ShelfResult` y su JSON
+      solo con geometría (`level_index`, `polygon`, `gaps`,
+      `product_count`); la vista mantiene los huecos en rojo, el
+      contorno de cada repisa y el cartel de la góndola, sin la etiqueta
+      "Repisa N - x% libre". Tests primero (TDD): una repisa sobre el
+      umbral no alerta si la góndola no lo alcanza, el JSON por repisa
+      no trae % ni alerta y la vista no tiene etiquetas por repisa;
+      `pytest` 195 passed. Pipeline real en CPU (`yolo26s`) sobre 3
+      fotos de Kaggle (003, 017, 031): 003 da una falsa alerta (41%
+      libre; refrigerador con la fila de abajo llena marcada como
+      hueco), hallazgo para #34/#33. Casos de uso CU01 a CU04 (solo el
+      texto de los `<w:t>`, verificados en Word) y diagramas de CU01,
+      CU02, CU03, CU04 y CU07 (fuentes `.mmd` y PNG regenerados con
+      mermaid-cli, tema oscuro; configuración en
+      `mermaid-config.json`). README ("Ejecución local") y
+      `docs/test-plan.md` (AV-01, RF04 y registro). Sigue pendiente,
+      en otros ítems: ítem #35 (justificar que las repisas son método de
+      medición, no salida) y las preguntas abiertas de `docs/curso.md`
+      (si una foto con varias góndolas o módulos da una o varias
+      alertas; si sigue el umbral de 30%).
 
 ## Notas
 

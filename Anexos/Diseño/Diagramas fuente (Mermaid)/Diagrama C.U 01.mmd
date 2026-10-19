@@ -16,8 +16,8 @@ sequenceDiagram
     Det->>Det: Detecta productos (una sola clase)
     Det->>Post: Cajas en coordenadas de la imagen corregida
     Post->>Post: Niveles de repisa, sin bodega superior ni islas
-    Post->>Post: Calcula espacio libre por repisa y de la góndola
-    Post->>BD: Guarda % libre por góndola y por repisa
+    Post->>Post: Mide huecos a lo largo de cada repisa y suma el espacio libre de la góndola
+    Post->>BD: Guarda % libre de la góndola completa
     alt Espacio libre >= umbral (30% por defecto)
         Post->>BD: Registra alerta de quiebre (CU02)
     end

@@ -6,10 +6,12 @@ sobre fotos de gondola.
         [--out data/processed/pipeline] [--device cpu] [--threads 4]
         [--conf 0.25] [--annotations ANOTACIONES.csv] [--iou 0.5]
 
-Por foto escribe `<out>/<nombre>.jpg` (vista limpia: huecos, % libre por
-repisa y alerta) y `<out>/<nombre>.json` (resultado completo, en
-coordenadas de la foto). Imprime una tabla con el % libre, la alerta y
-los segundos por etapa, con la mediana al final.
+Por foto escribe `<out>/<nombre>.jpg` (vista limpia: huecos, contorno de
+las repisas medidas y cartel con la alerta y el % libre de la gondola) y
+`<out>/<nombre>.json` (resultado completo, en coordenadas de la foto: la
+alerta y el % libre son los de la gondola completa; por repisa, solo la
+geometria). Imprime una tabla con el % libre y la alerta de cada gondola
+y los segundos por etapa, con la mediana al final.
 
 Evaluacion por lotes (CU07, RF06): con `--annotations` (CSV en el formato
 estandar de data/processed/annotations/, filas con class_group "product")

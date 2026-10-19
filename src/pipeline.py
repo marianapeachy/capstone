@@ -49,15 +49,15 @@ class Detector(Protocol):
 
 @dataclass(frozen=True)
 class ShelfResult:
-    """Un nivel de repisa en la foto original. `gaps`: un poligono por
-    hueco, de izquierda a derecha."""
+    """Geometria de un nivel de repisa en la foto original: el frente
+    medido y `gaps`, un poligono por hueco, de izquierda a derecha. Sin %
+    libre ni alerta: se informan solo los de la gondola completa
+    (PipelineResult)."""
 
     level_index: int
     polygon: Polygon
     gaps: tuple[Polygon, ...]
     product_count: int
-    free_fraction: float
-    critical: bool
 
 
 @dataclass(frozen=True)
@@ -77,7 +77,9 @@ class StageTimes:
 
 @dataclass(frozen=True)
 class PipelineResult:
-    """Resultado de una foto, en coordenadas de la foto original. Con
+    """Resultado de una foto, en coordenadas de la foto original.
+    `free_fraction` y `critical` (alerta de quiebre) son los de la gondola
+    completa; `shelves` solo trae la geometria de la medicion. Con
     `segmentation_found` falso no se encontraron repisas y la gondola se
     midio como un solo nivel (analisis global)."""
 
@@ -169,8 +171,6 @@ def _to_original(
                 for start, end in shelf.gaps
             ),
             product_count=int(shelf.product_count),
-            free_fraction=float(shelf.free_fraction),
-            critical=bool(shelf.critical),
         )
         for shelf in availability.shelves
     )

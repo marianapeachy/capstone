@@ -7,10 +7,10 @@ sequenceDiagram
     U->>Web: Accede a la vista de góndolas
     Web->>API: GET /api/v1/gondolas/status (token JWT)
     API->>BD: Consulta la última captura analizada de cada góndola
-    BD-->>API: % libre por góndola y repisa, hora de la captura
+    BD-->>API: % libre de cada góndola, hora de la captura
     API-->>Web: Estados (Verde menos de 15% / Amarillo 15-30% / Rojo 30% o más libre / Sin datos)
     Web-->>U: Mapa de pasillos con indicadores
     U->>Web: Selecciona una góndola
     Web->>API: GET /api/v1/gondolas/{id}
-    API-->>Web: Espacio libre por repisa, imagen analizada e historial de capturas
+    API-->>Web: Espacio libre de la góndola, imagen con huecos e historial de capturas
     Web-->>U: Detalle de la góndola

@@ -24,7 +24,7 @@ El proyecto aborda la automatización de la auditoría de espacios en salas de v
 * **Fachada visible**: se mide solo lo que la cámara ve de frente. Si el frente de una repisa está lleno, se supone que detrás también hay producto: es lo que ve el cliente, y la cámara no da información del fondo.
 * **Sin apilamiento**: no se mide la altura de los productos. Ningún producto se considera apilable, así que el espacio vertical sobre un producto no cuenta como hueco. Es la respuesta del sistema a "La Trampa del Apilamiento".
 * **Una sola clase de producto**: basta saber si hay producto o no; no se identifica el SKU ni la categoría.
-* **Quiebre por góndola completa** (cambio de alcance del 2026-10-19, indicado por el profesor): el quiebre de stock se determina sobre la góndola completa, no por nivel o repisa. El sistema entrega una sola alerta y un solo porcentaje de espacio libre por góndola. Internamente sigue midiendo repisa por repisa, porque así la medición funciona con la cámara en ángulo (las repisas se ven inclinadas, ítem #22), pero no informa alertas ni porcentajes por repisa. Adaptar el código, los casos de uso y los diagramas: ítem #40.
+* **Quiebre por góndola completa** (cambio de alcance del 2026-10-19, indicado por el profesor): el quiebre de stock se determina sobre la góndola completa, no por nivel o repisa. El sistema entrega una sola alerta y un solo porcentaje de espacio libre por góndola. Internamente sigue midiendo repisa por repisa, porque así la medición funciona con la cámara en ángulo (las repisas se ven inclinadas, ítem #22), pero no informa alertas ni porcentajes por repisa. Código, casos de uso y diagramas adaptados en el ítem #40.
 * **Qué se mide**: la góndola de venta que ve el cliente. Quedan fuera la bodega de reserva sobre la góndola y las islas centrales del pasillo (excluir la bodega superior está pendiente, #31).
 
 ### 3. Acuerdos con el Cliente (Walmart)
@@ -204,9 +204,13 @@ python scripts/run_pipeline.py FOTOS_O_CARPETAS... [--device cpu] [--out data/pr
 
 `run_pipeline.py` corre el pipeline completo (corrección, segmentación,
 YOLO26 y disponibilidad) sobre fotos o carpetas. Por foto escribe la
-vista limpia (`<nombre>.jpg`: huecos en rojo, % libre por repisa y la
-alerta) y el resultado completo (`<nombre>.json`), e imprime los segundos
-por etapa. Usa por defecto los pesos de
+vista limpia (`<nombre>.jpg`: huecos en rojo, contorno de las repisas
+medidas y un cartel con la alerta y el % libre de la góndola completa) y
+el resultado completo (`<nombre>.json`), e imprime el % libre, la alerta y
+los segundos por etapa. En el JSON, `free_fraction` y `critical` son los
+de la góndola completa; `shelves` solo trae la geometría de cada repisa
+medida (contorno, huecos y número de productos), sin % ni alerta por
+repisa: las repisas son el método para medir, no una salida. Usa por defecto los pesos de
 `data/processed/training/yolo26s/weights/best.pt` (no se versionan: se
 comparten dentro del equipo, ver `docs/training.md`).
 

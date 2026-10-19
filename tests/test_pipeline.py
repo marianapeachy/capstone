@@ -61,18 +61,26 @@ def test_full_gondola_has_no_alert():
 def test_emptying_shelves_creates_gaps_there_and_the_alert():
     result = run_image(gondola(EMPTIED)[0], ColorDetector())
     assert result.critical and result.free_fraction >= 0.3
-    emptied = [s for s in result.shelves if s.free_fraction > 0.5]
-    assert len(emptied) == 2
-    assert all(s.critical and s.gaps for s in emptied)
-    assert any(s.free_fraction < 0.1 and not s.gaps for s in result.shelves)
+    assert len([s for s in result.shelves if s.gaps]) == 2
+    assert any(not s.gaps for s in result.shelves)
+
+
+def test_alert_and_free_space_are_reported_only_for_the_whole_gondola():
+    # Una repisa vacia en su 70% central no llega al 30% de la gondola.
+    result = run_image(gondola({1: (0.15, 0.85)})[0], ColorDetector())
+    assert any(s.gaps for s in result.shelves)
+    assert not result.critical
+    # Por repisa solo va la geometria (contorno y huecos), sin % ni alerta.
+    for shelf in result.to_dict()["shelves"]:
+        assert set(shelf) == {"level_index", "polygon", "gaps", "product_count"}
 
 
 def test_without_calibration_gap_polygons_cover_the_free_width():
+    # Los huecos y contornos que se informan explican el % de la gondola.
     result = run_image(gondola(EMPTIED)[0], ColorDetector())
-    for shelf in result.shelves:
-        xs = np.array(shelf.polygon)[:, 0]
-        gap_width = sum(np.ptp(np.array(gap)[:, 0]) for gap in shelf.gaps)
-        assert gap_width / np.ptp(xs) == pytest.approx(shelf.free_fraction)
+    shelf_width = sum(np.ptp(np.array(s.polygon)[:, 0]) for s in result.shelves)
+    gap_width = sum(np.ptp(np.array(g)[:, 0]) for s in result.shelves for g in s.gaps)
+    assert gap_width / shelf_width == pytest.approx(result.free_fraction)
 
 
 def test_with_lens_calibration_results_go_back_to_the_original_photo():
