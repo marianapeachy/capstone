@@ -17,7 +17,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | --- | --- | --- |
 | `src/preprocessing/` | Hecho: corrección de imagen, segmentación de góndola y recorte de ROI | #1, #2, #3, #4 |
 | `src/models/` | Hecho: `ProductDetector` y detector `yolo26s` entrenado (mAP50-95 0.610 en test de SKU-110K) | #5 |
-| `src/postprocessing/` | Hecho: disponibilidad por repisa y alerta de quiebre (libre >= 30%) | #6 |
+| `src/postprocessing/` | Hecho: disponibilidad medida por repisa y alerta de quiebre (libre >= 30%). Falta: informar solo la góndola completa (#40) | #6, #40 |
 | `src/reporting/` | Pendiente | #7 |
 | `scripts/run_pipeline.py` | Hecho: pipeline completo por foto, vista limpia, JSON y evaluación por lotes con IoU (CU07) | #8 |
 | Datasets | 5 descargados y convertidos al estándar, con descarga reproducible | #10, #11, #12 |
@@ -75,6 +75,47 @@ hitos" en `docs/curso.md`).
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
       y reportes (#7), integrados con la aplicación web (#28). Para la
       demo, solo fotos que se pueden mostrar a terceros (no SKU-110K).
+- [ ] **#40** (dueño: Francisco) Quiebre de stock por góndola completa
+      (cambio de alcance indicado por el profesor el 2026-10-19; ver
+      `docs/curso.md`, README "Supuestos del Dominio" y la regla
+      "Quiebre por góndola completa" de `CLAUDE.md`). La alerta y el %
+      libre que se **informan** son solo los de la góndola completa; las
+      repisas de `shelf_levels()` siguen como método interno para medir
+      (no se toca la medición: `compute_availability()` ya calcula la
+      alerta de la góndola). Hacerlo antes del video y el informe del
+      2026-10-21 (#34, #36), que deben mostrar la salida por góndola.
+      Dependencias a cambiar:
+      - Código: `src/postprocessing/availability.py` (quitar
+        `ShelfAvailability.critical` y `GondolaAvailability.
+        critical_shelves`; el % por repisa puede quedar como dato interno
+        si sirve para medir); `src/pipeline.py` (`ShelfResult` y el
+        JSON: sin `critical` ni % por repisa; decidir si se informan los
+        huecos como polígonos de la góndola); `src/reporting/annotate.py`
+        (quitar la etiqueta "Repisa N - x% libre"; los huecos en rojo y
+        el cartel de la góndola se mantienen); `scripts/run_pipeline.py`
+        (revisar la tabla y el JSON). `scripts/evaluate_availability.py`
+        y las métricas AV-02/AV-03 ya miden la alerta de la góndola: no
+        cambian.
+      - Tests: `tests/test_availability.py` (asserts de
+        `shelves[i].critical` y `critical_shelves`), `tests/test_pipeline.py`
+        (`ShelfResult`, JSON) y `tests/test_annotate.py` (etiqueta de
+        repisa). Primero los tests (TDD).
+      - Casos de uso (`Anexos/Diseño/Plantilla de C.U 0X.docx`): CU01
+        (descripción "por repisa (Nivel 1)", pasos 4 y 5 y postcondición),
+        CU02 ("repisas con huecos"), CU03 (detalle "espacio libre por
+        repisa") y CU04 ("% libre por góndola y por repisa"). Editar solo
+        el texto, conservando el formato, y verificar abriéndolos en Word.
+      - Diagramas (`Anexos/Diseño/Diagramas fuente (Mermaid)/`): CU01,
+        CU02, CU03, CU04 y CU07 mencionan "por repisa"; regenerar sus PNG
+        en `Anexos/Diseño/Diagramas particulares por cada C. U._/`.
+      - Docs: README ("Ejecución local": la vista ya no muestra % por
+        repisa), `docs/test-plan.md` (AV-01 y RF04: la alerta es solo de
+        la góndola), ítem #7 (contenido mínimo, ya actualizado) e ítem
+        #35 (justificar que las repisas son método de medición, no
+        salida).
+      - Preguntas abiertas (en `docs/curso.md`): si una foto con varias
+        góndolas o módulos da una o varias alertas; si sigue el umbral de
+        30%.
 - [ ] **#34** Análisis de resultados del informe intermedio (entrega
       2026-10-21): 10 mejores y 10 peores casos (imagen de entrada,
       resultado, resultado esperado, error y causa, propuesta de mejora)
@@ -113,34 +154,9 @@ hitos" en `docs/curso.md`).
 - [ ] **#39** Instalar la aplicación en el servidor del CITT. Bloqueado:
       las instrucciones por sección llegan en los próximos días. Punto
       de partida: la imagen Docker que ya construye la CI (#13).
-- [ ] **#5** (dueño: Francisco) Integrar inferencia YOLO26 en `src/models/` (se decidió
-      YOLO26 sobre YOLOv8/YOLO11 por su cabeza sin NMS y mejor manejo de
-      objetos chicos, clave en productos apilados). Validado en local:
-      `ultralytics` 8.4.164 + `yolo26n.pt` corre sobre SKU-110K y se
-      encadena con `crop_roi()`/`to_original()`; `tests/test_models.py`
-      fija el contrato (versión >= 8.4.0, `nms=False` activa el modo
-      end-to-end y respeta `max_det`). Hecho (2026-09-29): inferencia en
-      `src/models/detector.py` (`ProductDetector.detect()` -> lista de
-      `Detection` con bbox estándar, fija `nms=False`, `max_det=1000` e
-      `imgsz=1280`, y rechaza modelos sin cabeza sin NMS). Dataset YOLO con
-      `scripts/prepare_yolo_dataset.py` (`xyxy_to_yolo()` en
-      `converters.py`). Las imágenes se enlazan desde `data/raw/`; los 712
-      JPEG truncados de SKU-110K se copian, porque Ultralytics los
-      reescribe al repararlos. Entrenamiento, reanudación y evaluación en
-      `scripts/train_detector.py` (variantes `yolo26s` y `yolo26s-p2`,
-      entrena y valida con `nms=False` y `max_det=1000`: por defecto
-      Ultralytics mide la cabeza con NMS y corta en 300 cajas). Guía para
-      el PC con GPU en `docs/training.md`. Todo el flujo verificado con
-      una prueba corta en CPU (16 imágenes, 1 época). Pendiente: entrenar
-      en el PC con GPU NVIDIA (sin GPU en el portátil de Francisco),
-      comparar las dos variantes en `val`, evaluar la ganadora en `test` y
-      registrar aquí las métricas. Para 8 GB bajo Windows (2026-10-01):
-      límite de VRAM con asignador en CPU ante OOM (`src/models/vram.py`),
-      EcoQoS desactivado (`src/models/power.py`) y `resume --batch`; P2
-      entrena con batch 1.
 - [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
-      README): % libre por góndola y por repisa, y alerta sí/no; así sirve
+      README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
       para cualquiera de las dos lecturas del umbral (#24). Walmart no
       pide un formato: dejar en el README por qué se eligieron estos.
 - [ ] **#33** Verificar el detector `yolo26s` fuera de SKU-110K, en las

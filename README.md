@@ -24,6 +24,7 @@ El proyecto aborda la automatización de la auditoría de espacios en salas de v
 * **Fachada visible**: se mide solo lo que la cámara ve de frente. Si el frente de una repisa está lleno, se supone que detrás también hay producto: es lo que ve el cliente, y la cámara no da información del fondo.
 * **Sin apilamiento**: no se mide la altura de los productos. Ningún producto se considera apilable, así que el espacio vertical sobre un producto no cuenta como hueco. Es la respuesta del sistema a "La Trampa del Apilamiento".
 * **Una sola clase de producto**: basta saber si hay producto o no; no se identifica el SKU ni la categoría.
+* **Quiebre por góndola completa** (cambio de alcance del 2026-10-19, indicado por el profesor): el quiebre de stock se determina sobre la góndola completa, no por nivel o repisa. El sistema entrega una sola alerta y un solo porcentaje de espacio libre por góndola. Internamente sigue midiendo repisa por repisa, porque así la medición funciona con la cámara en ángulo (las repisas se ven inclinadas, ítem #22), pero no informa alertas ni porcentajes por repisa. Adaptar el código, los casos de uso y los diagramas: ítem #40.
 * **Qué se mide**: la góndola de venta que ve el cliente. Quedan fuera la bodega de reserva sobre la góndola y las islas centrales del pasillo (excluir la bodega superior está pendiente, #31).
 
 ### 3. Acuerdos con el Cliente (Walmart)
@@ -34,9 +35,9 @@ Resumen de lo acordado en las reuniones con Walmart Chile (las minutas no se ver
 | :--- | :--- | :--- | :--- |
 | Problema | Detectar espacios vacíos (quiebres de stock) en góndolas; la pregunta central es si hay quiebre o no | 2026-09-03, 2026-09-30 | Vigente |
 | Alcance | La primera reunión propuso partir, en principio, con góndolas de pan y pollo. El equipo eligió no perecibles porque son los que tienen datasets públicos anotados, y después Walmart recomendó partir por la categoría con más datos | 2026-09-03, 2026-09-16 | Por confirmar (#24) |
-| Métrica | Porcentaje de espacio libre por góndola, con detalle por repisa (Nivel 1); como mínimo, alerta por umbral del 30% (Nivel 2) | 2026-09-03 | Vigente |
+| Métrica | Porcentaje de espacio libre de la góndola completa (Nivel 1); como mínimo, alerta por umbral del 30% (Nivel 2). El acta pedía además detalle por repisa: lo reemplaza el cambio del 2026-10-19 | 2026-09-03, 2026-10-19 (profesor) | Vigente |
 | Sentido del umbral | El acta lo plantea como "menos del 30% de productos disponibles"; el sistema alerta con **espacio libre >= 30%** del frente (decidido 2026-09-30, #6). El umbral es configurable (`AvailabilityParams.critical_free_fraction`) y los reportes informan el % libre, así que sirven para cualquiera de las dos lecturas | 2026-09-03 | Por confirmar (#24) |
-| Nivel de la alerta | Lo elige el equipo, justificándolo. El sistema alerta por góndola (es la unidad que se repone) y muestra el detalle por repisa | 2026-09-30 | Vigente |
+| Nivel de la alerta | **Góndola completa**, no por nivel o repisa (cambio de alcance indicado por el profesor; antes lo elegía el equipo y se mostraba también el detalle por repisa). Implementación: #40 | 2026-09-30, 2026-10-19 (profesor) | Vigente |
 | Criterios | Todo criterio del equipo (fachada visible, sin apilamiento, hueco de al menos un ancho de producto) es válido si se justifica ante el negocio | 2026-09-16 | Vigente |
 | Imágenes | Las fotos de Walmart son de muchos tipos (frontales, en ángulo, desde arriba) y no vienen recortadas a la góndola. Walmart no comparte fotogramas de sus cámaras (ver "Estrategia de Datos y Evaluación") | 2026-09-16, 2026-10-01 | Vigente |
 | Fotos propias | El equipo debe tomar fotos reales de góndolas; sirven para entrenar si se clasifican por ángulo (#32) | 2026-09-03, 2026-09-16 | Pendiente |
@@ -54,8 +55,8 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 | Criterio | Solución Óptima (Nivel 1) | MVP Alternativo (Nivel 2) |
 | :--- | :--- | :--- |
 | **Objetivo Principal** | Medición espacial y volumétrica exacta del espacio libre (profundidad constante de 25 cm) | Alerta macro por umbral binario de stock |
-| **Métrica de Salida** | Centímetros o porcentaje exacto de espacio vacío por repisa | ¿Espacio libre ≥ 30% del frente de la góndola? (Sí / No) |
-| **Granularidad** | Segmentado nivel por nivel de la góndola (Nivel 1, 2, 3...), con repisas detectadas automáticamente | Análisis global de la góndola detectada automáticamente |
+| **Métrica de Salida** | Porcentaje exacto (o cm, con escala) de espacio vacío de la góndola completa | ¿Espacio libre ≥ 30% del frente de la góndola? (Sí / No) |
+| **Granularidad** | Góndola completa (desde 2026-10-19). Las repisas, detectadas automáticamente, son solo el método interno de medición | Góndola completa, detectada automáticamente |
 | **Complejidad** | Alta (Segmentación espacial + Visión Computacional) | Media (Detección por umbral de píxeles / parches) |
 
 ---
@@ -65,8 +66,8 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 * **RF01 - Ingesta de Imágenes**: Procesamiento estático de fotogramas en formato imagen, de una cámara de sala o de un lote de fotos (frontales, en ángulo o desde arriba). Tiempo de inferencia objetivo: 2 a 5 segundos por imagen.
 * **RF02 - Detección de Espacios Vacíos**: Identificación de regiones sin producto dentro de las regiones de interés (ROI) correspondientes a la góndola, que el sistema segmenta automáticamente.
 * **RF03 - Cálculo de Disponibilidad**: Estimación cuantitativa del espacio libre (porcentaje/cm o alerta cuando el espacio libre llega al 30% del frente de la góndola), asumiendo profundidad de góndola constante (25 cm).
-* **RF04 - Generación de Alertas**: Emisión de notificaciones prioritarias para el equipo de reposición cuando se detecte un quiebre de stock (una alerta por góndola, con el detalle de las repisas afectadas). Opcional: alerta de cámara defectuosa cuando la imagen tiene colores imposibles.
-* **RF05 - Módulo de Reportería**: Exportación de datos analíticos auditados en formatos **Excel (.xlsx)**, **CSV** y **PDF**. Contenido mínimo: % libre por góndola y por repisa, y alerta sí/no. Walmart no pide un formato: los tres son decisión del equipo.
+* **RF04 - Generación de Alertas**: Emisión de notificaciones prioritarias para el equipo de reposición cuando se detecte un quiebre de stock (una alerta por góndola completa, sin alertas por repisa). Opcional: alerta de cámara defectuosa cuando la imagen tiene colores imposibles.
+* **RF05 - Módulo de Reportería**: Exportación de datos analíticos auditados en formatos **Excel (.xlsx)**, **CSV** y **PDF**. Contenido mínimo: % libre de la góndola completa y alerta sí/no. Walmart no pide un formato: los tres son decisión del equipo.
 * **RF06 - Evaluación por Lotes**: Ejecutar el sistema sobre un lote de imágenes anotadas a mano y entregar métricas (IoU de detección y acierto de la alerta) sin que las imágenes salgan de la máquina donde corre. Es la forma en que Walmart puede evaluar con su Dataset Oculto.
 
 ---
