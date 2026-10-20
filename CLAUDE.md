@@ -204,6 +204,16 @@ cada integrante sepa siempre qué le toca y no se pierda:
   `[x]`), o, si no tiene ninguno, proponerle el primer ítem sin dueño de
   "Pendientes (priorizados)" (van en orden de prioridad). Se toma solo
   cuando la persona confirma.
+- **Los ítems abiertos del backlog no tienen dueño** (desde el
+  2026-10-20): cada integrante se los asigna en su entorno. Si la
+  persona **no dijo** en qué ítem va a trabajar, preguntárselo antes de
+  escribir código (con `AskUserQuestion`, listando los ítems sin dueño
+  en orden de prioridad). Con su respuesta, Claude asigna el ítem:
+  agrega `(dueño: <nombre>)` en `PROGRESS.md` y actualiza en la Carta
+  Gantt (regla 7) el Responsable, el Inicio y el Estado de su fila, más
+  la documentación que cite al dueño. Si la persona ya nombró el ítem,
+  no preguntar: asignarlo directo. Ese cambio va en el mismo PR del
+  ítem, no en uno aparte.
 - **Nada fuera del backlog**: si la persona pide algo que no es un ítem,
   agregarlo primero como ítem nuevo (número siguiente al mayor que
   exista), con su dueño, y recién ahí escribir código.

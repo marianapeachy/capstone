@@ -58,11 +58,10 @@ Los cuatro primeros responden al mensaje del profesor de la semana 8, y
 los siguientes hasta el #39, al del 2026-10-16 (ver "Próximos
 hitos" en `docs/curso.md`).
 
-- [ ] **#26** (dueño: Mariana) Plan de mejoras de la Fase 1: elaborarlo
+- [ ] **#26** Plan de mejoras de la Fase 1: elaborarlo
       y empezar a implementarlo a más tardar 2026-10-09, según las
       observaciones de la evaluación y rúbrica de la Fase 1.
-- [ ] **#27** (dueño: Francisco; antes Nicko, reasignado el 2026-10-19
-      para no depender de otros) Informe de estado de avance para el
+- [ ] **#27** Informe de estado de avance para el
       profesor, con los puntos que pidió su correo de la semana 7. Ya
       atrasado: el profesor lo está esperando. Ahora es el informe
       intermedio que pide el cliente, entrega 2026-10-21 (puntos en
@@ -86,7 +85,7 @@ hitos" en `docs/curso.md`).
       al día, video (#36) a cargo de Nicko y borrador de la reflexión de
       Francisco. Falta el enlace al video y las reflexiones de Nicko y
       Mariana (resaltadas en amarillo).
-- [ ] **#29** (dueño: Nicko) Primer demo operativo ante Walmart, a más
+- [ ] **#29** Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
       y reportes (#7), integrados con la aplicación web (#28). Para la
@@ -107,12 +106,11 @@ hitos" en `docs/curso.md`).
       y un ejemplo reproducible con fotos Kaggle CC0 (verificado: foto 026
       da 2% libre, sin alerta). Los pesos no se publican (licencia de
       SKU-110K): se piden al equipo o se entrenan con `docs/training.md`.
-- [ ] **#36** (dueño: Nicko; antes Francisco, reasignado el 2026-10-20
-      para repartir el trabajo del informe) Video de demostración de 5 a 10 minutos (entrega
+- [ ] **#36** Video de demostración de 5 a 10 minutos (entrega
       2026-10-21): solo funcionalidades implementadas y resultados que
       la aplicación genera hoy, con fotos que se pueden mostrar (no
       SKU-110K). El pipeline (#8) y la app web (#28) ya están en `main`.
-- [ ] **#37** (dueño: Mariana) Evidencias de avance de la Fase 2, a más tardar
+- [ ] **#37** Evidencias de avance de la Fase 2, a más tardar
       2026-10-26: diario de reflexión 2.1, guía 2.4 (resumen del
       avance, plan de trabajo con estado y ajustes) e informe con el
       formato de las pautas 2.2 y 2.3 (abstract en español e inglés;
@@ -120,7 +118,7 @@ hitos" en `docs/curso.md`).
       con la estructura y nombres pedidos; la planilla de avance da 15%
       al aporte de cada integrante visible en el repositorio. Detalle
       en "Requisitos vigentes" de `docs/curso.md`.
-- [ ] **#38** (dueño: Nicko) Feria de informática (semana del 2026-10-26; día y hora
+- [ ] **#38** Feria de informática (semana del 2026-10-26; día y hora
       por informar): definir qué integrante va (al menos uno) y qué se
       muestra.
 - [ ] **#39** Instalar la aplicación en el servidor del CITT. Bloqueado:
@@ -156,16 +154,22 @@ hitos" en `docs/curso.md`).
 - [ ] **#45** Privacidad de las fotos (RNF05): las fotos guardadas
       pueden mostrar clientes. Proponer a Walmart (#24) borrarlas tras N
       días o difuminar rostros antes de guardarlas. Hallazgo 17.
-- [ ] **#47** (dueño: Francisco) Auditoría de commits de GitHub: `.mailmap`
+- [ ] **#48** Modelar el diagrama de la base de datos (entidad-relación) a partir de
+      `web/models.py` (`User`, perfiles como grupos de Django, `Analysis`)
+      y dejarlo en `Anexos/Diseño/Diagramas fuente (Mermaid)/` (`erDiagram`).
+      Las filas de modelamiento de la Carta Gantt figuran cumplidas (#28)
+      pero no hay diagrama. Incluir las tablas que traerían #43 y #44
+      (cámaras, configuración) si se decide su diseño. Cruza con #42.
+- [x] **#47** (dueño: Francisco) Auditoría de commits de GitHub: `.mailmap`
       que unifica las identidades (hoy 6 autores para 3 personas) y
       commits y PR sin la línea `Co-Authored-By` ni el pie de Claude
       Code. Los commits ya publicados no se reescriben (regla 5).
-- [ ] **#7** (dueño: Mariana) Implementar generación de reportes (Excel, CSV, PDF) en
+- [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
       para cualquiera de las dos lecturas del umbral (#24). Walmart no
       pide un formato: dejar en el README por qué se eligieron estos.
-- [ ] **#33** (dueño: Francisco) Verificar el detector `yolo26s` fuera de SKU-110K, en las
+- [ ] **#33** Verificar el detector `yolo26s` fuera de SKU-110K, en las
       condiciones con que evaluará Walmart (IoU contra anotación a mano;
       fotos frontales, en ángulo y desde arriba). Hoy solo está medido en
       el test de SKU-110K, que es igual al entrenamiento. Depende del modo
@@ -278,7 +282,7 @@ hitos" en `docs/curso.md`).
         cámaras de sala: siguen en #14. Para lo que SHARD no cubre
         (repisas inclinadas, contorno de la góndola), set chico
         etiquetado a mano (polilíneas, ej. en CVAT o Label Studio).
-- [ ] **#24** (dueño: Francisco) Preguntas para la próxima reunión con
+- [ ] **#24** Preguntas para la próxima reunión con
       Walmart (fecha: por definir). Hasta ahora no han dicho nada de sus
       cámaras, y del Dataset Oculto probablemente no puedan decir nada
       (#21):
