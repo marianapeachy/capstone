@@ -14,7 +14,7 @@ Se entrena en un PC con GPU NVIDIA. En CPU, una sola época de SKU-110K a
 - ~30 GB libres: SKU-110K ocupa 12.2 GB descomprimido. El dataset YOLO
   enlaza las imágenes en vez de copiarlas y solo copia los ~700 JPEG
   truncados (~2 GB).
-- Python 3.10 o superior y git.
+- Python 3.12 o superior y git.
 
 ## 1. Entorno
 

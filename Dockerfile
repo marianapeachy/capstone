@@ -1,4 +1,6 @@
-FROM python:3.10-slim-trixie
+# Python 3.13: 3.10 termina su soporte en octubre de 2026 y Django 6.1 (app
+# web) exige 3.12 o superior.
+FROM python:3.13-slim-trixie
 
 # Librerias de sistema que necesita opencv-python (lo exige ultralytics; ver
 # requirements.txt). Nombres de paquete de Debian 13 (trixie): la base se fija

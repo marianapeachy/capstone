@@ -124,8 +124,8 @@ La interfaz (dashboard y alertas) va después del pipeline: Walmart pidió prior
 
 ### Configuración de un entorno nuevo
 
-Requisitos: git, Python 3.10 o superior (el CI y la imagen Docker usan
-3.10; también se usa 3.14 en local) y acceso de escritura al repositorio
+Requisitos: git, Python 3.12 o superior (Django 6.1 lo exige; el CI y la
+imagen Docker usan 3.13, y también se usa 3.14 en local) y acceso de escritura al repositorio
 (invitación de GitHub aceptada).
 
 **1. graphify, una vez por PC y fuera del venv.** Los hooks de Claude Code
