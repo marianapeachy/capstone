@@ -160,6 +160,10 @@ hitos" en `docs/curso.md`).
       Las filas de modelamiento de la Carta Gantt figuran cumplidas (#28)
       pero no hay diagrama. Incluir las tablas que traerían #43 y #44
       (cámaras, configuración) si se decide su diseño. Cruza con #42.
+- [x] **#47** (dueño: Francisco) Auditoría de commits de GitHub: `.mailmap`
+      que unifica las identidades (hoy 6 autores para 3 personas) y
+      commits y PR sin la línea `Co-Authored-By` ni el pie de Claude
+      Code. Los commits ya publicados no se reescriben (regla 5).
 - [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
