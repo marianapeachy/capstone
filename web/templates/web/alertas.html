@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Alertas · ShelfVision AI{% endblock %}
+{% block head %}<meta http-equiv="refresh" content="60">{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{% if alertas %}<em>{{ alertas|length }}</em> {{ alertas|length|pluralize:"góndola,góndolas" }} en quiebre{% else %}Alertas{% endif %}</h1>
+    <p>Espacio libre de al menos 30% del frente. La lista se actualiza sola cada minuto.</p>
+  </div>
+</div>
+{% if alertas %}
+<div class="alerts">
+  {% for a in alertas %}
+  <article class="panel alert{% if a.estado == 'en_proceso' and a.taken_by_id == user.pk %} mine{% endif %}">
+    <div class="alert-top">
+      <h2 class="alert-loc"><a href="{% url 'analisis_detalle' a.pk %}">{% include "web/_loc.html" %}</a></h2>
+      <span class="alert-pct">{% widthratio a.free_fraction 1 100 %}<small>% libre</small></span>
+    </div>
+    {% include "web/_fleje.html" %}
+    <p class="alert-meta">Foto de hace {{ a.created_at|timesince }}.</p>
+    <p class="alert-meta">
+      {% if a.estado == "en_proceso" %}<span class="state en_proceso">{% if a.taken_by_id == user.pk %}La estás atendiendo{% else %}La atiende {{ a.taken_by.get_full_name|default:a.taken_by.username }}{% endif %}</span> hace {{ a.estado_at|timesince }}
+      {% else %}<span class="state activa">Activa</span> sin reponedor asignado{% endif %}
+    </p>
+    <form method="post" action="{% url 'alerta_accion' a.pk 'tomar' %}">
+      {% csrf_token %}<input type="hidden" name="next" value="{% url 'alertas' %}">
+      {% if a.estado == "activa" %}<button class="btn big"><svg class="icon" aria-hidden="true"><use href="#i-hand-grabbing"/></svg>Tomar alerta</button>
+      {% else %}<button class="btn big ok" formaction="{% url 'alerta_accion' a.pk 'completar' %}"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>Marcar repuesta</button>{% endif %}
+    </form>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="panel empty">
+  <svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>
+  <h2>Sin quiebres abiertos</h2>
+  <p>Cuando una foto muestre una góndola con 30% o más de espacio libre, aparecerá aquí con su pasillo y sus repisas.</p>
+</div>
+{% endif %}
+{% endblock %}

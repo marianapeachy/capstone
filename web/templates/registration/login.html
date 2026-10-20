@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión · ShelfVision AI{% endblock %}
+{% block body %}
+<main class="solo">
+  <div class="panel">
+    <div class="brand">{% include "web/_mark.html" %}<span>ShelfVision <b>AI</b></span></div>
+    <p class="lead">Quiebres de stock en góndolas, detectados por foto.</p>
+    <form method="post" class="form" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+      {% include "web/_field.html" with field=form.username %}
+      {% include "web/_field.html" with field=form.password %}
+      <button type="submit" class="btn big">Iniciar sesión</button>
+    </form>
+  </div>
+</main>
+{% endblock %}

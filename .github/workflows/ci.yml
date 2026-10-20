@@ -67,6 +67,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # tests/ no se copia a la imagen (.dockerignore), asi que se monta.
+      # tests/ no se copia a la imagen (.dockerignore), asi que se monta. La
+      # imagen corre sin DEBUG, y la app web exige entonces una SECRET_KEY.
       - name: Run tests inside image
-        run: docker run --rm -v "$PWD/tests:/app/tests" shelfvision-ai:ci python -m pytest tests/ -q
+        run: docker run --rm -e DJANGO_SECRET_KEY=ci -v "$PWD/tests:/app/tests" shelfvision-ai:ci python -m pytest tests/ -q

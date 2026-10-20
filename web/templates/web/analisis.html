@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Análisis · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Análisis de góndolas</h1>
+    <p>Sube una foto: el sistema mide el espacio libre de cada repisa y abre una alerta si hay quiebre.</p>
+  </div>
+</div>
+<section class="panel" aria-labelledby="subir">
+  <h2 id="subir" class="sr-only">Analizar una foto</h2>
+  <form method="post" enctype="multipart/form-data" class="form inline" id="subir-form">
+    {% csrf_token %}
+    {% include "web/_field.html" with field=form.pasillo %}
+    {% include "web/_field.html" with field=form.gondola %}
+    <div class="field photo-field">
+      <label for="{{ form.foto.id_for_label }}">{{ form.foto.label }}</label>
+      <label class="file-pick">{{ form.foto }}<span class="btn quiet" aria-hidden="true"><svg class="icon"><use href="#i-image"/></svg>Elegir foto</span><span class="file-name" id="file-name">Ninguna elegida</span></label>
+      <span class="help" id="{{ form.foto.auto_id }}_helptext">{{ form.foto.help_text }}</span>
+      {% for error in form.foto.errors %}<span class="err">{{ error }}</span>{% endfor %}
+    </div>
+    <button type="submit" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-upload-simple"/></svg><span>Analizar</span></button>
+  </form>
+  <script>
+    // El análisis corre en CPU unos segundos: se evita el doble envío y se avisa que está trabajando.
+    var foto = document.getElementById("{{ form.foto.id_for_label }}");
+    foto.addEventListener("change", function () {
+      document.getElementById("file-name").textContent = foto.files.length ? foto.files[0].name : "Ninguna elegida";
+    });
+    document.getElementById("subir-form").addEventListener("submit", function (event) {
+      var button = event.target.querySelector("button[type=submit]");
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+      button.querySelector("span").textContent = "Analizando…";
+    });
+  </script>
+  {% if form.non_field_errors %}<div class="form-errors form-after" role="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+</section>
+
+<h2 class="section-title">Últimos análisis</h2>
+{% if analisis %}
+<div class="panel table-wrap">
+  <table>
+    <thead><tr><th>Góndola</th><th>Repisas</th><th class="num">Libre</th><th class="hide-phone">Alerta</th><th class="hide-phone">Foto</th><th class="hide-phone">Fecha</th></tr></thead>
+    <tbody>
+    {% for a in analisis %}
+    <tr>
+      <td><a class="strong" href="{% url 'analisis_detalle' a.pk %}">{% include "web/_loc.html" %}</a>{% if a.estado %}<span class="show-phone"><span class="state {{ a.estado }}">{{ a.get_estado_display }}</span></span>{% endif %}</td>
+      <td>{% include "web/_fleje.html" with size="mini" %}</td>
+      <td class="num"><span class="pct{% if a.critical %} hot{% endif %}">{% widthratio a.free_fraction 1 100 %}%</span></td>
+      <td class="hide-phone">{% if a.estado %}<span class="state {{ a.estado }}">{{ a.get_estado_display }}</span>{% else %}<span class="state ok">Sin quiebre</span>{% endif %}</td>
+      <td class="muted hide-phone">{{ a.photo_name|truncatechars:28 }}</td>
+      <td class="muted hide-phone">{{ a.created_at|date:"Y-m-d H:i" }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="panel empty">
+  <svg class="icon" aria-hidden="true"><use href="#i-image"/></svg>
+  <h2>Todavía no hay análisis</h2>
+  <p>Indica el pasillo y la góndola, elige una foto y presiona Analizar. El resultado queda aquí.</p>
+</div>
+{% endif %}
+{% endblock %}

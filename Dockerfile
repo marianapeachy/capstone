@@ -28,5 +28,16 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 COPY src/ ./src/
 COPY scripts/ ./scripts/
+COPY web/ ./web/
+COPY manage.py pytest.ini ./
 
-CMD ["python", "scripts/run_pipeline.py"]
+# App web (item #28). /data es el volumen con la base de datos, las fotos
+# analizadas y los pesos (best.pt): sin volumen se pierden al recrear el
+# contenedor. DJANGO_SECRET_KEY y DJANGO_ALLOWED_HOSTS se pasan con -e.
+# El pipeline por lotes sigue disponible: docker run ... python scripts/run_pipeline.py
+ENV DJANGO_DEBUG=0 \
+    SHELFVISION_DATA_DIR=/data \
+    SHELFVISION_WEIGHTS=/data/best.pt
+EXPOSE 8000
+# Un solo worker: cada uno cargaria su propia copia de YOLO26 en memoria.
+CMD ["sh", "-c", "python manage.py migrate --noinput && exec gunicorn web.wsgi --bind 0.0.0.0:8000 --workers 1 --threads 4 --timeout 120"]

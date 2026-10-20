@@ -1,0 +1,183 @@
+import functools
+import threading
+import uuid
+
+import cv2
+import numpy as np
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.tokens import default_token_generator
+from django.core.exceptions import PermissionDenied
+from django.core.files.base import ContentFile
+from django.core.mail import send_mail
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.encoding import force_bytes
+from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_encode
+from django.views.decorators.http import require_POST
+
+from src.pipeline import run_image
+from src.reporting.annotate import draw_availability
+from web.forms import PhotoForm, UserForm
+from web.models import (ABIERTAS, ACTIVA, ADMIN, COMPLETADA, EN_PROCESO, JEFE, REEMPLAZADA, REPONEDOR,
+                        Analysis, User)
+
+# Vista principal de cada perfil (CU00).
+HOME = {ADMIN: "usuarios", JEFE: "analisis", REPONEDOR: "alertas"}
+TODOS = (ADMIN, JEFE, REPONEDOR)
+
+
+def roles(*allowed):
+    """Solo usuarios con sesion y uno de estos perfiles; al resto, 403."""
+
+    def decorator(view):
+        @login_required
+        @functools.wraps(view)
+        def wrapper(request, *args, **kwargs):
+            if request.user.role not in allowed:
+                raise PermissionDenied
+            return view(request, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+@login_required
+def inicio(request):
+    return redirect(HOME.get(request.user.role, "alertas"))
+
+
+# --- CU06: usuarios y roles ---
+
+@roles(ADMIN)
+def usuarios(request):
+    users = User.objects.order_by("username").prefetch_related("groups")
+    return render(request, "web/usuarios.html", {"usuarios": users})
+
+
+@roles(ADMIN)
+def usuario_form(request, pk=None):
+    user = get_object_or_404(User, pk=pk) if pk else None
+    form = UserForm(request.POST or None, instance=user, editor=request.user)
+    if form.is_valid():
+        saved = form.save()
+        if user is None:
+            send_password_link(request, saved)
+            messages.success(request, f"Usuario {saved.username} creado. Se envió a {saved.email} el enlace para definir su contraseña.")
+        else:
+            messages.success(request, f"Usuario {saved.username} actualizado.")
+        return redirect("usuarios")
+    return render(request, "web/usuario_form.html", {"form": form, "nuevo": user is None})
+
+
+def send_password_link(request, user):
+    """CU06: no se envian contrasenas por correo, sino un enlace de un solo
+    uso (deja de valer cuando el usuario define su contrasena)."""
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    link = request.build_absolute_uri(reverse("definir_clave", args=[uid, default_token_generator.make_token(user)]))
+    send_mail("ShelfVision AI: define tu contraseña",
+              f"Hola {user.first_name}, define tu contraseña en {link}", None, [user.email])
+
+
+# --- CU01: analisis de fotos ---
+
+_model_lock = threading.Lock()
+
+
+@functools.cache
+def get_detector():
+    """Un solo modelo por proceso: cada copia de YOLO26 ocupa cientos de MB."""
+    if not settings.WEIGHTS.exists():
+        raise FileNotFoundError(f"No existen los pesos {settings.WEIGHTS} (ver docs/training.md).")
+    from src.models.detector import ProductDetector  # import diferido: ultralytics tarda en cargar
+
+    return ProductDetector(settings.WEIGHTS, device="cpu")
+
+
+def analyze(upload, user, pasillo, gondola) -> Analysis:
+    image = cv2.imdecode(np.frombuffer(upload.read(), np.uint8), cv2.IMREAD_COLOR)
+    if image is None:
+        raise ValueError("No se pudo leer la imagen.")
+    with _model_lock:  # el modelo se comparte entre los hilos del servidor
+        result = run_image(image, get_detector())
+    _, jpg = cv2.imencode(".jpg", draw_availability(image, result, banner=False))
+    analysis = Analysis(created_by=user, pasillo=pasillo, gondola=gondola, photo_name=upload.name,
+                        free_fraction=result.free_fraction, critical=result.critical, result=result.to_dict())
+
+    # CU02: una gondola tiene a lo mas una alerta abierta. Con quiebre, la foto
+    # nueva reemplaza a la anterior (y hereda quien la atiende); sin quiebre, la
+    # foto confirma la reposicion y cierra la alerta abierta.
+    previous = Analysis.objects.filter(pasillo=pasillo, gondola=gondola, estado__in=ABIERTAS)
+    last_open = previous.first()
+    now = timezone.now()
+    if result.critical:
+        analysis.estado, analysis.taken_by = (last_open.estado, last_open.taken_by) if last_open else (ACTIVA, None)
+        analysis.estado_at = last_open.estado_at if last_open else now
+        previous.update(estado=REEMPLAZADA, estado_at=now)
+    else:
+        previous.update(estado=COMPLETADA, estado_at=now)
+
+    analysis.annotated.save(f"{uuid.uuid4().hex}.jpg", ContentFile(jpg.tobytes()), save=False)
+    analysis.save()
+    return analysis
+
+
+@roles(ADMIN, JEFE)
+def analisis(request):
+    form = PhotoForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        data = form.cleaned_data
+        try:
+            return redirect("analisis_detalle", analyze(data["foto"], request.user, data["pasillo"], data["gondola"]).pk)
+        except (FileNotFoundError, ValueError) as error:
+            form.add_error(None, str(error))
+    recent = Analysis.objects.select_related("taken_by")[:50]
+    return render(request, "web/analisis.html", {"form": form, "analisis": recent})
+
+
+@roles(*TODOS)
+def alertas(request):
+    """CU02: alertas abiertas. Primero las que atiende el usuario, despues las
+    activas de la mas libre a la menos, al final las que atienden otros."""
+    open_alerts = Analysis.objects.filter(estado__in=ABIERTAS).select_related("taken_by")
+
+    def order(a):
+        group = 0 if a.estado == EN_PROCESO and a.taken_by_id == request.user.pk else 1 if a.estado == ACTIVA else 2
+        return group, -a.free_fraction
+
+    return render(request, "web/alertas.html", {"alertas": sorted(open_alerts, key=order)})
+
+
+@require_POST
+@roles(*TODOS)
+def alerta_accion(request, pk, accion):
+    alert = get_object_or_404(Analysis, pk=pk)
+    if accion == "tomar" and alert.estado == ACTIVA:
+        alert.estado, alert.taken_by = EN_PROCESO, request.user
+        messages.success(request, f"Tomaste {alert.location}.")
+    elif accion == "completar" and alert.estado == EN_PROCESO:  # se toma antes de completarla
+        alert.estado = COMPLETADA
+        messages.success(request, f"{alert.location} quedó como repuesta. La próxima foto lo confirmará.")
+    else:
+        messages.error(request, f"La alerta de {alert.location} ya cambió de estado: se muestra la lista al día.")
+        return redirect("alertas")
+    alert.estado_at = timezone.now()
+    alert.save(update_fields=["estado", "taken_by", "estado_at"])
+    target = request.POST.get("next", "")
+    return redirect(target if url_has_allowed_host_and_scheme(target, {request.get_host()}) else "alertas")
+
+
+@roles(*TODOS)
+def analisis_detalle(request, pk):
+    analysis = get_object_or_404(Analysis.objects.select_related("taken_by", "created_by"), pk=pk)
+    return render(request, "web/analisis_detalle.html", {"a": analysis})
+
+
+@roles(*TODOS)
+def analisis_imagen(request, pk):
+    # Las fotos de tienda se sirven solo con sesion, no como archivos publicos.
+    return FileResponse(get_object_or_404(Analysis, pk=pk).annotated.open("rb"), content_type="image/jpeg")

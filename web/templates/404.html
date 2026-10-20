@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Página no encontrada · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="panel empty">
+  <svg class="icon muted-icon" aria-hidden="true"><use href="#i-warning-circle"/></svg>
+  <h1>Página no encontrada</h1>
+  <p>La dirección no existe o el registro ya no está disponible.</p>
+  <a class="btn quiet" href="{% url 'inicio' %}">Volver al inicio</a>
+</div>
+{% endblock %}

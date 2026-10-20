@@ -1,0 +1,8 @@
+<div class="fleje{% if size %} {{ size }}{% elif a.strips|length > 8 %} dense{% endif %}" role="img" aria-label="{{ a.result.shelves|length }} repisas medidas{% for s in a.strips %}, repisa {{ s.number }} con {{ s.gaps|length }} {{ s.gaps|length|pluralize:"hueco,huecos" }}{% endfor %}">
+  {% for s in a.strips %}
+  <div class="shelf">
+    {% if size != "mini" %}<span class="shelf-label">R{{ s.number }}</span>{% endif %}
+    <div class="bar">{% for g in s.gaps %}<i style="{{ g }}"></i>{% endfor %}</div>
+  </div>
+  {% endfor %}
+</div>

@@ -59,3 +59,11 @@ def test_banner_is_red_with_alert_and_green_without_it():
     ok = _banner_color(draw_availability(full, run_image(full, ColorDetector())))
     assert alert[2] > alert[1]  # BGR: mas rojo que verde
     assert ok[1] > ok[2]
+
+
+def test_without_banner_the_top_of_the_photo_is_untouched():
+    # La app web muestra la alerta junto a la foto, no encima.
+    image, _ = gondola(EMPTIED)
+    view = draw_availability(image, run_image(image, ColorDetector()), banner=False)
+    top = slice(0, image.shape[0] // 40)
+    assert np.array_equal(view[top], image[top])
