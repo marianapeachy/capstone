@@ -16,9 +16,9 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | Etapa | Estado | Ítems |
 | --- | --- | --- |
 | `src/preprocessing/` | Hecho: corrección de imagen, segmentación de góndola y recorte de ROI | #1, #2, #3, #4 |
-| `src/models/` | Hecho: `ProductDetector` y detector `yolo26s` entrenado (mAP50-95 0.610 en test de SKU-110K) | #5 |
+| `src/models/` | Hecho: `ProductDetector` y detector `yolo26s` entrenado (mAP50-95 0.610 en test de SKU-110K; fuera de dominio, en Kaggle, mAP50 0.713 y R 0.644: falta fine-tuning) | #5, #33, #34 |
 | `src/postprocessing/` | Hecho: disponibilidad medida a lo largo de cada repisa; se informan solo la alerta (libre >= 30%) y el % libre de la góndola completa | #6, #40 |
-| `src/reporting/` | Pendiente | #7 |
+| `src/reporting/` | En desarrollo: vista anotada hecha (`annotate.py`); faltan los reportes Excel, CSV y PDF | #8, #7 |
 | `scripts/run_pipeline.py` | Hecho: pipeline completo por foto, vista limpia, JSON y evaluación por lotes con IoU (CU07) | #8 |
 | Datasets | 5 descargados y convertidos al estándar, con descarga reproducible | #10, #11, #12 |
 | CI | Hecho: pytest + `docker build` en cada PR, `main` protegida | #13 |
@@ -55,7 +55,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 ## Pendientes (priorizados)
 
 Los cuatro primeros responden al mensaje del profesor de la semana 8, y
-los seis siguientes (#34 a #39), al del 2026-10-16 (ver "Próximos
+los siguientes hasta el #39, al del 2026-10-16 (ver "Próximos
 hitos" en `docs/curso.md`).
 
 - [ ] **#26** (dueño: Mariana) Plan de mejoras de la Fase 1: elaborarlo
@@ -69,24 +69,24 @@ hitos" en `docs/curso.md`).
       "Requisitos vigentes" de `docs/curso.md`). Formato Word, lo arma
       Francisco. Carta Gantt actualizada: `Anexos/Gestion/Carta Gantt
       Fase 2.xlsx` (copia de la Iteración 1, por semana, con estado de
-      cada actividad; corte 2026-10-19). Las fechas de #7, #28 y #37
-      son propuestas, a confirmar por sus dueños.
+      cada actividad; corte 2026-10-19). Las fechas de #7 y #37 son
+      propuestas, a confirmar por sus dueñas. Puntos 2, 3 y 6 del
+      informe salen de #35, #34 y #36. Avance (2026-10-20): borrador en
+      `Fase 2/Informe intermedio de avance - ShelfVision AI.docx` con el
+      formato de las pautas 2.2 y 2.3 (portada, índice, resumen y
+      abstract, Calibri 11, número de página): estado por módulo y por
+      C.U, Gantt, riesgos, próximos pasos, decisiones técnicas,
+      datasets, métricas medidas, reproducibilidad, commits por
+      integrante, conclusiones en inglés, bibliografía y anexo de PR.
+      La sección 3 ya tiene los 20 casos con lámina y el análisis
+      comparativo (#34). Falta (resaltado en amarillo en el Word): el
+      enlace al video (#36) y las reflexiones individuales en inglés de
+      cada integrante.
 - [ ] **#29** (dueño: Nicko) Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
       y reportes (#7), integrados con la aplicación web (#28). Para la
       demo, solo fotos que se pueden mostrar a terceros (no SKU-110K).
-- [ ] **#34** (dueño: Francisco) Análisis de resultados del informe intermedio (entrega
-      2026-10-21): 10 mejores y 10 peores casos (imagen de entrada,
-      resultado, resultado esperado, error y causa, propuesta de mejora)
-      y análisis comparativo con métricas (P, R, mAP del detector, %
-      libre contra el anotado, tiempo por foto). Factores a revisar:
-      iluminación, perspectiva, sombras, reflejos, oclusiones, calidad
-      de imagen, errores de detección y de segmentación. Solo fotos que
-      se pueden mostrar (Kaggle CC0, SHARD, Roboflow; nunca SKU-110K).
-      Depende del pipeline (#8, PR #28) y de la verificación del
-      detector fuera de SKU-110K (#29 "Verificar el detector", #33 tras
-      el PR #27).
 - [ ] **#35** (dueño: Francisco) README completo para el informe intermedio (2026-10-21) y
       las evidencias de avance (2026-10-26): descripción de la solución,
       estrategia técnica y justificación de cada decisión (OpenCV antes
@@ -99,7 +99,7 @@ hitos" en `docs/curso.md`).
 - [ ] **#36** (dueño: Francisco) Video de demostración de 5 a 10 minutos (entrega
       2026-10-21): solo funcionalidades implementadas y resultados que
       la aplicación genera hoy, con fotos que se pueden mostrar (no
-      SKU-110K). Depende de #8.
+      SKU-110K). El pipeline (#8) y la app web (#28) ya están en `main`.
 - [ ] **#37** (dueño: Mariana) Evidencias de avance de la Fase 2, a más tardar
       2026-10-26: diario de reflexión 2.1, guía 2.4 (resumen del
       avance, plan de trabajo con estado y ajustes) e informe con el
@@ -134,6 +134,13 @@ hitos" en `docs/curso.md`).
       umbral de espacio libre entre 1% y 100% (hoy fijo en 30%,
       `AvailabilityParams.critical_free_fraction`) y cámaras asociadas a
       pasillo y góndola con su calibración de lente. Hallazgo 14.
+- [ ] **#46** Falsas alertas en refrigeradores con puerta de vidrio
+      (#34, fotos 020 y 003 de Kaggle): el reflejo y el desenfoque de la
+      puerta en primer plano, los marcos entre puertas y una repisa en
+      sombra cuentan como huecos. Propuesta: excluir zonas desenfocadas
+      (nitidez local) y acotar la góndola a la parte enfocada; tratar los
+      marcos de puerta. Es la condición más parecida a una cámara de sala
+      que falla dentro del alcance.
 - [ ] **#45** Privacidad de las fotos (RNF05): las fotos guardadas
       pueden mostrar clientes. Proponer a Walmart (#24) borrarlas tras N
       días o difuminar rostros antes de guardarlas. Hallazgo 17.
@@ -165,7 +172,12 @@ hitos" en `docs/curso.md`).
       34% libre contra 11% de la anotación): los marcos entre puertas,
       letreros y vidrio borroso cuentan como huecos de al menos un ancho
       de producto (criterio de #6). Registrar los resultados en
-      `docs/test-plan.md` (#19).
+      `docs/test-plan.md` (#19). Paso (1) hecho en #34 (2026-10-20, 45
+      fotos): mAP50 0.713 (justo sobre 0.70), mAP50-95 0.423, R 0.644;
+      el recall en envasados (0.71) causa casi todas las falsas alertas,
+      así que se recomienda el fine-tuning aunque el mAP50 pase el
+      criterio. Las 45 fotos ya se usaron para evaluar: para afinar con
+      ellas, separar entrenamiento y prueba. Faltan los pasos (2) a (4).
 - [ ] **#31** Excluir de la medición la bodega de reserva que hay sobre
       la góndola de venta (Walmart no la evalúa; acuerdo del 2026-09-16
       en el README). Hoy `compute_availability()` acota la góndola "del
@@ -243,6 +255,26 @@ hitos" en `docs/curso.md`).
 
 ## Hecho
 
+- [x] **#34** (dueño: Francisco) Análisis de resultados del informe
+      intermedio (2026-10-20), en `docs/analisis-resultados.md` y la
+      sección 3 del informe (#27). Pipeline completo en CPU sobre las 45
+      fotos de Kaggle (CC0, no usadas al entrenar) con su anotación
+      (`run_pipeline.py --annotations`); el resultado esperado es la
+      anotación medida con el mismo pipeline (`measure_boxes()`). 10
+      mejores y 10 peores casos con lámina (entrada | sistema |
+      esperado) en `docs/analisis-resultados/`, causa y propuesta.
+      Detector (Ultralytics `val`): P 0.843, R 0.644, mAP50 0.713,
+      mAP50-95 0.423 (en test de SKU-110K, 0.950 / 0.610). Sistema, 44
+      fotos únicas (la 035 repite la 004): P 0.889, R 0.555, alerta
+      correcta 84%, error medio de % libre 9.6 pts; envasados (36): P
+      0.900, R 0.713, alerta 92%, 6.2 pts; frutas y verduras sueltas (8,
+      fuera del alcance): R 0.156, 4 de las 6 falsas alertas. Mediana de
+      0.51 s por foto. Patrones: el recall fuera de dominio crea huecos
+      falsos (6 de 7 errores de alerta son falsas alertas); vidrio,
+      sombra y desenfoque en refrigeradores (#46); pocos productos por
+      repisa (011, el único quiebre real del set, queda 3 puntos bajo el
+      umbral). Acciones: fine-tuning (#33), declarar fuera del alcance lo
+      que va a granel (#24), #46 y medir quiebres reales (Roboflow, #32).
 - [x] **#28** (dueño: Francisco) Aplicación web mínima en `web/`
       (Django 6.1 + SQLite; stack elegido el 2026-10-18 con un consejo
       de 5 perspectivas: Django trae login, roles, bcrypt, CSRF, ORM y
