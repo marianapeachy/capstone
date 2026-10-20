@@ -58,9 +58,6 @@ Los cuatro primeros responden al mensaje del profesor de la semana 8, y
 los seis siguientes (#34 a #39), al del 2026-10-16 (ver "Próximos
 hitos" en `docs/curso.md`).
 
-- [ ] **#26** (dueño: Mariana) Plan de mejoras de la Fase 1: elaborarlo
-      y empezar a implementarlo a más tardar 2026-10-09, según las
-      observaciones de la evaluación y rúbrica de la Fase 1.
 - [ ] **#27** (dueño: Francisco; antes Nicko, reasignado el 2026-10-19
       para no depender de otros) Informe de estado de avance para el
       profesor, con los puntos que pidió su correo de la semana 7. Ya
@@ -702,6 +699,20 @@ hitos" en `docs/curso.md`).
       iniciar la sesión); el registro de costos (`ledger`) queda
       desactivado y el *webhook* vacío. Regla de uso en `CLAUDE.md`
       ("Reglas de código" y regla 9) y paso de instalación en el README.
+
+- [x] **#26** (dueño: Mariana) Plan de mejoras de la Fase 1, en
+      `docs/plan-de-mejoras.md` (2026-10-20; el plazo era 2026-10-09).
+      La Fase 1 tuvo nota 7,0 sin observaciones escritas, así que el
+      plan contrasta lo comprometido en la guía 1.5 y los anexos con el
+      proyecto actual y con la pauta de avance de la Fase 2. Define 10
+      mejoras (M1 a M10) con acciones, responsables, fechas, evidencia
+      y estado: objetivos medibles, metodología ajustada, riesgos
+      reales, evidencias, monitoreo del plan, diseño alineado con la app
+      Django, competencias, inglés, aporte visible de cada integrante y
+      validación fuera de SKU-110K. Varias ya están en curso; los
+      responsables de las que no tienen ítem con dueño son propuestos,
+      a confirmar por el equipo. El seguimiento se hace en la columna
+      "Estado" del documento.
 
 ## Notas
 
