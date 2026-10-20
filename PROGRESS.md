@@ -198,8 +198,32 @@ hitos" en `docs/curso.md`).
       espacios vacíos son chicos y no comparables con huecos de un ancho
       de producto. Con 35° se cumple el criterio: toca el fine-tuning
       (Kaggle CC0 separado en entrenamiento y prueba, aumentación de giros,
-      color y ruido). Faltan el paso (4), el set propio (#32) y el
-      fine-tuning.
+      color y ruido). Paso (4) hecho (2026-10-20, a ojo y con las métricas por foto de
+      #34): de frente, las botellas (026, R 1.00) y las latas y potes
+      (R 0.93 a 0.98) se detectan igual de bien que las cajas (017, R
+      0.94); el IoU de las latas es menor (0.72 a 0.77 contra 0.89) por
+      cómo se cortan las pilas. El único fallo claro (028, R 0.27) es
+      oclusión y ángulo, no la forma. Los envasados con recall bajo son
+      botellas chicas y lejanas (013, 022), lácteos (032) y el
+      refrigerador (020). Pendiente: el set propio (#32) y el
+      fine-tuning, que no es urgente (se dejó para cuando el PC esté
+      libre). Plan, ya probado hasta el arranque: Kaggle CC0 sin las 8
+      fotos de frutas y verduras sueltas (005, 007, 014, 023, 029, 030,
+      033, 034), separado por foto en 24 de entrenamiento y 12 de prueba
+      (001, 004, 009, 012, 016, 019, 022, 026, 031, 037, 040, 043);
+      entrenamiento con las 24 más sus vistas giradas a 20° y 35° (15°
+      hacia abajo, `oblique_view()`) y 300 fotos de SKU-110K `train` para
+      no olvidar; desde `yolo26s/weights/best.pt`, 30 épocas, SGD lr0
+      0.002, `imgsz=1280`, batch 2, `nms=False`, `max_det=1000`, giro 3°,
+      perspectiva 0.0005, saturación 0.7. Reducir las fotos de Kaggle a
+      2560 px de lado mayor antes: a tamaño completo (5616 x 3744) la
+      carga de datos da ~10 s por iteración; reducidas, ~4 s (unos 12 min
+      por época con 2 procesos de carga). Línea base en las 12 fotos de
+      prueba (`yolo26s` actual), mAP50 / mAP50-95: de frente 0.809 /
+      0.481; 20° 0.781 / 0.334; 35° 0.703 / 0.217. Aceptar el modelo
+      nuevo solo si mejora esas cifras y no baja el mAP50-95 de 0.610 en
+      el `test` de SKU-110K; con 12 fotos de prueba, el resultado es
+      orientativo hasta tener el set propio (#32).
 - [ ] **#31** Excluir de la medición la bodega de reserva que hay sobre
       la góndola de venta (Walmart no la evalúa; acuerdo del 2026-09-16
       en el README). Hoy `compute_availability()` acota la góndola "del
