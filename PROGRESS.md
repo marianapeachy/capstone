@@ -82,6 +82,10 @@ hitos" en `docs/curso.md`).
       comparativo (#34). Falta (resaltado en amarillo en el Word): el
       enlace al video (#36) y las reflexiones individuales en inglés de
       cada integrante.
+      Actualización (2026-10-20): README (#35) integrado, anexo de PR
+      al día, video (#36) a cargo de Nicko y borrador de la reflexión de
+      Francisco. Falta el enlace al video y las reflexiones de Nicko y
+      Mariana (resaltadas en amarillo).
 - [ ] **#29** (dueño: Nicko) Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
