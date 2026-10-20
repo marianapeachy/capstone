@@ -161,7 +161,7 @@ hitos" en `docs/curso.md`).
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
       para cualquiera de las dos lecturas del umbral (#24). Walmart no
       pide un formato: dejar en el README por qué se eligieron estos.
-- [ ] **#33** Verificar el detector `yolo26s` fuera de SKU-110K, en las
+- [ ] **#33** (dueño: Francisco) Verificar el detector `yolo26s` fuera de SKU-110K, en las
       condiciones con que evaluará Walmart (IoU contra anotación a mano;
       fotos frontales, en ángulo y desde arriba). Hoy solo está medido en
       el test de SKU-110K, que es igual al entrenamiento. Depende del modo
@@ -189,7 +189,17 @@ hitos" en `docs/curso.md`).
       el recall en envasados (0.71) causa casi todas las falsas alertas,
       así que se recomienda el fine-tuning aunque el mAP50 pase el
       criterio. Las 45 fotos ya se usaron para evaluar: para afinar con
-      ellas, separar entrenamiento y prueba. Faltan los pasos (2) a (4).
+      ellas, separar entrenamiento y prueba. Pasos (2) y (3) hechos (2026-10-20, detalle en el registro de
+      `docs/test-plan.md`): Kaggle girado, mAP50 0.704 de frente, 0.688 a
+      20° y **0.637 a 35°** (bajo el criterio 0.70; mAP50-95 de 0.41 a 0.21:
+      se pierde la localización, no el recall). Roboflow Out Of Stock
+      (200 fotos): IoU de huecos 0.106, 24 falsas alertas y 2 quiebres
+      (2 detectados); Empty Shelf (60): IoU 0.162, 3 falsas alertas. Sus
+      espacios vacíos son chicos y no comparables con huecos de un ancho
+      de producto. Con 35° se cumple el criterio: toca el fine-tuning
+      (Kaggle CC0 separado en entrenamiento y prueba, aumentación de giros,
+      color y ruido). Faltan el paso (4), el set propio (#32) y el
+      fine-tuning.
 - [ ] **#31** Excluir de la medición la bodega de reserva que hay sobre
       la góndola de venta (Walmart no la evalúa; acuerdo del 2026-09-16
       en el README). Hoy `compute_availability()` acota la góndola "del
