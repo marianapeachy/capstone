@@ -156,6 +156,10 @@ hitos" en `docs/curso.md`).
 - [ ] **#45** Privacidad de las fotos (RNF05): las fotos guardadas
       pueden mostrar clientes. Proponer a Walmart (#24) borrarlas tras N
       días o difuminar rostros antes de guardarlas. Hallazgo 17.
+- [ ] **#47** (dueño: Francisco) Auditoría de commits de GitHub: `.mailmap`
+      que unifica las identidades (hoy 6 autores para 3 personas) y
+      commits y PR sin la línea `Co-Authored-By` ni el pie de Claude
+      Code. Los commits ya publicados no se reescriben (regla 5).
 - [ ] **#7** (dueño: Mariana) Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
