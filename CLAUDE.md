@@ -178,7 +178,17 @@ ni trabajo:
    en local; su registro de costos por tarea (`ledger`) se desactiva en
    cada PC con `/plugin configure ponytail@ponytail` (se guarda en la
    configuración personal) y su `webhookUrl` queda vacío: nada sale del
-   PC. Si una skill ofrece mergear localmente a `main` (ej.
+   PC. **Al empezar una sesión que toque código, verificar que la skill
+   `ponytail:ponytail` esté en la lista de skills disponibles.** Si no
+   está: `claude plugin list` debe mostrar `ponytail@ponytail` habilitado
+   (si no, `claude plugin install ponytail@ponytail --scope project`), y
+   en Windows la ruta del proyecto que registra
+   `~/.claude/plugins/installed_plugins.json` debe coincidir con la de la
+   sesión, incluida la mayúscula de la unidad (`d:\...` y `D:\...` cuentan
+   como proyectos distintos; pasó el 2026-10-20). Los plugins se cargan
+   al abrir la sesión: tras instalar o arreglar, reiniciar Claude Code, y
+   mientras tanto seguir a mano su `skills/ponytail/SKILL.md`. Si una
+   skill ofrece mergear localmente a `main` (ej.
    `finishing-a-development-branch` de superpowers), elegir siempre la
    opción de Pull Request: estas reglas tienen prioridad.
 
