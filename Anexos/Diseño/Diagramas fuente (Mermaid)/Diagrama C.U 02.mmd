@@ -7,7 +7,7 @@ sequenceDiagram
     Eng->>Not: Góndola con espacio libre >= umbral (30% por defecto)
     Not->>BD: Verifica si existe alerta activa (menos de 15 min)
     alt No existe alerta activa
-        Not->>BD: Registra alerta (pasillo, góndola, % libre, repisas con huecos)
+        Not->>BD: Registra alerta (pasillo, góndola, % libre, imagen con huecos)
         Not->>Rep: Muestra la alerta en la vista de alertas
     else Alerta ya notificada
         Not->>BD: Consolida en la alerta existente

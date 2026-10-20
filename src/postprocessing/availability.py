@@ -21,9 +21,11 @@ mide: una repisa de productos bajos o una pila a la que le quedan pocas
 unidades sigue con producto disponible, y el eje vertical es el que mas
 deforma una camara de sala (vista alta u oblicua).
 
-Alerta: espacio libre >= 30% del frente de la gondola (metros lineales de
-repisa). Profundidad constante de 25 cm para el volumen del Nivel 1 (ver
-CLAUDE.md).
+Alerta: espacio libre >= 30% del frente de la gondola completa (metros
+lineales de repisa). Las repisas son el metodo para medir, no una salida:
+la alerta y el % libre que se informan son solo los de la gondola
+(CLAUDE.md, "Quiebre por gondola completa"). Profundidad constante de
+25 cm para el volumen del Nivel 1 (ver CLAUDE.md).
 """
 
 from __future__ import annotations
@@ -69,17 +71,17 @@ class AvailabilityParams:
 
 @dataclass(frozen=True)
 class ShelfAvailability:
-    """Disponibilidad de un nivel de repisa. `level_index` es su posicion
-    en los niveles de entrada; `polygon`, el nivel ya acotado a los
-    productos (sup. izq., sup. der., inf. der., inf. izq.), y `bbox`, el
-    rectangulo que lo contiene. `gaps` son los tramos [x_inicio, x_fin]
-    sin producto, de izquierda a derecha."""
+    """Medicion de un nivel de repisa (dato interno: no lleva alerta y su
+    % libre no se informa). `level_index` es su posicion en los niveles de
+    entrada; `polygon`, el nivel ya acotado a los productos (sup. izq.,
+    sup. der., inf. der., inf. izq.), y `bbox`, el rectangulo que lo
+    contiene. `gaps` son los tramos [x_inicio, x_fin] sin producto, de
+    izquierda a derecha."""
 
     level_index: int
     bbox: BBox
     product_count: int
     gaps: tuple[Gap, ...]
-    critical: bool
     polygon: Quad
 
     @property
@@ -117,8 +119,9 @@ class ShelfAvailability:
 
 @dataclass(frozen=True)
 class GondolaAvailability:
-    """Disponibilidad de la gondola completa. `critical` es la alerta del
-    MVP (Nivel 2); el detalle por repisa sirve para el Nivel 1."""
+    """Disponibilidad de la gondola completa. `free_fraction` y `critical`
+    (la alerta del MVP, Nivel 2) son lo que se informa; `shelves` es la
+    medicion por repisa de la que salen."""
 
     shelves: tuple[ShelfAvailability, ...]
     free_fraction: float
@@ -127,11 +130,6 @@ class GondolaAvailability:
     @property
     def occupied_fraction(self) -> float:
         return 1.0 - self.free_fraction
-
-    @property
-    def critical_shelves(self) -> tuple[int, ...]:
-        """`level_index` de las repisas con quiebre."""
-        return tuple(shelf.level_index for shelf in self.shelves if shelf.critical)
 
     @property
     def free_area_px(self) -> float:
@@ -143,7 +141,7 @@ def compute_availability(
     levels: Sequence[BBox] | Sequence[Quad] | np.ndarray,
     params: AvailabilityParams = AvailabilityParams(),
 ) -> GondolaAvailability:
-    """Disponibilidad por repisa y de la gondola completa.
+    """Disponibilidad de la gondola completa, medida repisa por repisa.
 
     `levels` son los niveles de repisa, de arriba hacia abajo: bbox
     (GondolaSegmentation.shelves) o franjas inclinadas (shelf_levels(),
@@ -188,7 +186,6 @@ def compute_availability(
         widths = level_products[:, 2] - level_products[:, 0]
         reference = float(np.median(widths)) if len(widths) else fallback_width
         gaps = _free_gaps(band, level_products, params.min_gap_products * reference)
-        free = sum(end - start for start, end in gaps) / (band[1] - band[0])
         polygon = _polygon(band)
         shelves.append(
             ShelfAvailability(
@@ -201,7 +198,6 @@ def compute_availability(
                 ),
                 product_count=len(level_products),
                 gaps=gaps,
-                critical=free >= params.critical_free_fraction,
                 polygon=polygon,
             )
         )

@@ -6,7 +6,7 @@ sequenceDiagram
     participant BD as Base de Datos
     Sup->>Web: Selecciona fechas, pasillo o góndola y formato (Excel/CSV/PDF)
     Web->>Gen: POST /api/v1/reports/generate
-    Gen->>BD: Consulta % libre por góndola y repisa, alertas y estados
+    Gen->>BD: Consulta % libre por góndola, alertas y estados
     BD-->>Gen: Registros del período
     alt Sin registros en el período
         Gen-->>Web: Aviso "Sin datos" (no genera archivo vacío)

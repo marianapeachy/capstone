@@ -104,7 +104,7 @@ def test_tilted_gap_is_found_on_its_shelf():
     slope = 0.25
     boxes = gondola(slope, skip=lambda shelf, x: shelf == 1 and 300 <= x < 700)
     result = compute_availability(boxes, shelf_levels(boxes, [], ROI))
-    assert result.critical_shelves == (1,)
+    assert [bool(shelf.gaps) for shelf in result.shelves] == [False, True, False]
     middle = result.shelves[1]
     assert middle.free_fraction == pytest.approx(420 / 940, abs=0.01)
 
@@ -121,7 +121,6 @@ def test_horizontal_levels_hide_gaps_of_tilted_shelves():
     horizontal = [(0, 0, 1000, bottom[0]), (0, top[0], 1000, bottom[1]), (0, top[1], 1000, bottom[2])]
     flat = compute_availability(boxes, horizontal).shelves[1]
     tilted = compute_availability(boxes, shelf_levels(boxes, [], ROI)).shelves[1]
-    assert tilted.critical
     assert flat.free_fraction < 0.1 < tilted.free_fraction
 
 

@@ -34,7 +34,6 @@ def test_gap_of_several_products_is_measured():
     assert shelf.free_fraction == pytest.approx(0.4)
     assert shelf.occupied_fraction == pytest.approx(0.6)
     assert shelf.free_area_px == pytest.approx(400 * 200)
-    assert shelf.critical
 
 
 def test_gaps_at_the_edges_count_within_the_gondola_width():
@@ -69,10 +68,19 @@ def test_products_are_assigned_to_their_level():
     assert [s.product_count for s in result.shelves] == [10, 3]
     assert result.shelves[0].free_fraction == 0.0
     assert result.shelves[1].free_fraction == pytest.approx(0.7)
-    assert result.critical_shelves == (1,)
     # Frente de la gondola: 700 px libres de 2000 px de repisa.
     assert result.free_fraction == pytest.approx(0.35)
     assert result.critical
+
+
+def test_alert_is_for_the_whole_gondola_not_for_a_single_shelf():
+    # La repisa de abajo tiene 40% libre, pero la gondola solo 20%.
+    top = _row(range(0, 1000, 100))
+    bottom = _row([0, 100, 200, 300, 400, 500], y_min=250, y_max=400)
+    result = compute_availability(top + bottom, LEVELS)
+    assert result.shelves[1].free_fraction == pytest.approx(0.4)
+    assert result.free_fraction == pytest.approx(0.2)
+    assert not result.critical
 
 
 def test_small_vertical_overlap_does_not_cover_the_level_above():
@@ -99,8 +107,8 @@ def test_empty_shelf_between_stocked_shelves_is_fully_free():
     result = compute_availability(top + bottom, levels)
     assert result.shelves[1].gaps == ((0.0, 1000.0),)
     assert result.shelves[1].product_count == 0
-    assert result.critical_shelves == (1,)
     assert result.free_fraction == pytest.approx(1 / 3)
+    assert result.critical
 
 
 def test_gondola_is_trimmed_to_the_products():

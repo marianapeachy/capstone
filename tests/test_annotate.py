@@ -36,20 +36,20 @@ def test_gaps_are_painted_red():
     assert _redness(view[y, x]) > _redness(image[y, x]) + 40
 
 
-def test_shelf_label_is_not_hidden_by_the_banner():
-    image, _ = gondola()
+def test_view_has_no_shelf_labels():
+    # Sin huecos, bajo el cartel solo van los contornos blancos de las
+    # repisas, que aclaran la foto; una etiqueta por repisa pondria un
+    # recuadro oscuro. El % y la alerta son solo los de la gondola.
+    image, _ = gondola(EMPTIED)
     result = run_image(image, ColorDetector())
-    top = min(y for _, y in result.shelves[0].polygon)
-    shifted = replace(result, shelves=(replace(result.shelves[0], polygon=tuple(
-        (x, y - top) for x, y in result.shelves[0].polygon)), *result.shelves[1:]))
-    view = draw_availability(image, shifted)
+    no_gaps = replace(result, shelves=tuple(replace(s, gaps=()) for s in result.shelves))
+    view = draw_availability(image, no_gaps)
     # Fin del cartel: primera fila del borde derecho con otro color.
     column = view[: view.shape[0] // 4, -2].astype(int)
     banner = int(np.argmax(np.any(column != column[0], axis=1)))
     assert banner > 0
-    # Bajo el cartel, a la izquierda, esta el recuadro oscuro de "Repisa 1".
-    below = view[banner + 2 : banner + 12, 6:40].reshape(-1, 3)
-    assert (below.max(axis=1) < 60).mean() > 0.5
+    assert not np.array_equal(view[banner:], image[banner:])  # hay contornos
+    assert (view[banner:].astype(int) >= image[banner:].astype(int)).all()
 
 
 def test_banner_is_red_with_alert_and_green_without_it():
