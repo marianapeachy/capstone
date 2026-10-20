@@ -71,3 +71,9 @@ htmlcov/
 # --- Sistema operativo ---
 .DS_Store
 Thumbs.db
+
+# --- impeccable: artefactos de diseño locales (bocetos, rondas, capturas) ---
+/.impeccable/mocks/
+/.impeccable/questions/
+/.impeccable/review/
+/.impeccable/build/

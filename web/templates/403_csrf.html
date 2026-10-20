@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Formulario vencido · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="panel empty">
+  <svg class="icon muted-icon" aria-hidden="true"><use href="#i-warning-circle"/></svg>
+  <h1>El formulario venció</h1>
+  <p>La página estuvo abierta mucho tiempo o la sesión expiró. Vuelve atrás, recarga la página e inténtalo de nuevo.</p>
+  <a class="btn quiet" href="{% url 'inicio' %}">Volver al inicio</a>
+</div>
+{% endblock %}

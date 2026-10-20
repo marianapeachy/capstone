@@ -7,3 +7,8 @@ fpdf2>=2.7.0
 pytest>=7.4.0
 python-dotenv>=1.0.0
 py7zr>=1.0  # descomprime SHARD (.7z) en scripts/download_datasets.py, sin depender de un 7z del sistema
+django>=6.1,<7  # app web (item #28); 6.1 por MAILERS, exige Python >= 3.12
+bcrypt>=4.0  # hasher de contrasenas de la app web (Fase 1: bcrypt)
+gunicorn>=23.0; sys_platform != "win32"  # sirve la app web en Docker; en Windows, manage.py runserver
+pytest-django>=4.9  # tests de la app web (pytest.ini)
+whitenoise>=6.7  # sirve estilos, fuente e iconos de la app web sin CDN

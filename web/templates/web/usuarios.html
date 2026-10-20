@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Usuarios · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Usuarios y perfiles</h1>
+    <p>Las cuentas no se borran: se desactivan, para conservar quién hizo cada análisis.</p>
+  </div>
+  <a href="{% url 'usuario_nuevo' %}" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Nuevo usuario</a>
+</div>
+<div class="panel table-wrap">
+  <table>
+    <thead><tr><th>RUT</th><th>Nombre</th><th class="hide-phone">Correo</th><th>Perfil</th><th>Estado</th><th class="hide-phone">Último acceso</th><th><span class="sr-only">Acciones</span></th></tr></thead>
+    <tbody>
+    {% for u in usuarios %}
+    <tr>
+      <td class="strong">{{ u.username }}</td>
+      <td>{{ u.get_full_name|default:"-" }}</td>
+      <td class="muted hide-phone">{{ u.email }}</td>
+      <td>{{ u.role|default:"Sin perfil" }}</td>
+      <td>{% if u.is_active %}<span class="state completada">Activa</span>{% else %}<span class="state off">Inactiva</span>{% endif %}</td>
+      <td class="muted hide-phone">{{ u.last_login|date:"Y-m-d H:i"|default:"Nunca" }}</td>
+      <td><a class="btn quiet" href="{% url 'usuario_editar' u.pk %}"><svg class="icon" aria-hidden="true"><use href="#i-pencil-simple"/></svg>Editar</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

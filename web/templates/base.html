@@ -1,0 +1,37 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1f2a30">
+  <title>{% block title %}ShelfVision AI{% endblock %}</title>
+  <link rel="preload" href="{% static 'web/fonts/archivo-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'web/app.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+{% include "web/icons.html" %}
+{% block body %}
+<header class="topbar">
+  <a class="brand" href="{% url 'inicio' %}" aria-label="ShelfVision AI, inicio">{% include "web/_mark.html" %}<span>ShelfVision <b>AI</b></span></a>
+  {% if user.is_authenticated %}
+  {% with page=request.resolver_match.url_name role=user.role %}
+  <nav class="nav" aria-label="Principal">
+    {% if role == "Administrador" %}<a href="{% url 'usuarios' %}"{% if page == "usuarios" or page == "usuario_nuevo" or page == "usuario_editar" %} aria-current="page"{% endif %}><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg>Usuarios</a>{% endif %}
+    {% if role == "Administrador" or role == "Jefe de Salón" %}<a href="{% url 'analisis' %}"{% if page == "analisis" or page == "analisis_detalle" %} aria-current="page"{% endif %}><svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>Análisis</a>{% endif %}
+    <a href="{% url 'alertas' %}"{% if page == "alertas" %} aria-current="page"{% endif %}><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg>Alertas{% if open_alerts %} <span class="count" aria-label="{{ open_alerts }} abiertas">{{ open_alerts }}</span>{% endif %}</a>
+  </nav>
+  <div class="who">
+    <span>{{ user.get_full_name|default:user.username }}<small>{{ role|default:"Sin perfil" }}</small></span>
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="icon-btn" title="Cerrar sesión" aria-label="Cerrar sesión"><svg class="icon" aria-hidden="true"><use href="#i-sign-out"/></svg></button></form>
+  </div>
+  {% endwith %}
+  {% endif %}
+</header>
+<main class="page">
+  {% for message in messages %}<div class="flash{% if message.level_tag == 'error' %} error{% endif %}" role="status">{{ message }}</div>{% endfor %}
+  {% block content %}{% endblock %}
+</main>
+{% endblock %}
+</body>
+</html>

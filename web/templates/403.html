@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Sin acceso · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="panel empty">
+  <svg class="icon muted-icon" aria-hidden="true"><use href="#i-warning-circle"/></svg>
+  <h1>No tienes acceso a esta página</h1>
+  <p>Tu perfil no incluye esta sección. Si crees que es un error, pide al Administrador que revise tu perfil.</p>
+  <a class="btn quiet" href="{% url 'inicio' %}">Volver al inicio</a>
+</div>
+{% endblock %}

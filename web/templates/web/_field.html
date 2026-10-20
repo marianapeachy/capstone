@@ -1,0 +1,6 @@
+<div class="field{% if photo %} photo-field{% endif %}">
+  {% if field.field.widget.input_type == "checkbox" %}<label class="check">{{ field }} {{ field.label }}</label>
+  {% else %}<label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% endif %}
+  {% if field.help_text %}<span class="help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</span>{% endif %}
+  {% for error in field.errors %}<span class="err">{{ error }}</span>{% endfor %}
+</div>

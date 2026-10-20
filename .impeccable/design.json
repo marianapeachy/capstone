@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-19T00:30:00-03:00",
+  "title": "Design System: ShelfVision AI",
+  "extensions": {
+    "colorMeta": {
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Grafito",
+        "tonalRamp": [
+          "#0e1417",
+          "#1f2a30",
+          "#33424a",
+          "#4a5c65",
+          "#677a83",
+          "#8b9ca4",
+          "#b6c3c9",
+          "#e3e9ec"
+        ]
+      },
+      "shelf-gray": {
+        "role": "neutral",
+        "displayName": "Gris fleje",
+        "tonalRamp": [
+          "#2b3133",
+          "#4a5255",
+          "#6d7678",
+          "#929b9e",
+          "#b5bdbf",
+          "#d3d9db",
+          "#e5eaeb",
+          "#eef1f2"
+        ]
+      },
+      "gap-red": {
+        "role": "secondary",
+        "displayName": "Rojo hueco",
+        "tonalRamp": [
+          "#4a120d",
+          "#701c15",
+          "#9a271e",
+          "#c8372b",
+          "#dc5a4f",
+          "#e98a81",
+          "#f2b9b3",
+          "#f7d9d5"
+        ]
+      },
+      "action-teal": {
+        "role": "primary",
+        "displayName": "Verde azulado de acción",
+        "tonalRamp": [
+          "#032726",
+          "#064544",
+          "#0a6463",
+          "#0e7c7b",
+          "#2f9e9c",
+          "#6fd3cf",
+          "#a9e4e1",
+          "#dcefee"
+        ]
+      },
+      "done-green": {
+        "role": "tertiary",
+        "displayName": "Verde completado",
+        "tonalRamp": [
+          "#0a2a1b",
+          "#114330",
+          "#155f3d",
+          "#1b7a4e",
+          "#3d9a6c",
+          "#74bf96",
+          "#aedcc1",
+          "#dcefe4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Título de página",
+        "purpose": "Un título por pantalla; el conteo de quiebres va en rojo."
+      },
+      "location": {
+        "displayName": "Ubicación",
+        "purpose": "Pasillo y góndola, en ancho angosto."
+      },
+      "figure": {
+        "displayName": "Cifra",
+        "purpose": "% libre de la góndola."
+      },
+      "body": {
+        "displayName": "Texto",
+        "purpose": "Texto, formularios y tablas."
+      },
+      "label": {
+        "displayName": "Rótulo",
+        "purpose": "Encabezados de tabla, rótulos de repisa y estados."
+      }
+    },
+    "shadows": [
+      {
+        "name": "panel",
+        "value": "0 1px 2px rgb(31 42 48 / .06), 0 6px 18px rgb(31 42 48 / .07)",
+        "purpose": "Paneles, tarjetas de alerta y foto del detalle."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state",
+        "value": "150ms ease-out",
+        "purpose": "Cambio de fondo de botones; se desactiva con prefers-reduced-motion."
+      },
+      {
+        "name": "press",
+        "value": "transform scale(.98) 100ms ease-out",
+        "purpose": "Respuesta al presionar un botón."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "760px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón de acción",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal: Tomar alerta, Analizar, Nuevo usuario.",
+      "html": "<button class=\"ds-btn\">Tomar alerta</button>",
+      "css": ".ds-btn { min-height: 44px; padding: 0 18px; border: 2px solid transparent; border-radius: 10px; background: #0e7c7b; color: #fff; font: 700 16px/1 Archivo, system-ui, sans-serif; cursor: pointer; transition: background-color .15s ease-out, transform .1s ease-out; } .ds-btn:hover { background: #0a6463; } .ds-btn:active { transform: scale(.98); } .ds-btn:focus-visible { outline: 3px solid #0e7c7b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Botón completar",
+      "kind": "button",
+      "refersTo": "button-complete",
+      "description": "Marcar una alerta en proceso como repuesta.",
+      "html": "<button class=\"ds-btn-ok\">Marcar repuesta</button>",
+      "css": ".ds-btn-ok { min-height: 52px; padding: 0 18px; border: 2px solid #1b7a4e; border-radius: 10px; background: #fff; color: #1b7a4e; font: 700 17px/1 Archivo, system-ui, sans-serif; cursor: pointer; } .ds-btn-ok:hover { background: #dcefe4; color: #155f3d; } .ds-btn-ok:focus-visible { outline: 3px solid #0e7c7b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Botón quieto",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Acciones secundarias: Cancelar, Editar, Elegir foto.",
+      "html": "<button class=\"ds-btn-quiet\">Cancelar</button>",
+      "css": ".ds-btn-quiet { min-height: 44px; padding: 0 18px; border: 2px solid #d6dde0; border-radius: 10px; background: transparent; color: #1f2a30; font: 700 16px/1 Archivo, system-ui, sans-serif; cursor: pointer; } .ds-btn-quiet:hover { background: #eef1f2; } .ds-btn-quiet:focus-visible { outline: 3px solid #0e7c7b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Etiqueta arriba, ayuda y error abajo.",
+      "html": "<label class=\"ds-field\"><span>Pasillo</span><input value=\"3\"></label>",
+      "css": ".ds-field { display: grid; gap: 6px; font: 600 15px Archivo, system-ui, sans-serif; color: #1f2a30; } .ds-field input { min-height: 44px; padding: 9px 12px; border: 1.5px solid #aebbc1; border-radius: 8px; font: 400 16px Archivo, system-ui, sans-serif; } .ds-field input:focus { outline: none; border-color: #0e7c7b; box-shadow: 0 0 0 3px #dcefee; }"
+    },
+    {
+      "name": "Barra superior",
+      "kind": "nav",
+      "refersTo": "topbar",
+      "description": "Marca, secciones del perfil con contador de alertas y usuario.",
+      "html": "<nav class=\"ds-nav\"><b>ShelfVision <i>AI</i></b><a aria-current=\"page\">Alertas <span>3</span></a><a>Análisis</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 20px; height: 56px; padding: 0 20px; background: #1f2a30; color: #fff; font: 600 16px Archivo, system-ui, sans-serif; } .ds-nav b { font-weight: 800; font-stretch: 82%; } .ds-nav i { font-style: normal; color: #6fd3cf; } .ds-nav a { color: rgb(255 255 255 / .78); padding: 16px 0 13px; border-bottom: 3px solid transparent; } .ds-nav a[aria-current] { color: #fff; border-bottom-color: #6fd3cf; } .ds-nav span { padding: 1px 7px; border-radius: 999px; background: #c8372b; color: #fff; font-size: 13px; }"
+    },
+    {
+      "name": "Fleje",
+      "kind": "custom",
+      "refersTo": "fleje",
+      "description": "Una franja por repisa con los huecos medidos en su posición real; sin % por repisa (solo se informa el de la góndola).",
+      "html": "<div class=\"ds-fleje\"><div class=\"ds-shelf\"><span>R1</span><div class=\"ds-bar\"><i style=\"left:0;width:55%\"></i></div></div><div class=\"ds-shelf\"><span>R2</span><div class=\"ds-bar\"><i style=\"left:43%;width:10%\"></i></div></div></div>",
+      "css": ".ds-fleje { display: grid; gap: 6px; width: 320px; font: 700 13px Archivo, system-ui, sans-serif; color: #56656c; } .ds-shelf { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: center; } .ds-bar { position: relative; height: 16px; border-radius: 3px; background: #1f2a30; overflow: hidden; } .ds-bar i { position: absolute; top: 0; bottom: 0; background: repeating-linear-gradient(135deg, #c8372b 0 3px, #f7d9d5 3px 6px); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El fleje de góndola",
+    "overview": "El fleje es la tira del borde de cada repisa: lo primero que mira quien repone. El sistema dibuja cada góndola como sus repisas vistas de frente, una franja por repisa, con el producto en grafito y cada hueco rayado en rojo en su posición real, calculada por el pipeline. El hueco se lee antes que el número.",
+    "keyCharacteristics": [
+      "Una franja por repisa, con huecos en su geometría real, como pieza central de cada vista.",
+      "Rojo reservado para hueco y quiebre; verde azulado para acciones; verde para lo completado.",
+      "Archivo variable: ancho normal para leer, angosto (78-82%) para ubicaciones y cifras.",
+      "Objetivos táctiles de 44 px como mínimo y 52 px en las acciones del teléfono.",
+      "Estilos, fuente e íconos servidos desde la propia app, sin CDN."
+    ],
+    "rules": [
+      {
+        "name": "The Red Means Gap Rule",
+        "body": "El rojo solo marca huecos y quiebres. Nunca se usa para decorar ni para acciones.",
+        "section": "colors"
+      },
+      {
+        "name": "The Never Color Alone Rule",
+        "body": "Todo estado de color va con texto: el fleje va junto al % libre de la góndola y cada pastilla dice su estado.",
+        "section": "colors"
+      },
+      {
+        "name": "The Narrow For Where Rule",
+        "body": "El ancho angosto es para dónde y cuánto (ubicación, porcentaje), nunca para párrafos.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Elevation Rule",
+        "body": "Un panel se separa con sombra o con línea, nunca con ambas.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do mostrar el fleje junto al % libre de la góndola: el hueco antes que el número.",
+      "Do dejar el fleje como geometría: nunca agregarle % ni alerta por repisa.",
+      "Do escribir la ubicación como \"Pasillo N · Góndola X\" en el ancho angosto.",
+      "Do dar a cada acción del teléfono 52px de alto y todo el ancho de la tarjeta.",
+      "Do servir fuentes, íconos y estilos desde web/static/, sin CDN."
+    ],
+    "donts": [
+      "Don't usar rojo fuera de huecos y quiebres.",
+      "Don't usar el rayado como textura de fondo: solo marca huecos medidos, y en miniatura va plano.",
+      "Don't mostrar un estado solo con color, sin texto.",
+      "Don't usar la marca, el logo ni el azul y amarillo de Walmart."
+    ]
+  }
+}

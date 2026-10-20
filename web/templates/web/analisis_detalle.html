@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ a.location }} · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{% include "web/_loc.html" %}</h1>
+    <p>Foto de las {{ a.created_at|date:"H:i" }} del {{ a.created_at|date:"Y-m-d" }}{% if a.created_by %}, subida por {{ a.created_by.get_full_name|default:a.created_by.username }}{% endif %}</p>
+  </div>
+  {% if a.estado == "activa" or a.estado == "en_proceso" %}
+  <form method="post" action="{% url 'alerta_accion' a.pk 'tomar' %}" class="actions">
+    {% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}">
+    {% if a.estado == "activa" %}<button class="btn"><svg class="icon" aria-hidden="true"><use href="#i-hand-grabbing"/></svg>Tomar alerta</button>
+    {% else %}<button class="btn ok" formaction="{% url 'alerta_accion' a.pk 'completar' %}"><svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>Marcar repuesta</button>{% endif %}
+  </form>
+  {% endif %}
+</div>
+<div class="detail">
+  <img class="photo" src="{% url 'analisis_imagen' a.pk %}" alt="Foto analizada de {{ a.location }}: huecos en rojo y espacio libre por repisa" width="{{ a.result.image_size.0 }}" height="{{ a.result.image_size.1 }}">
+  <div>
+    <section class="panel">
+      <div class="alert-top">
+        <h2 class="alert-loc">{% if a.critical %}Quiebre de stock{% else %}Sin quiebre{% endif %}</h2>
+        <span class="alert-pct{% if not a.critical %} calm{% endif %}">{% widthratio a.free_fraction 1 100 %}<small>% libre</small></span>
+      </div>
+      {% if a.result.shelves %}<div class="stack">{% include "web/_fleje.html" with size="big" %}</div>{% endif %}
+      {% if not a.result.segmentation_found %}<p class="alert-meta stack">No se detectaron repisas: la góndola se midió completa, como un solo nivel.</p>{% endif %}
+    </section>
+    <section class="panel">
+      <dl class="facts">
+        <dt>Alerta</dt><dd>{% if a.estado %}<span class="state {{ a.estado }}">{{ a.get_estado_display }}</span>{% else %}No corresponde{% endif %}</dd>
+        {% if a.taken_by %}<dt>Atiende</dt><dd>{{ a.taken_by.get_full_name|default:a.taken_by.username }}{% if a.estado_at %} desde las {{ a.estado_at|time:"H:i" }}{% endif %}</dd>{% endif %}
+        <dt>Productos</dt><dd>{{ a.result.products|length }}</dd>
+        <dt>Repisas</dt><dd>{{ a.result.shelves|length }}</dd>
+        <dt>Archivo</dt><dd>{{ a.photo_name }}</dd>
+      </dl>
+    </section>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{% if nuevo %}Nuevo usuario{% else %}Editar usuario{% endif %} · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{% if nuevo %}Nuevo usuario{% else %}Editar {{ form.instance.username }}{% endif %}</h1>
+    <p>{% if nuevo %}Recibirá un correo con un enlace de un solo uso para definir su contraseña.{% else %}Los cambios de perfil rigen desde su próxima página.{% endif %}</p>
+  </div>
+</div>
+<form method="post" class="panel form narrow-form" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  {% include "web/_field.html" with field=form.username %}
+  {% include "web/_field.html" with field=form.first_name %}
+  {% include "web/_field.html" with field=form.last_name %}
+  {% include "web/_field.html" with field=form.email %}
+  {% include "web/_field.html" with field=form.role %}
+  {% include "web/_field.html" with field=form.is_active %}
+  <div class="actions"><button type="submit" class="btn">{% if nuevo %}Crear usuario{% else %}Guardar cambios{% endif %}</button><a class="btn quiet" href="{% url 'usuarios' %}">Cancelar</a></div>
+</form>
+{% endblock %}
