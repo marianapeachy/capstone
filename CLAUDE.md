@@ -157,7 +157,17 @@ ni trabajo:
    rama y no llega a `main`.
 7. **Al terminar el ítem**, marcarlo `[x]` en `PROGRESS.md` dentro del
    mismo PR, editando solo las líneas de ese ítem (es el archivo que más
-   conflictos genera).
+   conflictos genera), y **actualizar la Carta Gantt**
+   (`Anexos/Gestion/Carta Gantt Fase 2.xlsx`) en el mismo PR: en la fila
+   del ítem (columna "Ítem"), Estado `Cumplido` y Fin con la fecha real
+   de término (y el Inicio real si cambió). Si el ítem no tiene fila,
+   agregarla dentro de su sección, insertando la fila entre otras de la
+   misma sección para que herede las barras y los colores (una fila
+   agregada al final queda sin barra). Lo mismo cuando cambian el dueño o
+   las fechas de un ítem. Editar solo las columnas Actividad a
+   Observación: las barras y el resumen se calculan solos. Es un archivo
+   binario que git no sabe mezclar: si otro PR la cambió antes, partir de
+   la versión de `main` y volver a aplicar el cambio.
 8. **Configuración personal** en `CLAUDE.local.md` y
    `.claude/settings.local.json` (no se versionan). La compartida es este
    archivo y `.claude/settings.json`.
@@ -218,7 +228,8 @@ sus tests). Señal adicional: cuando las respuestas se sientan más lentas
 o se repita contexto que ya debería estar resuelto.
 
 Al terminar una tarea de esta bitácora, actualizar `PROGRESS.md` (marcar
-lo hecho, agregar lo nuevo pendiente) antes de cerrar la sesión.
+lo hecho, agregar lo nuevo pendiente) y la Carta Gantt (regla 7) antes de
+cerrar la sesión.
 
 ## Mensajes del profesor (`docs/curso.md`)
 

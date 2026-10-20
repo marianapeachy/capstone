@@ -46,6 +46,7 @@ checkpoints/
 
 # --- Reportes generados (Excel, CSV, PDF) ---
 *.xlsx
+!Anexos/**/*.xlsx
 *.csv
 *.pdf
 !docs/**/*.pdf

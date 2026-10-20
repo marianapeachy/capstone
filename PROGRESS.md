@@ -61,17 +61,22 @@ hitos" en `docs/curso.md`).
 - [ ] **#26** (dueño: Mariana) Plan de mejoras de la Fase 1: elaborarlo
       y empezar a implementarlo a más tardar 2026-10-09, según las
       observaciones de la evaluación y rúbrica de la Fase 1.
-- [ ] **#27** (dueño: Nicko) Informe de estado de avance para el
+- [ ] **#27** (dueño: Francisco; antes Nicko, reasignado el 2026-10-19
+      para no depender de otros) Informe de estado de avance para el
       profesor, con los puntos que pidió su correo de la semana 7. Ya
       atrasado: el profesor lo está esperando. Ahora es el informe
       intermedio que pide el cliente, entrega 2026-10-21 (puntos en
-      "Requisitos vigentes" de `docs/curso.md`).
+      "Requisitos vigentes" de `docs/curso.md`). Formato Word, lo arma
+      Francisco. Carta Gantt actualizada: `Anexos/Gestion/Carta Gantt
+      Fase 2.xlsx` (copia de la Iteración 1, por semana, con estado de
+      cada actividad; corte 2026-10-19). Las fechas de #7, #28 y #37
+      son propuestas, a confirmar por sus dueños.
 - [ ] **#29** (dueño: Nicko) Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
       y reportes (#7), integrados con la aplicación web (#28). Para la
       demo, solo fotos que se pueden mostrar a terceros (no SKU-110K).
-- [ ] **#34** Análisis de resultados del informe intermedio (entrega
+- [ ] **#34** (dueño: Francisco) Análisis de resultados del informe intermedio (entrega
       2026-10-21): 10 mejores y 10 peores casos (imagen de entrada,
       resultado, resultado esperado, error y causa, propuesta de mejora)
       y análisis comparativo con métricas (P, R, mAP del detector, %
@@ -82,7 +87,7 @@ hitos" en `docs/curso.md`).
       Depende del pipeline (#8, PR #28) y de la verificación del
       detector fuera de SKU-110K (#29 "Verificar el detector", #33 tras
       el PR #27).
-- [ ] **#35** README completo para el informe intermedio (2026-10-21) y
+- [ ] **#35** (dueño: Francisco) README completo para el informe intermedio (2026-10-21) y
       las evidencias de avance (2026-10-26): descripción de la solución,
       estrategia técnica y justificación de cada decisión (OpenCV antes
       de YOLO26, cabeza sin NMS, niveles híbridos, profundidad fija,
@@ -91,11 +96,11 @@ hitos" en `docs/curso.md`).
       preparación), estado operativo y pendiente, e instrucciones con
       un ejemplo para que un externo reproduzca la ejecución. Se cruza
       con #9.
-- [ ] **#36** Video de demostración de 5 a 10 minutos (entrega
+- [ ] **#36** (dueño: Francisco) Video de demostración de 5 a 10 minutos (entrega
       2026-10-21): solo funcionalidades implementadas y resultados que
       la aplicación genera hoy, con fotos que se pueden mostrar (no
       SKU-110K). Depende de #8.
-- [ ] **#37** Evidencias de avance de la Fase 2, a más tardar
+- [ ] **#37** (dueño: Mariana) Evidencias de avance de la Fase 2, a más tardar
       2026-10-26: diario de reflexión 2.1, guía 2.4 (resumen del
       avance, plan de trabajo con estado y ajustes) e informe con el
       formato de las pautas 2.2 y 2.3 (abstract en español e inglés;
@@ -103,7 +108,7 @@ hitos" en `docs/curso.md`).
       con la estructura y nombres pedidos; la planilla de avance da 15%
       al aporte de cada integrante visible en el repositorio. Detalle
       en "Requisitos vigentes" de `docs/curso.md`.
-- [ ] **#38** Feria de informática (semana del 2026-10-26; día y hora
+- [ ] **#38** (dueño: Nicko) Feria de informática (semana del 2026-10-26; día y hora
       por informar): definir qué integrante va (al menos uno) y qué se
       muestra.
 - [ ] **#39** Instalar la aplicación en el servidor del CITT. Bloqueado:
@@ -132,7 +137,7 @@ hitos" en `docs/curso.md`).
 - [ ] **#45** Privacidad de las fotos (RNF05): las fotos guardadas
       pueden mostrar clientes. Proponer a Walmart (#24) borrarlas tras N
       días o difuminar rostros antes de guardarlas. Hallazgo 17.
-- [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
+- [ ] **#7** (dueño: Mariana) Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
       para cualquiera de las dos lecturas del umbral (#24). Walmart no
