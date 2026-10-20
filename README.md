@@ -6,6 +6,14 @@ Este repositorio contiene el código fuente, la documentación técnica y la arq
 
 El proyecto aborda la automatización de la auditoría de espacios en salas de venta de supermercados mediante algoritmos de **Visión Artificial (Computer Vision)**. La solución analiza capturas fotográficas de cámaras de seguridad para detectar en tiempo real la disponibilidad de stock y cuantificar los espacios vacíos en góndola ("quiebres de stock" e "inventarios fantasmas").
 
+### La solución en breve
+
+**Entrada**: una foto de góndola (frontal, en ángulo o desde arriba; se admite lente gran angular). **Salida**, por foto y para la **góndola completa**: el % de espacio libre, la alerta de quiebre (sí/no, libre ≥ 30%) y la foto anotada con los huecos en rojo. Todo sale en un JSON, en la vista anotada y en la aplicación web. El sistema no identifica productos ni SKU: solo decide si hay producto o hueco en cada lugar del frente.
+
+Cómo lo hace, en cuatro pasos (detalle en "Estrategia Algorítmica y Arquitectura"): (1) **OpenCV** corrige la imagen y segmenta la góndola y sus repisas; (2) **YOLO26** detecta los productos dentro de esa ROI; (3) se calcula qué parte del frente queda sin producto; (4) se informa el resultado. En la CPU de un PC de escritorio tarda ~0,5 s por foto en un lote (mediana) y ~2 s una foto suelta, por el arranque del modelo (objetivo RF01: 2 a 5 s).
+
+Estado de las métricas (detalle y fotos en [docs/analisis-resultados.md](docs/analisis-resultados.md)): el detector llega a mAP50 0,950 en el *test* de SKU-110K y a 0,713 en 45 fotos de Kaggle que no vio al entrenar; el sistema completo acierta la alerta en 92% de las fotos de productos envasados (33/36). Los puntos débiles conocidos (frutas a granel, vidrio y reflejos) están en "Estado operativo y pendiente".
+
 ---
 
 ## 🎯 Definición del Alcance
@@ -89,6 +97,58 @@ La interfaz va después del pipeline: Walmart pidió priorizar que la lógica fu
 * **Código de Producción**: Desarrollo exclusivo en scripts modulares de Python (`.py`), descartando notebooks para la ejecución core.
 * **Aplicación web con Django** (decidido 2026-10-18, ítem #28): el diagrama de la Fase 1 proponía una API FastAPI/Flask con JWT y un frontend React. Se eligió Django con SQLite y páginas generadas en el servidor porque trae ya probados el login, los roles (grupos), el hash de contraseñas (bcrypt, como pedía el diseño), la protección CSRF, el ORM y las migraciones: el equipo no escribe a mano código de seguridad. Un frontend aparte (React) duplicaba el trabajo y sumaba Node al CI y a Docker para una interfaz que Walmart considera opcional. Se mantienen los módulos del diseño: backend Python, RBAC, base de datos relacional y vistas por perfil. En vez de JWT se usa la sesión de Django (cookie firmada, `HttpOnly`): CU06 pide invalidar al instante las sesiones de un usuario desactivado, y un JWT no se puede revocar antes de que expire. La app solo llama a `run_image()` de `src/pipeline.py`, como `scripts/run_pipeline.py`: no toca las etapas.
 
+### Flujo de una foto
+
+```mermaid
+flowchart LR
+    A["Foto original"] --> B["correct_image()<br/>dewarping y luego CLAHE"]
+    B --> C["segment_gondola()<br/>góndola, ROI y líneas de repisa"]
+    C --> D["crop_roi()<br/>recorte de la ROI"]
+    D --> E["ProductDetector<br/>YOLO26, nms=False, max_det=1000, imgsz=1280"]
+    E -->|"RoiCrop.to_original()"| F["shelf_levels()<br/>franjas inclinadas por repisa"]
+    C -.->|"shelf_lines y roi"| F
+    F --> G["compute_availability()<br/>huecos por repisa, suma de la góndola"]
+    G --> H["% libre de la góndola y alerta (libre ≥ 30%)"]
+    H --> I["JSON, vista anotada,<br/>app web y reportes"]
+```
+
+Las cajas viajan siempre como `[x_min, y_min, x_max, y_max]` en píxeles. Después de detectar, vuelven a la imagen corregida con `RoiCrop.to_original()` y a la foto original con `CorrectedImage.to_original()`, así que la vista anotada y el JSON usan las coordenadas de la foto que subió el usuario.
+
+### Componentes
+
+```mermaid
+flowchart TB
+    subgraph entradas["Puntos de entrada"]
+        CLI["scripts/run_pipeline.py<br/>(lotes y evaluación IoU, CU07)"]
+        WEB["web/ (Django)<br/>login, usuarios, análisis, alertas"]
+    end
+    PIPE["src/pipeline.py<br/>run_image()"]
+    subgraph etapas["Etapas, en orden (src/)"]
+        PRE["preprocessing/<br/>OpenCV"] --> MOD["models/<br/>YOLO26"] --> POST["postprocessing/<br/>disponibilidad y alerta"] --> REP["reporting/<br/>vista anotada, Excel, CSV, PDF"]
+    end
+    EVAL["evaluation/<br/>IoU y métricas (fuera del pipeline)"]
+    CLI --> PIPE
+    WEB --> PIPE
+    PIPE --> etapas
+    CLI -.-> EVAL
+    WEB --> DB[("SQLite<br/>usuarios, análisis, alertas")]
+```
+
+Cada etapa vive en su paquete y no importa los detalles de otra: se pasan arrays, tuplas y *dataclasses*. `src/pipeline.py` es el único que las encadena, y tanto el CLI como la app web solo llaman a `run_image()`. Los diagramas de diseño de la Fase 1 (casos de uso y arquitectura) están en `Anexos/Diseño/`; el de arquitectura propone FastAPI/React y quedó superado por Django (ítem #42).
+
+### Decisiones técnicas y su justificación
+
+| Decisión | Por qué | Evidencia |
+| :--- | :--- | :--- |
+| **OpenCV antes de YOLO26** (corrección, segmentación y recorte, en ese orden) | El ruido de una cámara de sala (lente, sombras, perspectiva) se controla mejor con operaciones que el equipo puede explicar y ajustar; Walmart prefiere un modelo explicable. Recortar a la góndola evita que el pasillo, el techo y los carteles cuenten como huecos. Dewarping antes de CLAHE porque la ecualización no debe trabajar sobre una imagen curva | Acotar la góndola a lo detectado, en vez de usar toda la ROI, bajó las falsas alertas con la góndola llena de 24,7% a 4,0% (ítem #6); F1 de repisas en SHARD de 0,82 (ítem #15) |
+| **YOLO26 con cabeza sin NMS** (`nms=False`, `max_det=1000`, `imgsz=1280`) | En góndolas densas y apiladas, el NMS suprime productos vecinos que se tocan, y el límite por defecto de 300 cajas trunca góndolas llenas. Entrenar y validar con los mismos valores hace que `best.pt` salga del mismo modelo que se usa al inferir | 690 latas detectadas como 714 en una foto densa (foto 002 de Kaggle); la variante `yolo26s-p2` (cabeza para objetos chicos) no mejoró (mAP50-95 0,596 contra 0,606) y costó el doble, así que se eligió `yolo26s` |
+| **Niveles de repisa híbridos** (`shelf_levels()`: filas de productos + líneas de la segmentación) | Con la cámara en ángulo las repisas se ven inclinadas y los rectángulos horizontales de la segmentación se meten en las repisas vecinas: los productos de una tapan los huecos de otra. Las bases de los productos marcan la repisa aunque esté inclinada, y las líneas de la segmentación aportan las repisas vacías | Foto real en ángulo (Kaggle 039): 3 franjas siguiendo las repisas y 5% libre, contra 5 niveles cruzados y huecos falsos de 77% y 36% solo con la segmentación (ítem #22) |
+| **Profundidad constante de 25 cm** | Walmart confirmó que el análisis 2D de la vista frontal basta; las góndolas miden entre 20 y 30 cm. Estimar profundidad (modelos de profundidad o estéreo) agregaría un error que no se puede verificar sin fotos de Walmart | Una sola constante global; si Walmart envía las medidas estándar, se cambia ese valor |
+| **Umbral: alerta con espacio libre ≥ 30% del frente** | El acta lo plantea como "menos del 30% de productos disponibles"; leído al pie de la letra alertaba con la góndola llena, así que se invirtió a espacio libre. Es configurable (`AvailabilityParams.critical_free_fraction`) | Con recall simulado de 0,9, umbrales de 20/25/30/35% dan 20,7/8,7/4,0/1,0% de falsas alertas con la góndola llena, y un quiebre de 30% se detecta en 87% de los casos (ítem #6) |
+| **Una alerta por góndola completa, repisas solo para medir** | Cambio de alcance indicado por el profesor el 2026-10-19. Las repisas siguen siendo el método interno, porque medir la cobertura a lo largo de cada repisa funciona con la cámara en ángulo; pero no se informa alerta ni % por repisa | Ítem #40; JSON con `free_fraction` y `critical` de la góndola y `shelves` solo con geometría |
+| **Fachada visible, sin apilamiento, hueco de al menos un ancho de producto** | Es lo que ve el cliente; la altura es el eje que más deforma una cámara de sala. Un hueco más angosto que un producto no se puede reponer | Criterio del equipo, válido ante Walmart si se justifica (reunión 2026-09-16) |
+| **Django con sesiones en vez de FastAPI + React + JWT** | Trae login, roles, hash de contraseñas, CSRF y migraciones probados; Walmart considera la interfaz opcional | Ver "Aplicación web con Django", arriba, y el ítem #28 |
+
 ---
 
 ## 📊 Estrategia de Datos y Evaluación
@@ -98,6 +158,48 @@ La interfaz va después del pipeline: Walmart pidió priorizar que la lógica fu
 * **Prueba Ciega (Dataset Oculto)**: la evaluación contra el **Dataset Oculto** de Walmart Chile (imágenes reales de sala con condiciones complejas) solo es posible si Walmart ejecuta el sistema en sus instalaciones (imagen Docker) y entrega las métricas, sin que las imágenes salgan de la empresa (RF06, CU07). Modalidad por confirmar con Walmart. Sus imágenes no son solo de cámaras de sala: hay fotos frontales, en ángulo y desde arriba.
 * **Cómo evalúa Walmart**: IoU contra una anotación hecha a mano, más una evaluación cualitativa del criterio de la solución. Para medirnos igual, el plan de pruebas debe incluir un set propio anotado a mano (#32).
 * **Fotos propias**: el equipo debe tomar fotos reales de góndolas (con permiso de la tienda), clasificadas por ángulo (frontal, lateral, desde arriba, gran angular). Sirven para entrenar, como control de vistas en ángulo y como material de demo que no es SKU-110K (#32).
+
+### Datasets: origen, cantidad, limpieza, etiquetado y preparación
+
+| Dataset | Origen y licencia | Imágenes y anotaciones | Para qué se usa |
+| :--- | :--- | :--- | :--- |
+| SKU-110K | Trax Retail (CVPR'19); académico, no comercial, sin redistribuir ni modificar | 11.743 fotos (train 8.219, val 588, test 2.936) y 1.730.996 cajas de producto | **Único dataset de entrenamiento** de `yolo26s`; evaluación en val y test. Nunca en demos ni en vistas sintéticas |
+| Kaggle supermarket-shelves | Humans in the Loop; CC0 | 45 fotos, 9.967 cajas de producto (y 1.776 de precio, que no se usan) | Evaluación fuera de SKU-110K (#34), demos y vistas en ángulo sintéticas |
+| Roboflow Out Of Stock detection | Roboflow Universe; CC BY 4.0 | 3.024 fotos, 15.720 cajas de espacio vacío | Medir quiebres reales (pendiente, #33) |
+| Roboflow Empty Shelf Detector | Roboflow Universe; CC BY 4.0 | 317 fotos (train 284, valid 17, test 16), 2.080 cajas de espacio vacío | Igual que el anterior |
+| UniDataPro grocery-shelves | Hugging Face; CC BY-NC-ND 4.0 | 15 fotos de muestra, 94 cajas | Pruebas de los conversores |
+| SHARD | figshare; CC BY 4.0 | 22.743 fotos con la altura de cada repisa | Medir `segment_gondola()` (F1 0,82); no tiene cajas de producto |
+
+* **Limpieza**: los 712 JPEG truncados de SKU-110K se copian en vez de enlazarse, porque Ultralytics los repara reescribiéndolos y habría modificado el original; las cajas sin área se descartan al convertir; en SHARD se usa el `annotation.csv` completo de figshare (el del `.7z` viene truncado y trae 2 fotos repetidas); en Kaggle la foto 035 es la misma que la 004 y se cuenta una vez. Los precios de Kaggle se separan de los productos (`class_group`).
+* **Etiquetado**: el equipo no etiquetó fotos a mano; todas las anotaciones vienen de los datasets. Cada formato (CSV, COCO, XML, Supervisely) se convierte con `scripts/prepare_datasets.py` a `[x_min, y_min, x_max, y_max]` en píxeles absolutos. Para el detector hay una sola clase, `product`. Las fotos propias con anotación a mano son el ítem #32.
+* **Preparación**: se conservan los *splits* oficiales de SKU-110K; Kaggle y UniDataPro no se parten porque no se usan para entrenar. `scripts/prepare_yolo_dataset.py` arma el formato de Ultralytics enlazando las imágenes. Todo se descarga con `scripts/download_datasets.py` (versiones fijas, ver [docs/datasets.md](docs/datasets.md)) y nada se versiona.
+
+---
+
+## 🚦 Estado Operativo y Pendiente
+
+Al 2026-10-20. El detalle por ítem y su dueño están en [PROGRESS.md](PROGRESS.md).
+
+| Módulo o requisito | Estado |
+| :--- | :--- |
+| Corrección de imagen (dewarping y CLAHE) | Operativo. El dewarping necesita calibración de lente: sin ella solo se aplica CLAHE |
+| Segmentación automática de góndola y repisas | Operativo. F1 de repisas 0,82 en SHARD; limitaciones conocidas en el ítem #17 |
+| Detector YOLO26 (`yolo26s`) | Operativo. mAP50-95 0,610 en el *test* de SKU-110K; 0,423 en las 45 fotos de Kaggle |
+| Disponibilidad y alerta por góndola completa (RF02, RF03, RF04) | Operativo |
+| Ingesta y evaluación por lotes (RF01, RF06, CU07) | Operativo (`scripts/run_pipeline.py`); ~0,5 s por foto en lote, en CPU |
+| Aplicación web: login (CU00), usuarios y roles (CU06), análisis (CU01) y alertas (CU02) | Operativo |
+| Reportes Excel, CSV y PDF (RF05, #7) | Pendiente (la vista anotada ya existe) |
+| Dashboard de disponibilidad (CU03, #43) y configuración de umbral y cámaras (CU05, #44) | Pendiente |
+| Instalación en el servidor del CITT (#39) | Bloqueado: esperan las instrucciones |
+
+**Limitaciones conocidas** (análisis completo en [docs/analisis-resultados.md](docs/analisis-resultados.md)):
+
+* El detector pierde productos fuera de su dominio (recall 0,644 en Kaggle contra 0,885 en SKU-110K), y cada producto perdido cuenta como hueco: produce falsas alertas (6 de 44 fotos). Siguiente paso: *fine-tuning* con fotos fuera de SKU-110K (#33, #32).
+* Las frutas y verduras a granel quedan fuera del alcance (no perecibles): recall 0,16.
+* Refrigeradores con puerta de vidrio: reflejos, desenfoque y marcos dan falsas alertas (#46).
+* La bodega de reserva sobre la góndola todavía se mide como parte de ella (#31).
+* El set de prueba tiene solo un quiebre real: mide falsas alertas, no cuántos quiebres detecta. Hacen falta las fotos de Roboflow Out Of Stock y las propias (#33, #32).
+* No hay imágenes de cámaras de sala reales: las vistas en ángulo son sintéticas, y la evaluación con el Dataset Oculto depende de que Walmart la ejecute en sus instalaciones.
 
 ---
 
@@ -232,6 +334,30 @@ salen de la máquina: solo se escriben métricas.
 Las etapas también se prueban por separado:
 `python scripts/visualize_segmentation.py` (segmentación, requiere
 datasets en `data/raw/`) y los scripts `evaluate_*.py`.
+
+#### Reproducir un ejemplo de punta a punta (para quien no es del equipo)
+
+Necesita Python 3.12 o superior y unos 2 GB libres; la CPU basta.
+
+```bash
+git clone https://github.com/marianapeachy/capstone.git && cd capstone
+python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+pytest tests/                                          # sin datos, pesos ni GPU; debe pasar completo
+
+# 1. Fotos de ejemplo: 45 fotos de góndolas, CC0 (Kaggle), se pueden mostrar
+python scripts/download_datasets.py --dataset kaggle_supermarket
+
+# 2. Pesos del detector (ver abajo) en data/processed/training/yolo26s/weights/best.pt
+
+# 3. Una foto: guarda la vista anotada (026.jpg) y el resultado (026.json) en salida/
+python scripts/run_pipeline.py "data/raw/supermarket-shelves/Supermarket shelves/images/026.jpg" \
+    --device cpu --out salida
+```
+
+Resultado esperado con `yolo26s`: la foto 026 (botellas de vidrio en filas, de frente) da `free_fraction` ≈ 0,02 y `critical: false`, es decir ~2% libre y sin alerta. La 011 (estante con pocos productos) es el único quiebre real del set: se espera ver ahí un % libre alto, cerca del umbral (el sistema da 27% y la anotación, 39%; ver el caso en el análisis). Para medir contra la anotación hecha a mano, agregar `--annotations data/processed/annotations/kaggle_supermarket.csv` (se genera con `python scripts/prepare_datasets.py --dataset kaggle_supermarket`); escribe `metrics.csv` con P, R, IoU y la alerta de cada foto. La tabla completa del equipo está en [docs/analisis-resultados.md](docs/analisis-resultados.md).
+
+**Los pesos (`best.pt`) no están en el repositorio**: salen de SKU-110K, cuya licencia prohíbe redistribuirlo, y el equipo no los publica. Hay dos caminos: pedirlos al equipo (se entregan por un canal privado, solo para uso académico y no comercial) o entrenarlos con [docs/training.md](docs/training.md) (GPU NVIDIA de 8 GB; ~7,5 h para `yolo26s`). Con los pesos de COCO (`yolo26s.pt`) el programa corre, pero no detecta la clase "producto" y el resultado no sirve.
 
 ### Aplicación web
 

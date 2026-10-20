@@ -87,7 +87,7 @@ hitos" en `docs/curso.md`).
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
       y reportes (#7), integrados con la aplicación web (#28). Para la
       demo, solo fotos que se pueden mostrar a terceros (no SKU-110K).
-- [ ] **#35** (dueño: Francisco) README completo para el informe intermedio (2026-10-21) y
+- [x] **#35** (dueño: Francisco) README completo para el informe intermedio (2026-10-21) y
       las evidencias de avance (2026-10-26): descripción de la solución,
       estrategia técnica y justificación de cada decisión (OpenCV antes
       de YOLO26, cabeza sin NMS, niveles híbridos, profundidad fija,
@@ -95,7 +95,14 @@ hitos" en `docs/curso.md`).
       (origen, cantidad de imágenes, limpieza, etiquetado y
       preparación), estado operativo y pendiente, e instrucciones con
       un ejemplo para que un externo reproduzca la ejecución. Se cruza
-      con #9.
+      con #9. Hecho (2026-10-20): README con "La solución en
+      breve", diagramas Mermaid del flujo y de los componentes, tabla de
+      decisiones técnicas con su evidencia (incluye que las repisas son
+      método de medición, no salida), tabla de datasets (origen, cantidad,
+      limpieza, etiquetado y preparación), "Estado operativo y pendiente"
+      y un ejemplo reproducible con fotos Kaggle CC0 (verificado: foto 026
+      da 2% libre, sin alerta). Los pesos no se publican (licencia de
+      SKU-110K): se piden al equipo o se entrenan con `docs/training.md`.
 - [ ] **#36** (dueño: Francisco) Video de demostración de 5 a 10 minutos (entrega
       2026-10-21): solo funcionalidades implementadas y resultados que
       la aplicación genera hoy, con fotos que se pueden mostrar (no
