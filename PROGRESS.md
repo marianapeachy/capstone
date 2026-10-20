@@ -16,9 +16,9 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | Etapa | Estado | Ítems |
 | --- | --- | --- |
 | `src/preprocessing/` | Hecho: corrección de imagen, segmentación de góndola y recorte de ROI | #1, #2, #3, #4 |
-| `src/models/` | Hecho: `ProductDetector` y detector `yolo26s` entrenado (mAP50-95 0.610 en test de SKU-110K) | #5 |
+| `src/models/` | Hecho: `ProductDetector` y detector `yolo26s` entrenado (mAP50-95 0.610 en test de SKU-110K; fuera de dominio, en Kaggle, mAP50 0.713 y R 0.644: falta fine-tuning) | #5, #33, #34 |
 | `src/postprocessing/` | Hecho: disponibilidad medida a lo largo de cada repisa; se informan solo la alerta (libre >= 30%) y el % libre de la góndola completa | #6, #40 |
-| `src/reporting/` | Pendiente | #7 |
+| `src/reporting/` | En desarrollo: vista anotada hecha (`annotate.py`); faltan los reportes Excel, CSV y PDF | #8, #7 |
 | `scripts/run_pipeline.py` | Hecho: pipeline completo por foto, vista limpia, JSON y evaluación por lotes con IoU (CU07) | #8 |
 | Datasets | 5 descargados y convertidos al estándar, con descarga reproducible | #10, #11, #12 |
 | CI | Hecho: pytest + `docker build` en cada PR, `main` protegida | #13 |
@@ -55,36 +55,39 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 ## Pendientes (priorizados)
 
 Los cuatro primeros responden al mensaje del profesor de la semana 8, y
-los seis siguientes (#34 a #39), al del 2026-10-16 (ver "Próximos
+los siguientes hasta el #39, al del 2026-10-16 (ver "Próximos
 hitos" en `docs/curso.md`).
 
-- [ ] **#27** (dueño: Francisco; antes Nicko, reasignado el 2026-10-19
-      para no depender de otros) Informe de estado de avance para el
+- [ ] **#27** Informe de estado de avance para el
       profesor, con los puntos que pidió su correo de la semana 7. Ya
       atrasado: el profesor lo está esperando. Ahora es el informe
       intermedio que pide el cliente, entrega 2026-10-21 (puntos en
       "Requisitos vigentes" de `docs/curso.md`). Formato Word, lo arma
       Francisco. Carta Gantt actualizada: `Anexos/Gestion/Carta Gantt
       Fase 2.xlsx` (copia de la Iteración 1, por semana, con estado de
-      cada actividad; corte 2026-10-19). Las fechas de #7, #28 y #37
-      son propuestas, a confirmar por sus dueños.
-- [ ] **#29** (dueño: Nicko) Primer demo operativo ante Walmart, a más
+      cada actividad; corte 2026-10-19). Las fechas de #7 y #37 son
+      propuestas, a confirmar por sus dueñas. Puntos 2, 3 y 6 del
+      informe salen de #35, #34 y #36. Avance (2026-10-20): borrador en
+      `Fase 2/Informe intermedio de avance - ShelfVision AI.docx` con el
+      formato de las pautas 2.2 y 2.3 (portada, índice, resumen y
+      abstract, Calibri 11, número de página): estado por módulo y por
+      C.U, Gantt, riesgos, próximos pasos, decisiones técnicas,
+      datasets, métricas medidas, reproducibilidad, commits por
+      integrante, conclusiones en inglés, bibliografía y anexo de PR.
+      La sección 3 ya tiene los 20 casos con lámina y el análisis
+      comparativo (#34). Falta (resaltado en amarillo en el Word): el
+      enlace al video (#36) y las reflexiones individuales en inglés de
+      cada integrante.
+      Actualización (2026-10-20): README (#35) integrado, anexo de PR
+      al día, video (#36) a cargo de Nicko y borrador de la reflexión de
+      Francisco. Falta el enlace al video y las reflexiones de Nicko y
+      Mariana (resaltadas en amarillo).
+- [ ] **#29** Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
       y reportes (#7), integrados con la aplicación web (#28). Para la
       demo, solo fotos que se pueden mostrar a terceros (no SKU-110K).
-- [ ] **#34** (dueño: Francisco) Análisis de resultados del informe intermedio (entrega
-      2026-10-21): 10 mejores y 10 peores casos (imagen de entrada,
-      resultado, resultado esperado, error y causa, propuesta de mejora)
-      y análisis comparativo con métricas (P, R, mAP del detector, %
-      libre contra el anotado, tiempo por foto). Factores a revisar:
-      iluminación, perspectiva, sombras, reflejos, oclusiones, calidad
-      de imagen, errores de detección y de segmentación. Solo fotos que
-      se pueden mostrar (Kaggle CC0, SHARD, Roboflow; nunca SKU-110K).
-      Depende del pipeline (#8, PR #28) y de la verificación del
-      detector fuera de SKU-110K (#29 "Verificar el detector", #33 tras
-      el PR #27).
-- [ ] **#35** (dueño: Francisco) README completo para el informe intermedio (2026-10-21) y
+- [x] **#35** (dueño: Francisco) README completo para el informe intermedio (2026-10-21) y
       las evidencias de avance (2026-10-26): descripción de la solución,
       estrategia técnica y justificación de cada decisión (OpenCV antes
       de YOLO26, cabeza sin NMS, niveles híbridos, profundidad fija,
@@ -92,12 +95,19 @@ hitos" en `docs/curso.md`).
       (origen, cantidad de imágenes, limpieza, etiquetado y
       preparación), estado operativo y pendiente, e instrucciones con
       un ejemplo para que un externo reproduzca la ejecución. Se cruza
-      con #9.
-- [ ] **#36** (dueño: Francisco) Video de demostración de 5 a 10 minutos (entrega
+      con #9. Hecho (2026-10-20): README con "La solución en
+      breve", diagramas Mermaid del flujo y de los componentes, tabla de
+      decisiones técnicas con su evidencia (incluye que las repisas son
+      método de medición, no salida), tabla de datasets (origen, cantidad,
+      limpieza, etiquetado y preparación), "Estado operativo y pendiente"
+      y un ejemplo reproducible con fotos Kaggle CC0 (verificado: foto 026
+      da 2% libre, sin alerta). Los pesos no se publican (licencia de
+      SKU-110K): se piden al equipo o se entrenan con `docs/training.md`.
+- [ ] **#36** Video de demostración de 5 a 10 minutos (entrega
       2026-10-21): solo funcionalidades implementadas y resultados que
       la aplicación genera hoy, con fotos que se pueden mostrar (no
-      SKU-110K). Depende de #8.
-- [ ] **#37** (dueño: Mariana) Evidencias de avance de la Fase 2, a más tardar
+      SKU-110K). El pipeline (#8) y la app web (#28) ya están en `main`.
+- [ ] **#37** Evidencias de avance de la Fase 2, a más tardar
       2026-10-26: diario de reflexión 2.1, guía 2.4 (resumen del
       avance, plan de trabajo con estado y ajustes) e informe con el
       formato de las pautas 2.2 y 2.3 (abstract en español e inglés;
@@ -105,7 +115,7 @@ hitos" en `docs/curso.md`).
       con la estructura y nombres pedidos; la planilla de avance da 15%
       al aporte de cada integrante visible en el repositorio. Detalle
       en "Requisitos vigentes" de `docs/curso.md`.
-- [ ] **#38** (dueño: Nicko) Feria de informática (semana del 2026-10-26; día y hora
+- [ ] **#38** Feria de informática (semana del 2026-10-26; día y hora
       por informar): definir qué integrante va (al menos uno) y qué se
       muestra.
 - [ ] **#39** Instalar la aplicación en el servidor del CITT. Bloqueado:
@@ -131,10 +141,27 @@ hitos" en `docs/curso.md`).
       umbral de espacio libre entre 1% y 100% (hoy fijo en 30%,
       `AvailabilityParams.critical_free_fraction`) y cámaras asociadas a
       pasillo y góndola con su calibración de lente. Hallazgo 14.
+- [ ] **#46** Falsas alertas en refrigeradores con puerta de vidrio
+      (#34, fotos 020 y 003 de Kaggle): el reflejo y el desenfoque de la
+      puerta en primer plano, los marcos entre puertas y una repisa en
+      sombra cuentan como huecos. Propuesta: excluir zonas desenfocadas
+      (nitidez local) y acotar la góndola a la parte enfocada; tratar los
+      marcos de puerta. Es la condición más parecida a una cámara de sala
+      que falla dentro del alcance.
 - [ ] **#45** Privacidad de las fotos (RNF05): las fotos guardadas
       pueden mostrar clientes. Proponer a Walmart (#24) borrarlas tras N
       días o difuminar rostros antes de guardarlas. Hallazgo 17.
-- [ ] **#7** (dueño: Mariana) Implementar generación de reportes (Excel, CSV, PDF) en
+- [ ] **#48** Modelar el diagrama de la base de datos (entidad-relación) a partir de
+      `web/models.py` (`User`, perfiles como grupos de Django, `Analysis`)
+      y dejarlo en `Anexos/Diseño/Diagramas fuente (Mermaid)/` (`erDiagram`).
+      Las filas de modelamiento de la Carta Gantt figuran cumplidas (#28)
+      pero no hay diagrama. Incluir las tablas que traerían #43 y #44
+      (cámaras, configuración) si se decide su diseño. Cruza con #42.
+- [x] **#47** (dueño: Francisco) Auditoría de commits de GitHub: `.mailmap`
+      que unifica las identidades (hoy 6 autores para 3 personas) y
+      commits y PR sin la línea `Co-Authored-By` ni el pie de Claude
+      Code. Los commits ya publicados no se reescriben (regla 5).
+- [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
       para cualquiera de las dos lecturas del umbral (#24). Walmart no
@@ -162,7 +189,46 @@ hitos" en `docs/curso.md`).
       34% libre contra 11% de la anotación): los marcos entre puertas,
       letreros y vidrio borroso cuentan como huecos de al menos un ancho
       de producto (criterio de #6). Registrar los resultados en
-      `docs/test-plan.md` (#19).
+      `docs/test-plan.md` (#19). Paso (1) hecho en #34 (2026-10-20, 45
+      fotos): mAP50 0.713 (justo sobre 0.70), mAP50-95 0.423, R 0.644;
+      el recall en envasados (0.71) causa casi todas las falsas alertas,
+      así que se recomienda el fine-tuning aunque el mAP50 pase el
+      criterio. Las 45 fotos ya se usaron para evaluar: para afinar con
+      ellas, separar entrenamiento y prueba. Pasos (2) y (3) hechos (2026-10-20, detalle en el registro de
+      `docs/test-plan.md`): Kaggle girado, mAP50 0.704 de frente, 0.688 a
+      20° y **0.637 a 35°** (bajo el criterio 0.70; mAP50-95 de 0.41 a 0.21:
+      se pierde la localización, no el recall). Roboflow Out Of Stock
+      (200 fotos): IoU de huecos 0.106, 24 falsas alertas y 2 quiebres
+      (2 detectados); Empty Shelf (60): IoU 0.162, 3 falsas alertas. Sus
+      espacios vacíos son chicos y no comparables con huecos de un ancho
+      de producto. Con 35° se cumple el criterio: toca el fine-tuning
+      (Kaggle CC0 separado en entrenamiento y prueba, aumentación de giros,
+      color y ruido). Paso (4) hecho (2026-10-20, a ojo y con las métricas por foto de
+      #34): de frente, las botellas (026, R 1.00) y las latas y potes
+      (R 0.93 a 0.98) se detectan igual de bien que las cajas (017, R
+      0.94); el IoU de las latas es menor (0.72 a 0.77 contra 0.89) por
+      cómo se cortan las pilas. El único fallo claro (028, R 0.27) es
+      oclusión y ángulo, no la forma. Los envasados con recall bajo son
+      botellas chicas y lejanas (013, 022), lácteos (032) y el
+      refrigerador (020). Pendiente: el set propio (#32) y el
+      fine-tuning, que no es urgente (se dejó para cuando el PC esté
+      libre). Plan, ya probado hasta el arranque: Kaggle CC0 sin las 8
+      fotos de frutas y verduras sueltas (005, 007, 014, 023, 029, 030,
+      033, 034), separado por foto en 24 de entrenamiento y 12 de prueba
+      (001, 004, 009, 012, 016, 019, 022, 026, 031, 037, 040, 043);
+      entrenamiento con las 24 más sus vistas giradas a 20° y 35° (15°
+      hacia abajo, `oblique_view()`) y 300 fotos de SKU-110K `train` para
+      no olvidar; desde `yolo26s/weights/best.pt`, 30 épocas, SGD lr0
+      0.002, `imgsz=1280`, batch 2, `nms=False`, `max_det=1000`, giro 3°,
+      perspectiva 0.0005, saturación 0.7. Reducir las fotos de Kaggle a
+      2560 px de lado mayor antes: a tamaño completo (5616 x 3744) la
+      carga de datos da ~10 s por iteración; reducidas, ~4 s (unos 12 min
+      por época con 2 procesos de carga). Línea base en las 12 fotos de
+      prueba (`yolo26s` actual), mAP50 / mAP50-95: de frente 0.809 /
+      0.481; 20° 0.781 / 0.334; 35° 0.703 / 0.217. Aceptar el modelo
+      nuevo solo si mejora esas cifras y no baja el mAP50-95 de 0.610 en
+      el `test` de SKU-110K; con 12 fotos de prueba, el resultado es
+      orientativo hasta tener el set propio (#32).
 - [ ] **#31** Excluir de la medición la bodega de reserva que hay sobre
       la góndola de venta (Walmart no la evalúa; acuerdo del 2026-09-16
       en el README). Hoy `compute_availability()` acota la góndola "del
@@ -213,7 +279,7 @@ hitos" en `docs/curso.md`).
         cámaras de sala: siguen en #14. Para lo que SHARD no cubre
         (repisas inclinadas, contorno de la góndola), set chico
         etiquetado a mano (polilíneas, ej. en CVAT o Label Studio).
-- [ ] **#24** (dueño: Francisco) Preguntas para la próxima reunión con
+- [ ] **#24** Preguntas para la próxima reunión con
       Walmart (fecha: por definir). Hasta ahora no han dicho nada de sus
       cámaras, y del Dataset Oculto probablemente no puedan decir nada
       (#21):
@@ -240,6 +306,26 @@ hitos" en `docs/curso.md`).
 
 ## Hecho
 
+- [x] **#34** (dueño: Francisco) Análisis de resultados del informe
+      intermedio (2026-10-20), en `docs/analisis-resultados.md` y la
+      sección 3 del informe (#27). Pipeline completo en CPU sobre las 45
+      fotos de Kaggle (CC0, no usadas al entrenar) con su anotación
+      (`run_pipeline.py --annotations`); el resultado esperado es la
+      anotación medida con el mismo pipeline (`measure_boxes()`). 10
+      mejores y 10 peores casos con lámina (entrada | sistema |
+      esperado) en `docs/analisis-resultados/`, causa y propuesta.
+      Detector (Ultralytics `val`): P 0.843, R 0.644, mAP50 0.713,
+      mAP50-95 0.423 (en test de SKU-110K, 0.950 / 0.610). Sistema, 44
+      fotos únicas (la 035 repite la 004): P 0.889, R 0.555, alerta
+      correcta 84%, error medio de % libre 9.6 pts; envasados (36): P
+      0.900, R 0.713, alerta 92%, 6.2 pts; frutas y verduras sueltas (8,
+      fuera del alcance): R 0.156, 4 de las 6 falsas alertas. Mediana de
+      0.51 s por foto. Patrones: el recall fuera de dominio crea huecos
+      falsos (6 de 7 errores de alerta son falsas alertas); vidrio,
+      sombra y desenfoque en refrigeradores (#46); pocos productos por
+      repisa (011, el único quiebre real del set, queda 3 puntos bajo el
+      umbral). Acciones: fine-tuning (#33), declarar fuera del alcance lo
+      que va a granel (#24), #46 y medir quiebres reales (Roboflow, #32).
 - [x] **#28** (dueño: Francisco) Aplicación web mínima en `web/`
       (Django 6.1 + SQLite; stack elegido el 2026-10-18 con un consejo
       de 5 perspectivas: Django trae login, roles, bcrypt, CSRF, ORM y

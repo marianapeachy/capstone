@@ -178,7 +178,17 @@ ni trabajo:
    en local; su registro de costos por tarea (`ledger`) se desactiva en
    cada PC con `/plugin configure ponytail@ponytail` (se guarda en la
    configuración personal) y su `webhookUrl` queda vacío: nada sale del
-   PC. Si una skill ofrece mergear localmente a `main` (ej.
+   PC. **Al empezar una sesión que toque código, verificar que la skill
+   `ponytail:ponytail` esté en la lista de skills disponibles.** Si no
+   está: `claude plugin list` debe mostrar `ponytail@ponytail` habilitado
+   (si no, `claude plugin install ponytail@ponytail --scope project`), y
+   en Windows la ruta del proyecto que registra
+   `~/.claude/plugins/installed_plugins.json` debe coincidir con la de la
+   sesión, incluida la mayúscula de la unidad (`d:\...` y `D:\...` cuentan
+   como proyectos distintos; pasó el 2026-10-20). Los plugins se cargan
+   al abrir la sesión: tras instalar o arreglar, reiniciar Claude Code, y
+   mientras tanto seguir a mano su `skills/ponytail/SKILL.md`. Si una
+   skill ofrece mergear localmente a `main` (ej.
    `finishing-a-development-branch` de superpowers), elegir siempre la
    opción de Pull Request: estas reglas tienen prioridad.
 
@@ -194,6 +204,16 @@ cada integrante sepa siempre qué le toca y no se pierda:
   `[x]`), o, si no tiene ninguno, proponerle el primer ítem sin dueño de
   "Pendientes (priorizados)" (van en orden de prioridad). Se toma solo
   cuando la persona confirma.
+- **Los ítems abiertos del backlog no tienen dueño** (desde el
+  2026-10-20): cada integrante se los asigna en su entorno. Si la
+  persona **no dijo** en qué ítem va a trabajar, preguntárselo antes de
+  escribir código (con `AskUserQuestion`, listando los ítems sin dueño
+  en orden de prioridad). Con su respuesta, Claude asigna el ítem:
+  agrega `(dueño: <nombre>)` en `PROGRESS.md` y actualiza en la Carta
+  Gantt (regla 7) el Responsable, el Inicio y el Estado de su fila, más
+  la documentación que cite al dueño. Si la persona ya nombró el ítem,
+  no preguntar: asignarlo directo. Ese cambio va en el mismo PR del
+  ítem, no en uno aparte.
 - **Nada fuera del backlog**: si la persona pide algo que no es un ítem,
   agregarlo primero como ítem nuevo (número siguiente al mayor que
   exista), con su dueño, y recién ahí escribir código.
