@@ -6,6 +6,18 @@ Capstone) de Duoc UC en colaboración con Walmart Chile.
 
 ## Reglas de código
 
+- **`/ponytail` para todo trabajo con código** (plugin compartido, ver
+  regla 9 de "Trabajo en equipo"): al escribir, corregir, refactorizar o
+  revisar código (`src/`, `scripts/`, `tests/`, `Dockerfile`), usar la
+  skill `ponytail` (nivel `full`): el cambio más chico que resuelve todo
+  lo pedido, sin abstracciones, opciones ni dependencias que nadie pidió,
+  reutilizando lo que ya hay en el repositorio. Para revisar un diff,
+  `/ponytail-review`. Las reglas de este archivo mandan sobre las de
+  ponytail: TDD con `superpowers:test-driven-development` y `pytest
+  tests/` antes de cada commit siguen siendo obligatorios aunque el
+  cambio sea trivial, y el enfoque híbrido, el formato de bounding boxes
+  y las demás reglas de abajo no se simplifican. No aplica a
+  documentación, minutas ni casos de uso.
 - **Solo scripts `.py`**: no se usan notebooks (`.ipynb`) para el código
   core del pipeline. Notebooks solo se permiten como exploración puntual
   fuera de `src/`, nunca versionados.
@@ -146,8 +158,14 @@ ni trabajo:
 8. **Configuración personal** en `CLAUDE.local.md` y
    `.claude/settings.local.json` (no se versionan). La compartida es este
    archivo y `.claude/settings.json`.
-9. **Plugins compartidos** (`.claude/settings.json`): `yolo@ultralytics`
-   y `superpowers`. Si una skill ofrece mergear localmente a `main` (ej.
+9. **Plugins compartidos** (`.claude/settings.json`): `yolo@ultralytics`,
+   `superpowers` y `ponytail@ponytail` (fijo en la versión v5.3.2; para
+   subir de versión, cambiar el `ref` por PR después de revisar sus
+   *hooks*). Ponytail trae *hooks* que corren Node en cada sesión, solo
+   en local; su registro de costos por tarea (`ledger`) se desactiva en
+   cada PC con `/plugin configure ponytail@ponytail` (se guarda en la
+   configuración personal) y su `webhookUrl` queda vacío: nada sale del
+   PC. Si una skill ofrece mergear localmente a `main` (ej.
    `finishing-a-development-branch` de superpowers), elegir siempre la
    opción de Pull Request: estas reglas tienen prioridad.
 

@@ -35,10 +35,18 @@
         "source": "github",
         "repo": "obra/superpowers-marketplace"
       }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail",
+        "ref": "v5.3.2"
+      }
     }
   },
   "enabledPlugins": {
     "yolo@ultralytics": true,
-    "superpowers@superpowers-marketplace": true
+    "superpowers@superpowers-marketplace": true,
+    "ponytail@ponytail": true
   }
 }

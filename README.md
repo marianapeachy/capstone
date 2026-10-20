@@ -183,7 +183,12 @@ de cada uno y cuál proponer después (ver "Trabajo en equipo" en
   e iniciar sesión con la cuenta propia. Claude lee `CLAUDE.md` al empezar, que
   incluye el flujo de trabajo en equipo (ramas, PR y dueños de ítems). Al abrir
   el proyecto, aceptar la instalación de los plugins compartidos
-  (`yolo@ultralytics` y `superpowers`, declarados en `.claude/settings.json`).
+  (`yolo@ultralytics`, `superpowers` y `ponytail`, declarados en
+  `.claude/settings.json`). Ponytail requiere Node.js (corre sus *hooks*
+  con `node`); después de instalarlo, desactivar su registro de costos con
+  `/plugin configure ponytail@ponytail` (`ledger` en falso). Desde la
+  terminal: `claude plugin install ponytail@ponytail --scope project
+  --config ledger=false`.
 - **GitHub CLI** (`gh auth login`) para abrir Pull Requests desde la terminal.
 - **Docker Desktop** para construir y probar la imagen (ver abajo).
 - **Entrenamiento del detector** (PC con GPU NVIDIA): ver

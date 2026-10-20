@@ -629,6 +629,14 @@ hitos" en `docs/curso.md`).
       medición, no salida) y las preguntas abiertas de `docs/curso.md`
       (si una foto con varias góndolas o módulos da una o varias
       alertas; si sigue el umbral de 30%).
+- [x] **#41** (dueño: Francisco) Plugin `ponytail` para el trabajo con
+      código (pedido de Francisco, 2026-10-19): skill `/ponytail` de
+      github.com/DietrichGebert/ponytail (MIT), compartida en
+      `.claude/settings.json` y fija en v5.3.2. Revisados sus *hooks*
+      antes de instalar: corren Node en local (reglas y mapa del repo al
+      iniciar la sesión); el registro de costos (`ledger`) queda
+      desactivado y el *webhook* vacío. Regla de uso en `CLAUDE.md`
+      ("Reglas de código" y regla 9) y paso de instalación en el README.
 
 ## Notas
 
