@@ -22,6 +22,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | `scripts/run_pipeline.py` | Hecho: pipeline completo por foto, vista limpia, JSON y evaluación por lotes con IoU (CU07) | #8 |
 | Datasets | 5 descargados y convertidos al estándar, con descarga reproducible | #10, #11, #12 |
 | CI | Hecho: pytest + `docker build` en cada PR, `main` protegida | #13 |
+| `web/` | Hecho: app web Django con login por perfil (CU00), usuarios y roles (CU06) y análisis de fotos (CU01) | #28 |
 
 ## Plan de trabajo por fases (2026-09-27)
 
@@ -65,11 +66,6 @@ hitos" en `docs/curso.md`).
       atrasado: el profesor lo está esperando. Ahora es el informe
       intermedio que pide el cliente, entrega 2026-10-21 (puntos en
       "Requisitos vigentes" de `docs/curso.md`).
-- [ ] **#28** (dueño: Francisco) Aplicación web mínima: login por
-      perfil (Reponedor, Jefe de Salón, Administrador; CU00), CRUD de
-      usuarios y roles (CU06) y base de datos. Ya atrasado: el profesor
-      espera CRUD y Login operativos. Primero elegir el stack (ej.
-      FastAPI o Django con SQLite).
 - [ ] **#29** (dueño: Nicko) Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
@@ -112,7 +108,30 @@ hitos" en `docs/curso.md`).
       muestra.
 - [ ] **#39** Instalar la aplicación en el servidor del CITT. Bloqueado:
       las instrucciones por sección llegan en los próximos días. Punto
-      de partida: la imagen Docker que ya construye la CI (#13).
+      de partida: la imagen Docker que ya construye la CI (#13). Para la
+      app web (#28): copiar los pesos `yolo26s` al volumen `/data`,
+      configurar SMTP para los correos de CU06 y servir con HTTPS
+      (cookies seguras). Hallazgos 15, 16 y 18 de
+      `docs/auditoria-app-web.md`.
+- [ ] **#42** Rehacer las plantillas de C.U, sus diagramas de secuencia
+      y el diagrama de arquitectura según la app web Django (#28): sin
+      API REST, JWT ni React; sesiones, formularios y plantillas HTML.
+      Qué cambiar en cada uno: `docs/cambios-cu.md`. Hacerlo antes de
+      las evidencias de avance (2026-10-26), donde se comparan diseño y
+      sistema.
+- [ ] **#43** Dashboard de disponibilidad (CU03, RF05): estado de cada
+      góndola según su última foto (verde con menos de la mitad del
+      umbral, amarillo hasta el umbral, rojo con alerta, "Sin datos" sin
+      foto reciente) e historial de capturas. Con el pasillo y la
+      góndola de cada análisis (#28) es una consulta por góndola.
+      Hallazgo 12 de `docs/auditoria-app-web.md`.
+- [ ] **#44** Configuración del umbral y de las cámaras (CU05, RF07):
+      umbral de espacio libre entre 1% y 100% (hoy fijo en 30%,
+      `AvailabilityParams.critical_free_fraction`) y cámaras asociadas a
+      pasillo y góndola con su calibración de lente. Hallazgo 14.
+- [ ] **#45** Privacidad de las fotos (RNF05): las fotos guardadas
+      pueden mostrar clientes. Proponer a Walmart (#24) borrarlas tras N
+      días o difuminar rostros antes de guardarlas. Hallazgo 17.
 - [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
@@ -219,6 +238,47 @@ hitos" en `docs/curso.md`).
 
 ## Hecho
 
+- [x] **#28** (dueño: Francisco) Aplicación web mínima en `web/`
+      (Django 6.1 + SQLite; stack elegido el 2026-10-18 con un consejo
+      de 5 perspectivas: Django trae login, roles, bcrypt, CSRF, ORM y
+      migraciones probados, y React duplicaba el trabajo para una
+      interfaz que Walmart considera opcional; justificación en el
+      README, "Estrategia Algorítmica y Arquitectura"). CU00: login con
+      RUT o correo, vista principal por perfil (Administrador ->
+      Usuarios, Jefe de Salón -> Análisis, Reponedor -> Alertas) y
+      bloqueo tras 5 intentos fallidos. CU06: el Administrador crea y
+      edita usuarios con rol y estado; la contraseña la define el
+      usuario con un enlace de un solo uso (sin contraseñas por correo)
+      y desactivar una cuenta cierra sus sesiones. Los usuarios se
+      desactivan, no se borran. CU01 desde la web: subir una foto,
+      correr `run_image()` y guardar en la base el % libre de la góndola
+      completa, la alerta y la foto anotada (solo visible con sesión).
+      Imagen Docker con gunicorn (1 worker: cada uno cargaría su copia
+      de YOLO26) y volumen `/data` para la base, las fotos y los pesos.
+      Tests: 10 en `tests/test_web.py` (pytest-django); suite completa
+      203 OK. Prueba manual de punta a punta con YOLO real (pesos
+      `smoke`, foto Kaggle 039): login, crear usuario, análisis en
+      7,4 s con la carga del modelo. Auditoría antes de publicar
+      (2026-10-19, `docs/auditoria-app-web.md`, contra RF, RNF, CU y
+      mockups) y rediseño con las skills `design-taste-frontend` e
+      `impeccable` (contexto en `PRODUCT.md`, sistema en `DESIGN.md`):
+      mundo "fleje de góndola" elegido por el usuario entre 6
+      direcciones (cada góndola dibujada como sus repisas, con los
+      huecos en su posición real), estilos, fuente e íconos servidos
+      desde la app sin CDN (whitenoise). P0 resueltos: pasillo y
+      góndola al subir la foto; ciclo de la alerta (Activa, En proceso
+      con quién y desde cuándo, Completada; una foto nueva reemplaza la
+      alerta abierta o confirma la reposición); vista de alertas para
+      el teléfono con recarga cada minuto; estados vacíos y páginas
+      403/404/500; sesión que expira tras 2 h sin uso; foto de hasta
+      20 MB; dígito verificador del RUT; el Administrador no puede
+      desactivarse; el modelo se precarga al arrancar el servidor.
+      Adaptado al alcance por góndola completa (#40, 2026-10-19): el
+      fleje muestra solo la geometría de los huecos, sin % ni quiebre
+      por repisa. Tests: 22 en `tests/test_web.py`. Pendiente: confirmar con el
+      profesor que Django + SQLite cuenta como "estándar de la
+      industria" y CU06 como implementado; los P1 de la auditoría
+      quedan en #7, #39, #43, #44 y #45.
 - [x] **#1** (dueño: Francisco) Implementar
       `src/preprocessing/roi_filter.py`: recortador de región de interés
       (ROI) sobre la góndola detectada, incluyendo normalización de
@@ -667,9 +727,9 @@ hitos" en `docs/curso.md`).
     arrastraba CUDA 13 + cuDNN (varios GB). Resolución final verificada
     con `uv pip compile` para Linux/py3.10: `torch 2.14.0+cpu`,
     `ultralytics 8.4.164`, `opencv-python 4.14.0.94`, sin paquetes CUDA.
-- Python 3.10 llega a fin de soporte en octubre de 2026 (el entorno local
-  usa 3.14). Pendiente decidir si se sube la imagen a 3.12+; decidir a
-  más tardar 2026-10-16.
+- Python de la imagen y del CI: 3.13 (decidido 2026-10-18, #28). 3.10
+  termina su soporte en octubre de 2026 y Django 6.1 exige 3.12 o
+  superior; la suite ya corría en 3.14 en local.
 - La carpeta `Fase 1/` (entregables de la Fase 1 académica) no se toca.
 - README.md se actualizará incrementalmente a medida que se implementen
   los módulos.

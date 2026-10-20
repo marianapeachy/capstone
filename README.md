@@ -74,7 +74,7 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ## 👥 Perfiles de Usuario
 
-La interfaz (dashboard y alertas) va después del pipeline: Walmart pidió priorizar que la lógica funcione. Los casos de uso CU00-CU07 están en `Anexos/Diseño/`.
+La interfaz va después del pipeline: Walmart pidió priorizar que la lógica funcione. La aplicación web (ver "Aplicación web") ya tiene el login por perfil (CU00), la gestión de usuarios y roles (CU06) y el análisis de fotos (CU01); el dashboard, los reportes y la configuración siguen pendientes. Los casos de uso CU00-CU07 están en `Anexos/Diseño/`.
 
 1. **Reponedor de Tienda**: Recibe alertas inmediatas en dispositivos móviles para acudir a los pasillos con quiebre crítico.
 2. **Jefe de Salón / Supervisor**: Visualiza dashboards de disponibilidad por pasillo y exporta reportes periódicos de desempeño.
@@ -87,6 +87,7 @@ La interfaz (dashboard y alertas) va después del pipeline: Walmart pidió prior
 * **Enfoque Híbrido**: Evaluación de modelos de extracción de características (**YOLO26** de Ultralytics, con cabeza sin NMS para góndolas densas) combinados obligatoriamente con **Visión Computacional Clásica** (detección de bordes, transformaciones matriciales y filtros morfológicos) para mantener control matemático sobre el ruido visual. La segmentación automática de la góndola y sus repisas es parte de este pre-procesamiento clásico: se ejecuta sobre la imagen ya corregida (dewarping de lente y luego CLAHE) y antes de la inferencia. Después de la inferencia, los niveles de repisa que se miden combinan las repisas de la segmentación con las filas de productos detectados, como franjas inclinadas: así el cálculo sigue funcionando con la cámara en ángulo (vista oblicua o cámara de sala), donde las repisas se ven inclinadas.
 * **Pipeline Modular**: Separación física de los componentes de *Pre-procesamiento*, *Inferencia de Modelo* y *Post-procesamiento*.
 * **Código de Producción**: Desarrollo exclusivo en scripts modulares de Python (`.py`), descartando notebooks para la ejecución core.
+* **Aplicación web con Django** (decidido 2026-10-18, ítem #28): el diagrama de la Fase 1 proponía una API FastAPI/Flask con JWT y un frontend React. Se eligió Django con SQLite y páginas generadas en el servidor porque trae ya probados el login, los roles (grupos), el hash de contraseñas (bcrypt, como pedía el diseño), la protección CSRF, el ORM y las migraciones: el equipo no escribe a mano código de seguridad. Un frontend aparte (React) duplicaba el trabajo y sumaba Node al CI y a Docker para una interfaz que Walmart considera opcional. Se mantienen los módulos del diseño: backend Python, RBAC, base de datos relacional y vistas por perfil. En vez de JWT se usa la sesión de Django (cookie firmada, `HttpOnly`): CU06 pide invalidar al instante las sesiones de un usuario desactivado, y un JWT no se puede revocar antes de que expire. La app solo llama a `run_image()` de `src/pipeline.py`, como `scripts/run_pipeline.py`: no toca las etapas.
 
 ---
 
@@ -112,10 +113,12 @@ La interfaz (dashboard y alertas) va después del pipeline: Walmart pidió prior
 │   ├── reporting/          # Generadores de reportes (Excel, CSV, PDF)
 │   └── evaluation/         # Métricas de evaluación (fuera del pipeline)
 ├── scripts/                # CLI del pipeline y visor de segmentación
+├── web/                    # Aplicación web Django (login, usuarios y roles, análisis de fotos)
+├── manage.py               # Comandos de Django (runserver, migrate, createsuperuser)
 ├── data/                   # Datasets (data/raw y data/processed, no versionados)
 ├── tests/                  # Pruebas unitarias e integración (pytest)
 ├── Fase 1/                 # Entregables académicos de la Fase 1 (no modificar)
-├── Dockerfile              # Imagen de ejecución del pipeline (python:3.10-slim-trixie)
+├── Dockerfile              # Imagen de la app web y del pipeline (python:3.13-slim-trixie)
 ├── CLAUDE.md               # Memoria de proyecto y reglas de código para IA
 ├── PROGRESS.md             # Bitácora de tareas por sprint
 ├── README.md               # Documentación principal del repositorio
@@ -230,6 +233,50 @@ Las etapas también se prueban por separado:
 `python scripts/visualize_segmentation.py` (segmentación, requiere
 datasets en `data/raw/`) y los scripts `evaluate_*.py`.
 
+### Aplicación web
+
+```bash
+python manage.py migrate            # crea la base (data/processed/web/db.sqlite3) y los 3 perfiles
+python manage.py createsuperuser    # primer Administrador (RUT, correo y contraseña)
+python manage.py runserver          # http://localhost:8000
+```
+
+- **CU00**: se entra con RUT (con o sin puntos) o correo; cada perfil
+  llega a su vista (Administrador -> Usuarios, Jefe de Salón -> Análisis,
+  Reponedor -> Alertas). Tras 5 intentos fallidos seguidos la cuenta queda
+  inactiva hasta que el Administrador la reactive. La sesión expira tras
+  2 h sin uso.
+- **CU06**: el Administrador crea y edita usuarios (RUT con dígito
+  verificador validado, nombre, correo, rol y estado); no puede
+  desactivarse a sí mismo. La contraseña no se envía por correo: el usuario recibe
+  un enlace de un solo uso para definirla. En desarrollo el correo se
+  imprime en la consola de `runserver`. Desactivar una cuenta cierra sus
+  sesiones abiertas. Los usuarios no se borran, se desactivan, para no
+  perder quién hizo cada análisis.
+- **CU01**: el Administrador y el Jefe de Salón suben una foto con su
+  pasillo y góndola (hasta 20 MB). La app corre el pipeline y guarda en la
+  base el % libre de la góndola completa, la alerta y la foto anotada.
+  Las fotos solo se ven con sesión iniciada.
+- **CU02**: "Alertas" (los tres perfiles, pensada para el teléfono del
+  reponedor) lista las góndolas con quiebre abierto y se actualiza sola
+  cada minuto. Cada alerta pasa por Activa -> En proceso (quién la tomó y
+  desde cuándo) -> Completada. Una góndola tiene a lo más una alerta
+  abierta: una foto nueva con quiebre reemplaza a la anterior, y una foto
+  sin quiebre confirma la reposición y la cierra.
+- **Diseño**: el mundo visual es el "fleje de góndola": cada góndola se
+  dibuja como sus repisas de frente, con los huecos rayados en su posición
+  real (contexto de producto en [PRODUCT.md](PRODUCT.md) y sistema en
+  [DESIGN.md](DESIGN.md)). Estilos, fuente (Archivo, OFL) e íconos
+  (Phosphor, MIT) se sirven desde la app con whitenoise, sin CDN: la red
+  de la tienda o el servidor del CITT pueden no tener internet.
+
+Variables de entorno (todas opcionales en desarrollo):
+`SHELFVISION_WEIGHTS` (pesos de YOLO26; por defecto los de
+`run_pipeline.py`), `SHELFVISION_DATA_DIR` (base y fotos; por defecto
+`data/processed/web/`), `DJANGO_DEBUG` (`1` por defecto; `0` en el
+servidor), `DJANGO_SECRET_KEY` (obligatoria con `DJANGO_DEBUG=0`),
+`DJANGO_ALLOWED_HOSTS` (separados por coma) y `DJANGO_EMAIL_BACKEND`.
+
 El CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) corre `pytest` y el `docker build` (con los tests dentro de la imagen) en cada Pull Request hacia `main` y en cada push a `main`; un PR solo se puede mergear con ambos checks en verde.
 
 ### Ejecución con Docker
@@ -239,8 +286,12 @@ docker build -t shelfvision-ai .
 # run_pipeline.py con las fotos y los pesos montados (sin argumentos, muestra el uso):
 docker run --rm -v "$(pwd)/fotos:/app/fotos" -v "$(pwd)/data/processed/training:/app/data/processed/training" \
   -v "$(pwd)/salida:/app/salida" shelfvision-ai python scripts/run_pipeline.py fotos --out salida
+# Aplicación web en http://localhost:8000. /data guarda la base, las fotos y los pesos
+# (copiar best.pt a ./web-data/); sin ese volumen se pierden al recrear el contenedor:
+docker run -d -p 8000:8000 -v "$(pwd)/web-data:/data" -e DJANGO_SECRET_KEY=<clave-larga-al-azar>   -e DJANGO_ALLOWED_HOSTS=localhost,<host-del-servidor> --name shelfvision shelfvision-ai
+docker exec -it shelfvision python manage.py createsuperuser
 # Pruebas dentro del contenedor (tests/ no se copia a la imagen, se monta):
-docker run --rm -v "$(pwd)/tests:/app/tests" shelfvision-ai python -m pytest tests/
+docker run --rm -e DJANGO_SECRET_KEY=prueba -v "$(pwd)/tests:/app/tests" shelfvision-ai python -m pytest tests/
 ```
 
 ---
