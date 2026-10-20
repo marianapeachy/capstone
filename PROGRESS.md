@@ -107,14 +107,20 @@ hitos" en `docs/curso.md`).
       2026-10-21): solo funcionalidades implementadas y resultados que
       la aplicación genera hoy, con fotos que se pueden mostrar (no
       SKU-110K). El pipeline (#8) y la app web (#28) ya están en `main`.
-- [ ] **#37** Evidencias de avance de la Fase 2, a más tardar
+- [ ] **#37** (dueño: Mariana) Evidencias de avance de la Fase 2, a más tardar
       2026-10-26: diario de reflexión 2.1, guía 2.4 (resumen del
       avance, plan de trabajo con estado y ajustes) e informe con el
       formato de las pautas 2.2 y 2.3 (abstract en español e inglés;
       conclusiones y reflexiones individuales en inglés). Todo en Git
       con la estructura y nombres pedidos; la planilla de avance da 15%
       al aporte de cada integrante visible en el repositorio. Detalle
-      en "Requisitos vigentes" de `docs/curso.md`.
+      en "Requisitos vigentes" de `docs/curso.md`. Avance (2026-10-20):
+      guía 2.4 llenada en su plantilla oficial (`Fase 2/2.4_GuiaEstudiante_Fase
+      2_DesarrolloProyecto APT.docx`); contenido y borrador del diario 2.1
+      en `docs/evidencias-avance.md`. Falta la plantilla 2.1 (no venía en
+      el PR #42) y las partes de opinión del equipo (autoevaluación,
+      evaluación del trabajo en grupo y causa de la semana del 12 al 16
+      de octubre sin avances).
 - [ ] **#38** Feria de informática (semana del 2026-10-26; día y hora
       por informar): definir qué integrante va (al menos uno) y qué se
       muestra.
