@@ -103,7 +103,8 @@ hitos" en `docs/curso.md`).
       y un ejemplo reproducible con fotos Kaggle CC0 (verificado: foto 026
       da 2% libre, sin alerta). Los pesos no se publican (licencia de
       SKU-110K): se piden al equipo o se entrenan con `docs/training.md`.
-- [ ] **#36** (dueño: Francisco) Video de demostración de 5 a 10 minutos (entrega
+- [ ] **#36** (dueño: Nicko; antes Francisco, reasignado el 2026-10-20
+      para repartir el trabajo del informe) Video de demostración de 5 a 10 minutos (entrega
       2026-10-21): solo funcionalidades implementadas y resultados que
       la aplicación genera hoy, con fotos que se pueden mostrar (no
       SKU-110K). El pipeline (#8) y la app web (#28) ya están en `main`.
