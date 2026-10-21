@@ -28,9 +28,9 @@ def export(rows: list[dict], fmt: str, title: str) -> bytes:
     """Bytes del reporte en `fmt` ("xlsx", "csv" o "pdf"). `title` va como
     encabezado del PDF y nombre de la hoja de Excel."""
     table = [
-        [row["fecha"].strftime("%Y-%m-%d %H:%M"), row["pasillo"], row["gondola"],
+        [row["fecha"].strftime("%Y-%m-%d %H:%M"), _text(row["pasillo"]), _text(row["gondola"]),
          round(row["free_fraction"] * 100, 1), "Sí" if row["critical"] else "No",
-         row["estado"], row["usuario"]]
+         row["estado"], _text(row["usuario"])]
         for row in rows
     ]
     if fmt == "csv":
@@ -40,6 +40,13 @@ def export(rows: list[dict], fmt: str, title: str) -> bytes:
     if fmt == "pdf":
         return _pdf(table, title)
     raise ValueError(f"Formato desconocido: {fmt}")
+
+
+def _text(value: str) -> str:
+    """Texto escrito por un usuario: si empieza como una formula ("=", "+",
+    "-", "@"), Excel la ejecutaria al abrir el reporte; el apostrofo la deja
+    como texto (inyeccion de formulas en CSV/Excel)."""
+    return f"'{value}" if value[:1] in ("=", "+", "-", "@") else value
 
 
 def _csv(table: list[list]) -> bytes:

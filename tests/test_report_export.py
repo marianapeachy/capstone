@@ -48,3 +48,11 @@ def test_unknown_format_is_rejected():
     with pytest.raises(ValueError):
         export(ROWS, "docx", "Reporte")
 
+
+def test_text_that_looks_like_a_formula_is_not_run_by_excel():
+    # Pasillo y góndola los escribe un usuario: "=..." no debe llegar como fórmula.
+    rows = [{**ROWS[0], "pasillo": "=1+1", "gondola": "@SUM(A1)"}]
+    cell = openpyxl.load_workbook(io.BytesIO(export(rows, "xlsx", "Reporte"))).active["B2"]
+    assert cell.data_type == "s" and cell.value == "'=1+1"
+    line = export(rows, "csv", "Reporte").decode("utf-8-sig").splitlines()[1]
+    assert ",'=1+1,'@SUM(A1)," in line
