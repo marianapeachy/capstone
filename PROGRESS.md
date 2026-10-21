@@ -58,7 +58,7 @@ Los cuatro primeros responden al mensaje del profesor de la semana 8, y
 los siguientes hasta el #39, al del 2026-10-16 (ver "Próximos
 hitos" en `docs/curso.md`).
 
-- [ ] **#27** Informe de estado de avance para el
+- [ ] **#27** (dueño: Francisco) Informe de estado de avance para el
       profesor, con los puntos que pidió su correo de la semana 7. Ya
       atrasado: el profesor lo está esperando. Ahora es el informe
       intermedio que pide el cliente, entrega 2026-10-21 (puntos en
@@ -85,6 +85,15 @@ hitos" en `docs/curso.md`).
       Actualización (2026-10-21): reflexión de Mariana agregada y plan de
       mejoras (#26) corregido a cumplido (Tabla 11, resumen de la Gantt y
       retrasos). Falta el enlace al video y la reflexión de Nicko.
+      Actualización (2026-10-21, versión final): estado por módulo y por
+      C.U al día (CU04 y reportes #7, plantillas y diagramas #42, 5 de 8
+      C.U), Carta Gantt de 49 actividades (36 cumplidas), riesgos y
+      próximos pasos con los hallazgos de la auditoría (#49 a #54) y el #55
+      (responsables y fechas propuestos, a confirmar por cada dueño),
+      fine-tuning (#33, DET-07) en 3.2 y 3.5 (los 20 casos se midieron con
+      el `yolo26s` original), PR hasta el #57 y commits por integrante.
+      Sigue abierto: enlace al video (#36, Nicko), reflexión de Nicko y
+      revisión de la reflexión de Francisco.
 - [ ] **#29** Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
