@@ -10,6 +10,8 @@ data/processed/training/<nombre>/ (weights/best.pt, weights/last.pt).
 Uso (en un PC con GPU NVIDIA; ver docs/training.md):
     python scripts/train_detector.py train --variant yolo26s
     python scripts/train_detector.py train --variant yolo26s-p2
+    python scripts/train_detector.py finetune --weights data/processed/training/yolo26s/weights/best.pt \
+        --data data/processed/yolo/finetune/data.yaml --workers 2   # item #33
     python scripts/train_detector.py resume data/processed/training/yolo26s
     python scripts/train_detector.py resume data/processed/training/yolo26s-p2 --batch 1
     python scripts/train_detector.py val --weights data/processed/training/yolo26s/weights/best.pt
@@ -97,6 +99,30 @@ def train(args: argparse.Namespace) -> None:
     )
 
 
+def finetune(args: argparse.Namespace) -> None:
+    """Afina unos pesos ya entrenados (item #33): lr bajo, SGD y aumentacion suave."""
+    require_cuda(args.device)
+    prepare_process(args.device, args.vram_reserve)
+    YOLO(args.weights).train(
+        data=str(args.data),
+        epochs=args.epochs,
+        imgsz=args.imgsz,
+        batch=args.batch,
+        device=args.device,
+        workers=args.workers,
+        project=str(RUNS_DIR),
+        name=args.name,
+        optimizer="SGD",
+        lr0=args.lr0,
+        degrees=3,
+        perspective=0.0005,
+        hsv_s=0.7,
+        nms=False,
+        max_det=MAX_DET,
+        seed=0,
+    )
+
+
 def resume(args: argparse.Namespace) -> None:
     run = Path(args.run)
     last = run if run.suffix == ".pt" else run / "weights" / "last.pt"
@@ -167,6 +193,14 @@ def main() -> None:
     p_train.add_argument("--patience", type=int, default=15, help="epocas sin mejora antes de parar")
     p_train.add_argument("--name", help="nombre de la corrida (default: la variante)")
     p_train.set_defaults(func=train)
+
+    p_ft = sub.add_parser("finetune", parents=[common, vram], help="afinar pesos ya entrenados con otro dataset")
+    p_ft.add_argument("--weights", required=True, help="pesos de partida (best.pt)")
+    p_ft.add_argument("--epochs", type=int, default=30)
+    p_ft.add_argument("--lr0", type=float, default=0.002)
+    p_ft.add_argument("--batch", type=int, default=2)
+    p_ft.add_argument("--name", default="yolo26s-finetune")
+    p_ft.set_defaults(func=finetune)
 
     p_resume = sub.add_parser("resume", parents=[vram], help="continuar una corrida cortada")
     p_resume.add_argument("run", help="carpeta de la corrida o su weights/last.pt")

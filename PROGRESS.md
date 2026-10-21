@@ -16,7 +16,7 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 | Etapa | Estado | Ítems |
 | --- | --- | --- |
 | `src/preprocessing/` | Hecho: corrección de imagen, segmentación de góndola y recorte de ROI | #1, #2, #3, #4 |
-| `src/models/` | Hecho: `ProductDetector` y detector `yolo26s` entrenado (mAP50-95 0.610 en test de SKU-110K; fuera de dominio, en Kaggle, mAP50 0.713 y R 0.644: falta fine-tuning) | #5, #33, #34 |
+| `src/models/` | Hecho: `ProductDetector` y detector `yolo26s` entrenado (mAP50-95 0.610 en test de SKU-110K; fuera de dominio, en Kaggle, mAP50 0.713 y R 0.644; el fine-tuning `yolo26s-finetune` lo sube a 0.854 / 0.809 en las 12 fotos de prueba) | #5, #33, #34 |
 | `src/postprocessing/` | Hecho: disponibilidad medida a lo largo de cada repisa; se informan solo la alerta (libre >= 30%) y el % libre de la góndola completa | #6, #40 |
 | `src/reporting/` | En desarrollo: vista anotada hecha (`annotate.py`); faltan los reportes Excel, CSV y PDF | #8, #7 |
 | `scripts/run_pipeline.py` | Hecho: pipeline completo por foto, vista limpia, JSON y evaluación por lotes con IoU (CU07) | #8 |
@@ -175,6 +175,67 @@ hitos" en `docs/curso.md`).
       que unifica las identidades (hoy 6 autores para 3 personas) y
       commits y PR sin la línea `Co-Authored-By` ni el pie de Claude
       Code. Los commits ya publicados no se reescriben (regla 5).
+- [ ] **#49** Alertas atómicas en la app web (auditoría 2026-10-21, `web/views.py`
+      `analyze()` y `alerta_accion()`): hoy cerrar la alerta anterior,
+      guardar la foto y crear el análisis no van en una transacción. Si
+      falla el guardado, la alerta vieja queda cerrada y no hay otra; con
+      dos fotos de la misma góndola a la vez quedan dos abiertas; y
+      "Tomar" justo después de un reemplazo reabre la alerta
+      reemplazada. Arreglo: `transaction.atomic()`, guardar el archivo
+      antes de cerrar la alerta vieja y `filter(pk, estado=...).update()`
+      mirando cuántas filas cambió. Incluir normalizar pasillo y góndola
+      (`strip().upper()`: "a1" y "A1" hoy son góndolas distintas). Con test.
+- [ ] **#50** Configuración segura de la app web antes de instalarla (auditoría
+      2026-10-21; se cruza con #39): `DJANGO_DEBUG` vale "1" si no se
+      define (con la clave pública de desarrollo), faltan
+      `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE` y
+      `SECURE_SSL_REDIRECT`, y el contenedor corre como root. Arreglo:
+      debug apagado por defecto, cookies seguras y HTTPS cuando
+      `DEBUG` es falso, y `USER` sin privilegios en el Dockerfile con
+      `/data` escribible.
+- [ ] **#51** Bloqueo de cuentas (CU00, auditoría 2026-10-21, `web/auth.py`):
+      con solo saber el RUT se bloquea la cuenta de cualquiera, también la
+      del único Administrador (nadie puede reactivarla desde la
+      interfaz), y `failed_logins += 1` no es atómico, así que intentos
+      en paralelo pasan de 5. Propuesta: contar con `F()` y bloquear por
+      tiempo (ej. 15 min) en vez de desactivar la cuenta. Requiere
+      confirmar el cambio de CU00 con el equipo.
+- [ ] **#52** Foto sin productos detectados (auditoría 2026-10-21): con 0
+      detecciones, `compute_availability()` da 100% libre y alerta
+      crítica (foto tapada, oscura o sin góndola). Rechazar el análisis
+      en la app web ("no se detectaron productos") y definir qué
+      informa `run_pipeline.py` en ese caso. Cruza con #24 (alcance).
+- [ ] **#53** Rendimiento y robustez de la app web (auditoría 2026-10-21): las
+      listas de análisis y de alertas cargan el JSON `result` de cada
+      fila sin usarlo (`.defer("result")`); y si el correo del enlace de
+      contraseña falla al crear un usuario, queda creado sin contraseña
+      y un error 500 (capturar el error y ofrecer reenviar el enlace).
+- [ ] **#54** Limpieza (auditoría 2026-10-21): `free_volume_cm3()` solo la
+      usan los tests (Nivel 1 no se informa, #40) y `openpyxl` y `fpdf2`
+      están en `requirements.txt` sin que nada los importe (los traerá
+      #7: si #7 no los usa, quitarlos). Fijar por commit las acciones de
+      `.github/workflows/ci.yml`.
+- [ ] **#55** Entrenar y medir el detector con ruido visual de cámara de sala
+      (pedido de Francisco, 2026-10-21): el mismo ruido que produce una
+      cámara fija apuntando a una góndola de supermercado. Hoy ni el
+      entrenamiento ni las pruebas lo tienen (SKU-110K y Kaggle son fotos
+      limpias). Ruidos a simular: ruido del sensor (gaussiano y de
+      poca luz), compresión JPEG fuerte, baja resolución, desenfoque de
+      movimiento y de foco, cambios de exposición y contraluz, reflejos
+      y brillo en puertas de vidrio (#46), distorsión de lente
+      (`LensCalibration`, #3) y personas o carros que tapan parte de la
+      góndola. Pasos: (1) función de degradación en
+      `src/datasets/synthetic.py` (junto a `oblique_view()`, con test);
+      (2) medir primero el `yolo26s-finetune` con las 12 fotos de prueba
+      de Kaggle degradadas, por tipo y nivel de ruido, y registrarlo en
+      `docs/test-plan.md` (DET-07); (3) si cae bajo mAP50 0.70, un nuevo
+      fine-tuning (`prepare_finetune_dataset.py`) con las 24 fotos de
+      entrenamiento degradadas al azar; (4) comparar contra el modelo
+      sin ruido. Solo con fotos que se pueden modificar (Kaggle CC0,
+      SHARD y Roboflow CC BY 4.0): nunca degradar SKU-110K para generar
+      imágenes (licencia). Se cruza con #14 (imágenes tipo CCTV
+      sintéticas), #33 y #46; los parámetros reales de la cámara de
+      Walmart (#24) afinarían los niveles de ruido.
 - [x] **#7** (dueño: Mariana) Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
@@ -186,69 +247,6 @@ hitos" en `docs/curso.md`).
       avisa y no genera archivo). Una fila por análisis: fecha, pasillo,
       góndola, % libre, alerta, estado y quién subió la foto. Por qué
       estos formatos: tabla de decisiones técnicas del README.
-- [ ] **#33** Verificar el detector `yolo26s` fuera de SKU-110K, en las
-      condiciones con que evaluará Walmart (IoU contra anotación a mano;
-      fotos frontales, en ángulo y desde arriba). Hoy solo está medido en
-      el test de SKU-110K, que es igual al entrenamiento. Depende del modo
-      por lotes de #8 (CU07). Con datos ya descargados:
-      (1) Kaggle supermarket-shelves (45 fotos con productos anotados,
-      CC0, no usadas al entrenar): P, R, mAP50 y mAP50-95;
-      (2) las mismas fotos giradas con `oblique_view()` a 20° y 35° (#22);
-      (3) Roboflow Out Of Stock y Empty Shelf (espacios vacíos anotados):
-      IoU entre los huecos de `compute_availability()` y los vacíos
-      anotados; (4) revisión a ojo de botellas y envases cilíndricos
-      frente a cajas (los datos no etiquetan la forma). Después, el set
-      propio de #32. Criterio: reentrenar (fine-tuning con Kaggle CC0,
-      fotos propias y aumentación de giros chicos, color y ruido) solo si
-      alguna medición queda bajo mAP50 0.70 (referencia de Walmart: con
-      ~70% el problema está casi resuelto); nunca generar imágenes
-      sintéticas desde SKU-110K (licencia). Primera prueba de humo con #8
-      (2026-10-10, 6 fotos de Kaggle, ver `docs/test-plan.md`): R 0.425
-      por la foto 030 (verduras sueltas, fuera del alcance: 21 de 546);
-      sin ella, R 0.70. Falsa alerta en la 020 (refrigeradores llenos,
-      34% libre contra 11% de la anotación): los marcos entre puertas,
-      letreros y vidrio borroso cuentan como huecos de al menos un ancho
-      de producto (criterio de #6). Registrar los resultados en
-      `docs/test-plan.md` (#19). Paso (1) hecho en #34 (2026-10-20, 45
-      fotos): mAP50 0.713 (justo sobre 0.70), mAP50-95 0.423, R 0.644;
-      el recall en envasados (0.71) causa casi todas las falsas alertas,
-      así que se recomienda el fine-tuning aunque el mAP50 pase el
-      criterio. Las 45 fotos ya se usaron para evaluar: para afinar con
-      ellas, separar entrenamiento y prueba. Pasos (2) y (3) hechos (2026-10-20, detalle en el registro de
-      `docs/test-plan.md`): Kaggle girado, mAP50 0.704 de frente, 0.688 a
-      20° y **0.637 a 35°** (bajo el criterio 0.70; mAP50-95 de 0.41 a 0.21:
-      se pierde la localización, no el recall). Roboflow Out Of Stock
-      (200 fotos): IoU de huecos 0.106, 24 falsas alertas y 2 quiebres
-      (2 detectados); Empty Shelf (60): IoU 0.162, 3 falsas alertas. Sus
-      espacios vacíos son chicos y no comparables con huecos de un ancho
-      de producto. Con 35° se cumple el criterio: toca el fine-tuning
-      (Kaggle CC0 separado en entrenamiento y prueba, aumentación de giros,
-      color y ruido). Paso (4) hecho (2026-10-20, a ojo y con las métricas por foto de
-      #34): de frente, las botellas (026, R 1.00) y las latas y potes
-      (R 0.93 a 0.98) se detectan igual de bien que las cajas (017, R
-      0.94); el IoU de las latas es menor (0.72 a 0.77 contra 0.89) por
-      cómo se cortan las pilas. El único fallo claro (028, R 0.27) es
-      oclusión y ángulo, no la forma. Los envasados con recall bajo son
-      botellas chicas y lejanas (013, 022), lácteos (032) y el
-      refrigerador (020). Pendiente: el set propio (#32) y el
-      fine-tuning, que no es urgente (se dejó para cuando el PC esté
-      libre). Plan, ya probado hasta el arranque: Kaggle CC0 sin las 8
-      fotos de frutas y verduras sueltas (005, 007, 014, 023, 029, 030,
-      033, 034), separado por foto en 24 de entrenamiento y 12 de prueba
-      (001, 004, 009, 012, 016, 019, 022, 026, 031, 037, 040, 043);
-      entrenamiento con las 24 más sus vistas giradas a 20° y 35° (15°
-      hacia abajo, `oblique_view()`) y 300 fotos de SKU-110K `train` para
-      no olvidar; desde `yolo26s/weights/best.pt`, 30 épocas, SGD lr0
-      0.002, `imgsz=1280`, batch 2, `nms=False`, `max_det=1000`, giro 3°,
-      perspectiva 0.0005, saturación 0.7. Reducir las fotos de Kaggle a
-      2560 px de lado mayor antes: a tamaño completo (5616 x 3744) la
-      carga de datos da ~10 s por iteración; reducidas, ~4 s (unos 12 min
-      por época con 2 procesos de carga). Línea base en las 12 fotos de
-      prueba (`yolo26s` actual), mAP50 / mAP50-95: de frente 0.809 /
-      0.481; 20° 0.781 / 0.334; 35° 0.703 / 0.217. Aceptar el modelo
-      nuevo solo si mejora esas cifras y no baja el mAP50-95 de 0.610 en
-      el `test` de SKU-110K; con 12 fotos de prueba, el resultado es
-      orientativo hasta tener el set propio (#32).
 - [ ] **#31** Excluir de la medición la bodega de reserva que hay sobre
       la góndola de venta (Walmart no la evalúa; acuerdo del 2026-09-16
       en el README). Hoy `compute_availability()` acota la góndola "del
@@ -326,6 +324,98 @@ hitos" en `docs/curso.md`).
 
 ## Hecho
 
+- [x] **#33** (dueño: Francisco) Verificar el detector `yolo26s` fuera de SKU-110K, en las
+      condiciones con que evaluará Walmart (IoU contra anotación a mano;
+      fotos frontales, en ángulo y desde arriba). Hoy solo está medido en
+      el test de SKU-110K, que es igual al entrenamiento. Depende del modo
+      por lotes de #8 (CU07). Con datos ya descargados:
+      (1) Kaggle supermarket-shelves (45 fotos con productos anotados,
+      CC0, no usadas al entrenar): P, R, mAP50 y mAP50-95;
+      (2) las mismas fotos giradas con `oblique_view()` a 20° y 35° (#22);
+      (3) Roboflow Out Of Stock y Empty Shelf (espacios vacíos anotados):
+      IoU entre los huecos de `compute_availability()` y los vacíos
+      anotados; (4) revisión a ojo de botellas y envases cilíndricos
+      frente a cajas (los datos no etiquetan la forma). Después, el set
+      propio de #32. Criterio: reentrenar (fine-tuning con Kaggle CC0,
+      fotos propias y aumentación de giros chicos, color y ruido) solo si
+      alguna medición queda bajo mAP50 0.70 (referencia de Walmart: con
+      ~70% el problema está casi resuelto); nunca generar imágenes
+      sintéticas desde SKU-110K (licencia). Primera prueba de humo con #8
+      (2026-10-10, 6 fotos de Kaggle, ver `docs/test-plan.md`): R 0.425
+      por la foto 030 (verduras sueltas, fuera del alcance: 21 de 546);
+      sin ella, R 0.70. Falsa alerta en la 020 (refrigeradores llenos,
+      34% libre contra 11% de la anotación): los marcos entre puertas,
+      letreros y vidrio borroso cuentan como huecos de al menos un ancho
+      de producto (criterio de #6). Registrar los resultados en
+      `docs/test-plan.md` (#19). Paso (1) hecho en #34 (2026-10-20, 45
+      fotos): mAP50 0.713 (justo sobre 0.70), mAP50-95 0.423, R 0.644;
+      el recall en envasados (0.71) causa casi todas las falsas alertas,
+      así que se recomienda el fine-tuning aunque el mAP50 pase el
+      criterio. Las 45 fotos ya se usaron para evaluar: para afinar con
+      ellas, separar entrenamiento y prueba. Pasos (2) y (3) hechos (2026-10-20, detalle en el registro de
+      `docs/test-plan.md`): Kaggle girado, mAP50 0.704 de frente, 0.688 a
+      20° y **0.637 a 35°** (bajo el criterio 0.70; mAP50-95 de 0.41 a 0.21:
+      se pierde la localización, no el recall). Roboflow Out Of Stock
+      (200 fotos): IoU de huecos 0.106, 24 falsas alertas y 2 quiebres
+      (2 detectados); Empty Shelf (60): IoU 0.162, 3 falsas alertas. Sus
+      espacios vacíos son chicos y no comparables con huecos de un ancho
+      de producto. Con 35° se cumple el criterio: toca el fine-tuning
+      (Kaggle CC0 separado en entrenamiento y prueba, aumentación de giros,
+      color y ruido). Paso (4) hecho (2026-10-20, a ojo y con las métricas por foto de
+      #34): de frente, las botellas (026, R 1.00) y las latas y potes
+      (R 0.93 a 0.98) se detectan igual de bien que las cajas (017, R
+      0.94); el IoU de las latas es menor (0.72 a 0.77 contra 0.89) por
+      cómo se cortan las pilas. El único fallo claro (028, R 0.27) es
+      oclusión y ángulo, no la forma. Los envasados con recall bajo son
+      botellas chicas y lejanas (013, 022), lácteos (032) y el
+      refrigerador (020). Pendiente: el set propio (#32) y el
+      fine-tuning, que no es urgente (se dejó para cuando el PC esté
+      libre). Plan, ya probado hasta el arranque: Kaggle CC0 sin las 8
+      fotos de frutas y verduras sueltas (005, 007, 014, 023, 029, 030,
+      033, 034), separado por foto en 24 de entrenamiento y 12 de prueba
+      (001, 004, 009, 012, 016, 019, 022, 026, 031, 037, 040, 043);
+      entrenamiento con las 24 más sus vistas giradas a 20° y 35° (15°
+      hacia abajo, `oblique_view()`) y 300 fotos de SKU-110K `train` para
+      no olvidar; desde `yolo26s/weights/best.pt`, 30 épocas, SGD lr0
+      0.002, `imgsz=1280`, batch 2, `nms=False`, `max_det=1000`, giro 3°,
+      perspectiva 0.0005, saturación 0.7. Reducir las fotos de Kaggle a
+      2560 px de lado mayor antes: a tamaño completo (5616 x 3744) la
+      carga de datos da ~10 s por iteración; reducidas, ~4 s (unos 12 min
+      por época con 2 procesos de carga). Línea base en las 12 fotos de
+      prueba (`yolo26s` actual), mAP50 / mAP50-95: de frente 0.809 /
+      0.481; 20° 0.781 / 0.334; 35° 0.703 / 0.217. Aceptar el modelo
+      nuevo solo si mejora esas cifras y no baja el mAP50-95 de 0.610 en
+      el `test` de SKU-110K; con 12 fotos de prueba, el resultado es
+      orientativo hasta tener el set propio (#32).
+      Primer fine-tuning (2026-10-21, `scripts/prepare_finetune_dataset.py`
+      y `train_detector.py finetune`; 30 épocas en ~8 min, 7,5 it/s, mejor
+      época 27): **NO se acepta**. Mejora las 12 fotos de prueba, mAP50 /
+      mAP50-95 (antes -> ahora): de frente 0.809 / 0.493 -> 0.854 / 0.540;
+      20° 0.778 / 0.334 -> 0.837 / 0.530; 35° 0.701 / 0.225 -> 0.818 /
+      0.488. Pero en el `test` de SKU-110K el mAP50-95 baja de 0.610 a
+      **0.533** (mAP50 0.950 -> 0.940, R 0.885 -> 0.877), bajo el criterio.
+      Las 12 fotos también eligieron el `best.pt` y las vistas giradas de
+      prueba usan la misma homografía que las de entrenamiento, así que la
+      mejora en 20° y 35° es optimista. Siguiente prueba: más fotos de
+      SKU-110K para no olvidar (ej. 1500), lr0 menor o menos épocas.
+      Segundo fine-tuning (2026-10-21, 1500 fotos de SKU-110K, lr0 0.0005,
+      30 épocas, mejor época 25): tampoco pasa. Kaggle de prueba, mAP50 /
+      mAP50-95: de frente 0.834 / 0.531, 20° 0.823 / 0.503, 35° 0.805 /
+      0.447 (menos que el primero, aún sobre la línea base). `test` de
+      SKU-110K: mAP50 0.943, R 0.880, **mAP50-95 0.548** (bajo 0.610). Lo
+      que se pierde es localización (mAP50 casi igual), consistente con que
+      las cajas de Kaggle se dibujan más sueltas que las de SKU-110K.
+      **Decisión (2026-10-21, Francisco): se acepta el primer fine-tuning**
+      (`yolo26s-finetune`, 300 fotos de SKU-110K, lr0 0.002) y se relaja el
+      criterio: SKU-110K no es el dominio de Walmart; el mAP50 en su `test`
+      casi no cambia (0.950 -> 0.940) y en fotos fuera de dominio sube 4 a 12
+      puntos, sobre todo en ángulo. El mAP50-95 en SKU-110K (0.533) se
+      informa, y se revisa con el set propio (#32). Los pesos
+      (`data/processed/training/yolo26s-finetune/weights/best.pt`) se
+      comparten por Drive como `yolo26s`; `run_pipeline.py` y la app web los
+      usan con `--weights` y `SHELFVISION_WEIGHTS`. Reproducir:
+      `prepare_finetune_dataset.py --sku-images 300` y `train_detector.py
+      finetune` (docs/training.md). Resultados en DET-07 de `docs/test-plan.md`.
 - [x] **#34** (dueño: Francisco) Análisis de resultados del informe
       intermedio (2026-10-20), en `docs/analisis-resultados.md` y la
       sección 3 del informe (#27). Pipeline completo en CPU sobre las 45
