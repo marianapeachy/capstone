@@ -94,6 +94,10 @@ hitos" en `docs/curso.md`).
       el `yolo26s` original), PR hasta el #57 y commits por integrante.
       Sigue abierto: enlace al video (#36, Nicko), reflexión de Nicko y
       revisión de la reflexión de Francisco.
+      Idioma (2026-10-21): el informe queda todo en español (se quitó el
+      abstract en inglés; ningún mensaje del profesor ni del cliente pide
+      inglés). Las pautas 2.2 y 2.3 sí lo piden para las evidencias de
+      avance (#37): pregunta abierta en `docs/curso.md`.
 - [ ] **#29** Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
