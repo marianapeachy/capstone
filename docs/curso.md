@@ -217,6 +217,12 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
   el formato del informe de avance (ver "Requisitos vigentes"): ¿el
   informe intermedio sigue ese formato o es otro documento? ¿Por qué
   medio se entrega (repositorio, PDF, Drive) y dónde se sube el video?
+- Idioma del informe intermedio: ningún mensaje del profesor ni del
+  cliente pide inglés, y el informe se entregó en español (decidido
+  2026-10-21). Las pautas 2.2 y 2.3 (rúbrica de la Fase 2) sí piden
+  abstract en inglés y español, y conclusiones y reflexiones solo en
+  inglés: ¿esa exigencia aplica al informe intermedio o solo a las
+  evidencias de avance (2026-10-26)?
 - El mensaje numera los puntos del informe del 1 al 5 y luego el 7:
   ¿falta un punto 6?
 - ¿Qué componentes debe tener la instalación en el servidor del CITT
