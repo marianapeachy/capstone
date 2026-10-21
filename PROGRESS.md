@@ -125,7 +125,7 @@ hitos" en `docs/curso.md`).
       evaluación del trabajo en grupo y causa de la semana del 12 al 16
       de octubre sin avances).
       Actualización (2026-10-21): guía 2.4 y `docs/evidencias-avance.md`
-      al corte del 21-10 (CU04 y #42 hechos, 231 pruebas, Gantt y PR).
+      al corte del 21-10 (CU04, #42 y #33 hechos, 233 pruebas, Gantt y PR).
 - [ ] **#38** Feria de informática (semana del 2026-10-26; día y hora
       por informar): definir qué integrante va (al menos uno) y qué se
       muestra.
