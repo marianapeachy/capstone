@@ -134,7 +134,7 @@ flowchart TB
     WEB --> DB[("SQLite<br/>usuarios, análisis, alertas")]
 ```
 
-Cada etapa vive en su paquete y no importa los detalles de otra: se pasan arrays, tuplas y *dataclasses*. `src/pipeline.py` es el único que las encadena, y tanto el CLI como la app web solo llaman a `run_image()`. Los diagramas de diseño de la Fase 1 (casos de uso y arquitectura) están en `Anexos/Diseño/`; el de arquitectura propone FastAPI/React y quedó superado por Django (ítem #42).
+Cada etapa vive en su paquete y no importa los detalles de otra: se pasan arrays, tuplas y *dataclasses*. `src/pipeline.py` es el único que las encadena, y tanto el CLI como la app web solo llaman a `run_image()`. Los diagramas de diseño de la Fase 1 (casos de uso y arquitectura) están en `Anexos/Diseño/`, actualizados a la app Django el 2026-10-21 (ítem #42); sus fuentes Mermaid, en `Anexos/Diseño/Diagramas fuente (Mermaid)/`.
 
 ### Decisiones técnicas y su justificación
 

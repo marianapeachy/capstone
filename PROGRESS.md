@@ -134,12 +134,17 @@ hitos" en `docs/curso.md`).
       configurar SMTP para los correos de CU06 y servir con HTTPS
       (cookies seguras). Hallazgos 15, 16 y 18 de
       `docs/auditoria-app-web.md`.
-- [ ] **#42** Rehacer las plantillas de C.U, sus diagramas de secuencia
+- [x] **#42** (dueño: Mariana) Rehacer las plantillas de C.U, sus diagramas de secuencia
       y el diagrama de arquitectura según la app web Django (#28): sin
       API REST, JWT ni React; sesiones, formularios y plantillas HTML.
       Qué cambiar en cada uno: `docs/cambios-cu.md`. Hacerlo antes de
       las evidencias de avance (2026-10-26), donde se comparan diseño y
-      sistema.
+      sistema. Hecho (2026-10-21): plantillas CU00, CU01, CU02 y CU06
+      corregidas (CU03-CU05 no nombraban JWT ni API); fuentes Mermaid de
+      CU00-CU06 y nueva fuente del diagrama de arquitectura
+      (`Anexos/Diseño/Diagramas fuente (Mermaid)/`), con sus PNG
+      regenerados con mermaid-cli. Verificado contra `web/` (login con
+      RUT o correo, bloqueo tras 5 intentos, vista por rol, alertas).
 - [ ] **#43** Dashboard de disponibilidad (CU03, RF05): estado de cada
       góndola según su última foto (verde con menos de la mitad del
       umbral, amarillo hasta el umbral, rojo con alerta, "Sin datos" sin

@@ -1,18 +1,16 @@
 sequenceDiagram
     autonumber
     actor Sup as Jefe de Salón / Administrador del Sistema
-    participant Web as Módulo Reportería Web
+    participant Web as App web (Django)
     participant Gen as Generador de Reportes (Python)
     participant BD as Base de Datos
-    Sup->>Web: Selecciona fechas, pasillo o góndola y formato (Excel/CSV/PDF)
-    Web->>Gen: POST /api/v1/reports/generate
-    Gen->>BD: Consulta % libre por góndola, alertas y estados
-    BD-->>Gen: Registros del período
+    Sup->>Web: Pide el reporte (formulario: fechas, pasillo o góndola y formato Excel/CSV/PDF)
+    Web->>BD: Consulta % libre por góndola, alertas y estados
+    BD-->>Web: Registros del período
     alt Sin registros en el período
-        Gen-->>Web: Aviso "Sin datos" (no genera archivo vacío)
-        Web-->>Sup: Muestra el aviso
+        Web-->>Sup: El formulario muestra "Sin datos" (no genera archivo vacío)
     else Hay registros
-        Gen->>Gen: Construye el archivo (.xlsx / .csv / .pdf)
-        Gen-->>Web: Enlace de descarga
-        Web-->>Sup: Descarga el archivo
+        Web->>Gen: Registros del período y formato
+        Gen-->>Web: Archivo (.xlsx / .csv / .pdf)
+        Web-->>Sup: Descarga el archivo como respuesta de la página
     end

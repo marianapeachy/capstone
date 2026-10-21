@@ -1,0 +1,52 @@
+flowchart TB
+    subgraph C1["Capa 1: Ingesta de Imágenes en Sala"]
+        CAM["Cámaras IP / Seguridad de Sala"]
+        UP["Carga de fotos desde la app web (Análisis)"]
+        LOTE["Lote de fotos (CLI run_pipeline.py)"]
+    end
+
+    subgraph C2["Capa 2: Pipeline Modular de Visión Artificial (src/pipeline.py, run_image)"]
+        subgraph M1["Módulo 1: Preprocesamiento OpenCV (src/preprocessing)"]
+            DEW["Dewarping / corrección de lente"] --> CLAHE["Contraste CLAHE"]
+            CLAHE --> SEG["Segmentación automática de góndola y repisas (sin ROI configurada)"]
+            SEG --> ROI["Recorte de la ROI"]
+        end
+        subgraph M2["Módulo 2: Detector YOLO26 (src/models)"]
+            DET["ProductDetector: una clase, sin NMS, max_det 1000, imgsz 1280"]
+        end
+        subgraph M3["Módulo 3: Postprocesamiento (src/postprocessing)"]
+            LVL["Niveles de repisa híbridos (shelf_levels)"] --> AV["Espacio libre de la góndola completa (profundidad fija 25 cm)"]
+            AV --> ALR["Alerta con espacio libre >= 30%"]
+        end
+        ROI -->|"ROI de la imagen corregida"| DET
+        DET -->|"Cajas [x_min, y_min, x_max, y_max]"| LVL
+    end
+
+    subgraph C3["Capa 3: App web Django (vistas, ORM, migraciones)"]
+        VIEWS["Vistas de Django: formularios y páginas"]
+        AUTH["Sesiones + bcrypt, perfiles por grupo (RBAC)"]
+        REP["Reportes Excel / CSV / PDF (CU04, src/reporting, en desarrollo)"]
+        DB[("SQLite: usuarios, análisis y alertas (volumen /data en Docker)")]
+        VIEWS --> AUTH
+        VIEWS --> REP
+        VIEWS --> DB
+    end
+
+    subgraph C4["Capa 4: Plantillas HTML de Django (servidas por la misma app)"]
+        V_ADM["Administrador: Usuarios y roles (CU06)"]
+        V_JEFE["Jefe de Salón: Análisis de fotos (CU01)"]
+        V_REP["Reponedor: Alertas en el teléfono (CU02)"]
+    end
+
+    subgraph C5["Capa 5: Evaluación y Validación Externa"]
+        OCULTO["Dataset Oculto Walmart Chile (CU07, IoU y métricas CSV)"]
+    end
+
+    CAM -->|"Imagen estática .jpg / .png"| DEW
+    UP --> DEW
+    LOTE --> DEW
+    ALR -->|"Resultado de la góndola"| VIEWS
+    LOTE -.->|"Prueba ciega"| OCULTO
+    VIEWS --> V_ADM
+    VIEWS --> V_JEFE
+    VIEWS --> V_REP
