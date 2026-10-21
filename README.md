@@ -82,7 +82,7 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ## 👥 Perfiles de Usuario
 
-La interfaz va después del pipeline: Walmart pidió priorizar que la lógica funcione. La aplicación web (ver "Aplicación web") ya tiene el login por perfil (CU00), la gestión de usuarios y roles (CU06) y el análisis de fotos (CU01); el dashboard, los reportes y la configuración siguen pendientes. Los casos de uso CU00-CU07 están en `Anexos/Diseño/`.
+La interfaz va después del pipeline: Walmart pidió priorizar que la lógica funcione. La aplicación web (ver "Aplicación web") ya tiene el login por perfil (CU00), la gestión de usuarios y roles (CU06) el análisis de fotos (CU01), las alertas (CU02) y los reportes (CU04); el dashboard y la configuración siguen pendientes. Los casos de uso CU00-CU07 están en `Anexos/Diseño/`.
 
 1. **Reponedor de Tienda**: Recibe alertas inmediatas en dispositivos móviles para acudir a los pasillos con quiebre crítico.
 2. **Jefe de Salón / Supervisor**: Visualiza dashboards de disponibilidad por pasillo y exporta reportes periódicos de desempeño.
@@ -147,6 +147,7 @@ Cada etapa vive en su paquete y no importa los detalles de otra: se pasan arrays
 | **Umbral: alerta con espacio libre ≥ 30% del frente** | El acta lo plantea como "menos del 30% de productos disponibles"; leído al pie de la letra alertaba con la góndola llena, así que se invirtió a espacio libre. Es configurable (`AvailabilityParams.critical_free_fraction`) | Con recall simulado de 0,9, umbrales de 20/25/30/35% dan 20,7/8,7/4,0/1,0% de falsas alertas con la góndola llena, y un quiebre de 30% se detecta en 87% de los casos (ítem #6) |
 | **Una alerta por góndola completa, repisas solo para medir** | Cambio de alcance indicado por el profesor el 2026-10-19. Las repisas siguen siendo el método interno, porque medir la cobertura a lo largo de cada repisa funciona con la cámara en ángulo; pero no se informa alerta ni % por repisa | Ítem #40; JSON con `free_fraction` y `critical` de la góndola y `shelves` solo con geometría |
 | **Fachada visible, sin apilamiento, hueco de al menos un ancho de producto** | Es lo que ve el cliente; la altura es el eje que más deforma una cámara de sala. Un hueco más angosto que un producto no se puede reponer | Criterio del equipo, válido ante Walmart si se justifica (reunión 2026-09-16) |
+| **Reportes en Excel, CSV y PDF**, una fila por análisis | Walmart no pide un formato (RF05), así que se eligió uno por uso: Excel para que el Jefe de Salón filtre y grafique (el % libre va como número), CSV para cargarlo en otros sistemas (UTF-8 con BOM, para que Excel muestre bien las tildes) y PDF para imprimir o archivar una auditoría sin que se edite. Cada fila trae fecha, pasillo, góndola, % libre de la góndola completa y alerta sí/no (el contenido mínimo), más el estado de la alerta y quién subió la foto; nada por repisa (#40). Sin análisis en el período no se genera un archivo vacío (CU04) | `tests/test_report_export.py` y las pruebas de CU04 en `tests/test_web.py` (ítem #7) |
 | **Django con sesiones en vez de FastAPI + React + JWT** | Trae login, roles, hash de contraseñas, CSRF y migraciones probados; Walmart considera la interfaz opcional | Ver "Aplicación web con Django", arriba, y el ítem #28 |
 
 ---
@@ -188,7 +189,7 @@ Al 2026-10-20. El detalle por ítem y su dueño están en [PROGRESS.md](PROGRESS
 | Disponibilidad y alerta por góndola completa (RF02, RF03, RF04) | Operativo |
 | Ingesta y evaluación por lotes (RF01, RF06, CU07) | Operativo (`scripts/run_pipeline.py`); ~0,5 s por foto en lote, en CPU |
 | Aplicación web: login (CU00), usuarios y roles (CU06), análisis (CU01) y alertas (CU02) | Operativo |
-| Reportes Excel, CSV y PDF (RF05, #7) | Pendiente (la vista anotada ya existe) |
+| Reportes Excel, CSV y PDF (RF05, CU04, #7) | Operativo: página "Reportes" de la app web (`src/reporting/export.py`) |
 | Dashboard de disponibilidad (CU03, #43) y configuración de umbral y cámaras (CU05, #44) | Pendiente |
 | Instalación en el servidor del CITT (#39) | Bloqueado: esperan las instrucciones |
 
@@ -389,6 +390,10 @@ python manage.py runserver          # http://localhost:8000
   desde cuándo) -> Completada. Una góndola tiene a lo más una alerta
   abierta: una foto nueva con quiebre reemplaza a la anterior, y una foto
   sin quiebre confirma la reposición y la cierra.
+- **CU04**: "Reportes" (Administrador y Jefe de Salón) descarga los
+  análisis de un período, opcionalmente de un pasillo o una góndola, en
+  Excel, CSV o PDF. Si no hay análisis en el período lo avisa y no genera
+  un archivo vacío.
 - **Diseño**: el mundo visual es el "fleje de góndola": cada góndola se
   dibuja como sus repisas de frente, con los huecos rayados en su posición
   real (contexto de producto en [PRODUCT.md](PRODUCT.md) y sistema en

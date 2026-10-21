@@ -106,6 +106,7 @@ p { margin: 0; }
 /* --- Formularios --- */
 .form { display: grid; gap: 16px; }
 .form.inline { grid-template-columns: 120px 120px minmax(220px, 1fr) auto; align-items: end; }
+.form.inline.report { grid-template-columns: 170px 170px minmax(0, 1fr) minmax(0, 1fr) 170px auto; }
 .field { display: grid; gap: 6px; }
 .field label { font-weight: 600; font-size: 15px; }
 .field .help { color: var(--ink-2); font-size: 14px; }
@@ -113,7 +114,7 @@ p { margin: 0; }
 .form-after { margin-top: 14px; }
 .narrow-form { max-width: 640px; }
 .form-errors { padding: 10px 14px; border-radius: var(--radius-control); background: var(--gap-tint); }
-input[type=text], input[type=email], input[type=password], select, input[type=file] {
+input[type=text], input[type=email], input[type=password], input[type=date], select, input[type=file] {
   width: 100%; min-height: 44px; padding: 9px 12px;
   border: 1.5px solid #aebbc1; border-radius: 8px; background: #fff; color: var(--ink);
   font: 400 16px "Archivo", system-ui, sans-serif;
@@ -224,7 +225,7 @@ td a.strong:hover { color: var(--act-dark); text-decoration: underline; }
   .page { padding: 18px 12px 48px; }
   .page-head h1 { font-size: 25px; }
   .alerts { grid-template-columns: 1fr; }
-  .form.inline { grid-template-columns: 1fr 1fr; }
+  .form.inline, .form.inline.report { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .form.inline .field.photo-field, .form.inline .btn { grid-column: 1 / -1; }
   .detail { grid-template-columns: 1fr; }
   .hide-phone { display: none; }

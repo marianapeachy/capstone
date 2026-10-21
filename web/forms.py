@@ -70,3 +70,21 @@ class PhotoForm(forms.Form):
         if foto.size > MAX_PHOTO_MB * 1024 * 1024:
             raise forms.ValidationError(f"La foto pesa más de {MAX_PHOTO_MB} MB.")
         return foto
+
+
+class ReportForm(forms.Form):
+    """CU04: periodo, ubicacion opcional y formato del reporte."""
+
+    desde = forms.DateField(label="Desde", widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}))
+    hasta = forms.DateField(label="Hasta", widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}))
+    pasillo = forms.CharField(label="Pasillo", max_length=20, required=False,
+                              widget=forms.TextInput(attrs={"placeholder": "Todos"}))
+    gondola = forms.CharField(label="Góndola", max_length=20, required=False,
+                              widget=forms.TextInput(attrs={"placeholder": "Todas"}))
+    formato = forms.ChoiceField(label="Formato", choices=[("xlsx", "Excel (.xlsx)"), ("csv", "CSV"), ("pdf", "PDF")])
+
+    def clean(self):
+        data = super().clean()
+        if data.get("desde") and data.get("hasta") and data["desde"] > data["hasta"]:
+            raise forms.ValidationError("La fecha «Desde» no puede ser posterior a «Hasta».")
+        return data

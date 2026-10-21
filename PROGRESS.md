@@ -175,11 +175,17 @@ hitos" en `docs/curso.md`).
       que unifica las identidades (hoy 6 autores para 3 personas) y
       commits y PR sin la línea `Co-Authored-By` ni el pie de Claude
       Code. Los commits ya publicados no se reescriben (regla 5).
-- [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
+- [x] **#7** (dueño: Mariana) Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
       para cualquiera de las dos lecturas del umbral (#24). Walmart no
       pide un formato: dejar en el README por qué se eligieron estos.
+      Hecho (2026-10-21): `src/reporting/export.py` (openpyxl, csv y
+      fpdf2, ya en `requirements.txt`) y página "Reportes" de la app web
+      (CU04: período, pasillo o góndola opcionales y formato; sin datos
+      avisa y no genera archivo). Una fila por análisis: fecha, pasillo,
+      góndola, % libre, alerta, estado y quién subió la foto. Por qué
+      estos formatos: tabla de decisiones técnicas del README.
 - [ ] **#33** Verificar el detector `yolo26s` fuera de SKU-110K, en las
       condiciones con que evaluará Walmart (IoU contra anotación a mano;
       fotos frontales, en ángulo y desde arriba). Hoy solo está medido en
