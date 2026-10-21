@@ -207,6 +207,27 @@ hitos" en `docs/curso.md`).
       están en `requirements.txt` sin que nada los importe (los traerá
       #7: si #7 no los usa, quitarlos). Fijar por commit las acciones de
       `.github/workflows/ci.yml`.
+- [ ] **#55** Entrenar y medir el detector con ruido visual de cámara de sala
+      (pedido de Francisco, 2026-10-21): el mismo ruido que produce una
+      cámara fija apuntando a una góndola de supermercado. Hoy ni el
+      entrenamiento ni las pruebas lo tienen (SKU-110K y Kaggle son fotos
+      limpias). Ruidos a simular: ruido del sensor (gaussiano y de
+      poca luz), compresión JPEG fuerte, baja resolución, desenfoque de
+      movimiento y de foco, cambios de exposición y contraluz, reflejos
+      y brillo en puertas de vidrio (#46), distorsión de lente
+      (`LensCalibration`, #3) y personas o carros que tapan parte de la
+      góndola. Pasos: (1) función de degradación en
+      `src/datasets/synthetic.py` (junto a `oblique_view()`, con test);
+      (2) medir primero el `yolo26s-finetune` con las 12 fotos de prueba
+      de Kaggle degradadas, por tipo y nivel de ruido, y registrarlo en
+      `docs/test-plan.md` (DET-07); (3) si cae bajo mAP50 0.70, un nuevo
+      fine-tuning (`prepare_finetune_dataset.py`) con las 24 fotos de
+      entrenamiento degradadas al azar; (4) comparar contra el modelo
+      sin ruido. Solo con fotos que se pueden modificar (Kaggle CC0,
+      SHARD y Roboflow CC BY 4.0): nunca degradar SKU-110K para generar
+      imágenes (licencia). Se cruza con #14 (imágenes tipo CCTV
+      sintéticas), #33 y #46; los parámetros reales de la cámara de
+      Walmart (#24) afinarían los niveles de ruido.
 - [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
