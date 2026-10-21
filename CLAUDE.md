@@ -140,14 +140,18 @@ ni trabajo:
    `build/<tema>` o `chore/<tema>`. **Nunca** commit ni push directo a
    `main`.
 4. **Commits solo cuando la persona lo pide**, separados por tema y en
-   estilo Conventional Commits en inglés (`feat: ...`, `fix: ...`,
-   `docs: ...`). Antes de cada commit, `pytest tests/` debe pasar; si se
+   estilo Conventional Commits con el tipo en inglés y **el texto en
+   español** (`feat: agrega ...`, `fix: corrige ...`, `docs: actualiza
+   ...`): el mensaje dice qué cambió y por qué, de modo que cualquier
+   integrante lo entienda. Antes de cada commit, `pytest tests/` debe pasar; si se
    tocó `Dockerfile` o `requirements.txt`, también `docker build`.
 5. **Nunca reescribir historia publicada**: nada de `git push --force`,
    `git reset` ni `rebase` sobre ramas ya subidas. Para deshacer algo
    publicado se usa `git revert`.
 6. **Todo entra a `main` por Pull Request** (`gh pr create`), con qué
-   cambia y cómo se verificó. Requiere revisión de otro integrante y CI
+   cambia y cómo se verificó. El título, la descripción y los comentarios
+   de PR e issues también van en español (los nombres de ramas y los
+   tipos de commit, `feat`, `fix`, etc., se quedan como están). Requiere revisión de otro integrante y CI
    en verde. Preferir PR independientes contra `main`. Si hay PR
    encadenados (uno con base en la rama de otro), se mergean de a uno y
    en orden, con "Create a merge commit" (no squash), y **después de
