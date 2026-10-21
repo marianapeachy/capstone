@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Reportes · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Reportes de disponibilidad</h1>
+    <p>Descarga los análisis de un período: fecha, ubicación, % libre de la góndola completa, alerta, estado y quién subió la foto.</p>
+  </div>
+</div>
+<section class="panel" aria-labelledby="exportar">
+  <h2 id="exportar" class="sr-only">Exportar un reporte</h2>
+  <form method="get" class="form inline report">
+    {% include "web/_field.html" with field=form.desde %}
+    {% include "web/_field.html" with field=form.hasta %}
+    {% include "web/_field.html" with field=form.pasillo %}
+    {% include "web/_field.html" with field=form.gondola %}
+    {% include "web/_field.html" with field=form.formato %}
+    <button type="submit" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-download-simple"/></svg><span>Descargar reporte</span></button>
+  </form>
+  {% if form.non_field_errors %}<div class="form-errors form-after" role="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+</section>
+{% endblock %}

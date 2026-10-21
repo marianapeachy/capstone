@@ -17,5 +17,6 @@ urlpatterns = [
     path("analisis/<int:pk>/", views.analisis_detalle, name="analisis_detalle"),
     path("analisis/<int:pk>/imagen.jpg", views.analisis_imagen, name="analisis_imagen"),
     path("alertas/", views.alertas, name="alertas"),
+    path("reportes/", views.reportes, name="reportes"),
     path("alertas/<int:pk>/<str:accion>/", views.alerta_accion, name="alerta_accion"),
 ]
