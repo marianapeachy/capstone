@@ -151,8 +151,10 @@ ni trabajo:
 6. **Todo entra a `main` por Pull Request** (`gh pr create`), con qué
    cambia y cómo se verificó. El título, la descripción y los comentarios
    de PR e issues también van en español (los nombres de ramas y los
-   tipos de commit, `feat`, `fix`, etc., se quedan como están). Requiere revisión de otro integrante y CI
-   en verde. Preferir PR independientes contra `main`. Si hay PR
+   tipos de commit, `feat`, `fix`, etc., se quedan como están). Requiere el CI en verde; la revisión de otro
+   integrante **ya no es obligatoria** (decidido 2026-10-21, `main` no
+   exige aprobación desde el 2026-10-19): quien abre el PR lo puede
+   mergear, y pedir revisión queda a su criterio. Preferir PR independientes contra `main`. Si hay PR
    encadenados (uno con base en la rama de otro), se mergean de a uno y
    en orden, con "Create a merge commit" (no squash), y **después de
    cada merge se borra la rama mergeada** ("Delete branch"): solo así
