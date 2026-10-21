@@ -1,6 +1,7 @@
 import functools
 import threading
 import uuid
+from datetime import timedelta
 
 import cv2
 import numpy as np
@@ -11,7 +12,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.mail import send_mail
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -21,7 +22,8 @@ from django.views.decorators.http import require_POST
 
 from src.pipeline import run_image
 from src.reporting.annotate import draw_availability
-from web.forms import PhotoForm, UserForm
+from src.reporting.export import MEDIA_TYPES, export
+from web.forms import PhotoForm, ReportForm, UserForm
 from web.models import (ABIERTAS, ACTIVA, ADMIN, COMPLETADA, EN_PROCESO, JEFE, REEMPLAZADA, REPONEDOR,
                         Analysis, User)
 
@@ -181,3 +183,33 @@ def analisis_detalle(request, pk):
 def analisis_imagen(request, pk):
     # Las fotos de tienda se sirven solo con sesion, no como archivos publicos.
     return FileResponse(get_object_or_404(Analysis, pk=pk).annotated.open("rb"), content_type="image/jpeg")
+
+
+# --- CU04: reportes ---
+
+@roles(ADMIN, JEFE)
+def reportes(request):
+    today = timezone.localdate()
+    form = ReportForm(request.GET if "formato" in request.GET else None,
+                      initial={"desde": today - timedelta(days=7), "hasta": today, "formato": "xlsx"})
+    if form.is_valid():
+        data = form.cleaned_data
+        found = (Analysis.objects.filter(created_at__date__range=(data["desde"], data["hasta"]))
+                 .select_related("created_by").order_by("created_at"))
+        if data["pasillo"]:
+            found = found.filter(pasillo__iexact=data["pasillo"])
+        if data["gondola"]:
+            found = found.filter(gondola__iexact=data["gondola"])
+        if found:
+            rows = [{"fecha": timezone.localtime(a.created_at), "pasillo": a.pasillo, "gondola": a.gondola,
+                     "free_fraction": a.free_fraction, "critical": a.critical,
+                     "estado": a.get_estado_display() or "Sin quiebre",
+                     "usuario": a.created_by.username if a.created_by else ""} for a in found]
+            period = f"{data['desde']} a {data['hasta']}"
+            fmt = data["formato"]
+            response = HttpResponse(export(rows, fmt, f"Reporte de disponibilidad {period}"),
+                                    content_type=MEDIA_TYPES[fmt])
+            response["Content-Disposition"] = f'attachment; filename="reporte-{period.replace(" ", "-")}.{fmt}"'
+            return response
+        form.add_error(None, "No hay análisis en el período elegido: no se genera un archivo vacío.")
+    return render(request, "web/reportes.html", {"form": form})

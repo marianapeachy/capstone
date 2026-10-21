@@ -82,6 +82,9 @@ hitos" en `docs/curso.md`).
       al día, video (#36) a cargo de Nicko y borrador de la reflexión de
       Francisco. Falta el enlace al video y las reflexiones de Nicko y
       Mariana (resaltadas en amarillo).
+      Actualización (2026-10-21): reflexión de Mariana agregada y plan de
+      mejoras (#26) corregido a cumplido (Tabla 11, resumen de la Gantt y
+      retrasos). Falta el enlace al video y la reflexión de Nicko.
 - [ ] **#29** Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
@@ -131,12 +134,17 @@ hitos" en `docs/curso.md`).
       configurar SMTP para los correos de CU06 y servir con HTTPS
       (cookies seguras). Hallazgos 15, 16 y 18 de
       `docs/auditoria-app-web.md`.
-- [ ] **#42** Rehacer las plantillas de C.U, sus diagramas de secuencia
+- [x] **#42** (dueño: Mariana) Rehacer las plantillas de C.U, sus diagramas de secuencia
       y el diagrama de arquitectura según la app web Django (#28): sin
       API REST, JWT ni React; sesiones, formularios y plantillas HTML.
       Qué cambiar en cada uno: `docs/cambios-cu.md`. Hacerlo antes de
       las evidencias de avance (2026-10-26), donde se comparan diseño y
-      sistema.
+      sistema. Hecho (2026-10-21): plantillas CU00, CU01, CU02 y CU06
+      corregidas (CU03-CU05 no nombraban JWT ni API); fuentes Mermaid de
+      CU00-CU06 y nueva fuente del diagrama de arquitectura
+      (`Anexos/Diseño/Diagramas fuente (Mermaid)/`), con sus PNG
+      regenerados con mermaid-cli. Verificado contra `web/` (login con
+      RUT o correo, bloqueo tras 5 intentos, vista por rol, alertas).
 - [ ] **#43** Dashboard de disponibilidad (CU03, RF05): estado de cada
       góndola según su última foto (verde con menos de la mitad del
       umbral, amarillo hasta el umbral, rojo con alerta, "Sin datos" sin
@@ -228,11 +236,17 @@ hitos" en `docs/curso.md`).
       imágenes (licencia). Se cruza con #14 (imágenes tipo CCTV
       sintéticas), #33 y #46; los parámetros reales de la cámara de
       Walmart (#24) afinarían los niveles de ruido.
-- [ ] **#7** Implementar generación de reportes (Excel, CSV, PDF) en
+- [x] **#7** (dueño: Mariana) Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
       para cualquiera de las dos lecturas del umbral (#24). Walmart no
       pide un formato: dejar en el README por qué se eligieron estos.
+      Hecho (2026-10-21): `src/reporting/export.py` (openpyxl, csv y
+      fpdf2, ya en `requirements.txt`) y página "Reportes" de la app web
+      (CU04: período, pasillo o góndola opcionales y formato; sin datos
+      avisa y no genera archivo). Una fila por análisis: fecha, pasillo,
+      góndola, % libre, alerta, estado y quién subió la foto. Por qué
+      estos formatos: tabla de decisiones técnicas del README.
 - [ ] **#31** Excluir de la medición la bodega de reserva que hay sobre
       la góndola de venta (Walmart no la evalúa; acuerdo del 2026-09-16
       en el README). Hoy `compute_availability()` acota la góndola "del

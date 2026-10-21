@@ -1,5 +1,5 @@
 """App web (item #28): login por perfil (CU00), usuarios y roles (CU06),
-analisis de fotos (CU01) y ciclo de las alertas (CU02), con la gondola
+analisis de fotos (CU01), ciclo de las alertas (CU02) y reportes (CU04, #7), con la gondola
 sintetica y el detector falso de pipeline_fixtures (sin pesos de YOLO26)."""
 
 import cv2
@@ -7,6 +7,7 @@ import pytest
 from django.contrib.auth.models import Group
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
+from django.utils import timezone
 
 from tests.pipeline_fixtures import ColorDetector, gondola
 from web import forms, views
@@ -204,3 +205,58 @@ def test_no_informa_porcentaje_ni_quiebre_por_repisa(client, analyzer):
     for url in (reverse("alertas"), reverse("analisis_detalle", args=[analysis.pk])):
         page = client.get(url).content.decode()
         assert "shelf-free" not in page and "Quiebre en repisa" not in page
+
+
+# --- CU04 ---
+
+def report(client, **params):
+    today = timezone.localdate().isoformat()
+    return client.get(reverse("reportes"), {"desde": today, "hasta": today, "formato": "csv", **params})
+
+
+def test_reporte_csv_trae_una_fila_por_analisis_con_libre_y_alerta(client, analyzer):
+    client.force_login(make_user("1-9", JEFE))
+    analyzer(client)  # con quiebre
+    analyzer(client, empty=None, gondola_id="15")  # góndola llena, sin quiebre
+    response = report(client)
+    assert response["Content-Disposition"].startswith("attachment")
+    header, first, second = response.content.decode("utf-8-sig").splitlines()
+    assert header == "Fecha,Pasillo,Góndola,% libre,Alerta,Estado,Subida por"
+    assert ",3,14B," in first and ",Sí,Activa," in first
+    assert ",3,15," in second and ",No,Sin quiebre," in second
+
+
+def test_reporte_filtra_por_gondola(client, analyzer):
+    client.force_login(make_user("1-9", JEFE))
+    analyzer(client)
+    analyzer(client, empty=None, gondola_id="15")
+    lines = report(client, gondola="15").content.decode("utf-8-sig").splitlines()
+    assert len(lines) == 2 and ",15," in lines[1]
+
+
+@pytest.mark.parametrize("formato, tipo", [("xlsx", "spreadsheetml"), ("pdf", "application/pdf")])
+def test_reporte_excel_y_pdf(client, analyzer, formato, tipo):
+    client.force_login(make_user("1-9", ADMIN))
+    analyzer(client)
+    response = report(client, formato=formato)
+    assert tipo in response["Content-Type"]
+    assert response["Content-Disposition"].endswith(f'.{formato}"')
+
+
+def test_reporte_sin_datos_avisa_y_no_genera_archivo(client):
+    client.force_login(make_user("1-9", JEFE))
+    response = report(client, desde="2020-01-01", hasta="2020-01-31")
+    assert "Content-Disposition" not in response
+    assert "No hay análisis" in response.content.decode()
+
+
+def test_reporte_rechaza_periodo_invertido(client):
+    client.force_login(make_user("1-9", JEFE))
+    response = report(client, desde="2026-10-21", hasta="2026-10-01")
+    assert "Content-Disposition" not in response
+    assert response.context["form"].errors
+
+
+def test_reponedor_no_exporta_reportes(client):
+    client.force_login(make_user("1-9", REPONEDOR))
+    assert client.get(reverse("reportes")).status_code == 403

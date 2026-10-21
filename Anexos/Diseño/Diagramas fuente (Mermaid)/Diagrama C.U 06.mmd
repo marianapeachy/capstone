@@ -1,15 +1,18 @@
 sequenceDiagram
     autonumber
     actor Adm as Administrador del Sistema
-    participant Web as Panel de Usuarios Web
-    participant Svc as Servicio de Usuarios
+    participant Web as App web (Django)
     participant BD as Base de Datos
     participant Mail as Servicio de Correo
-    Adm->>Web: Ingresa datos del nuevo usuario y selecciona el rol
-    Web->>Svc: POST /api/v1/users (datos + rol)
-    Svc->>BD: Inserta el usuario (sin contraseña) y sus permisos
-    BD-->>Svc: ID del usuario creado
-    Svc->>Mail: Envía enlace de un solo uso para definir la contraseña
-    Svc-->>Web: Confirma la creación
+    Adm->>Web: Envía el formulario del usuario (RUT, nombre, correo + rol)
+    Web->>BD: Inserta el usuario (sin contraseña) y su perfil
+    BD-->>Web: ID del usuario creado
+    Web->>Mail: Envía enlace de un solo uso para definir la contraseña
+    Note over Mail: En desarrollo el correo se imprime en la consola<br/>del servidor (falta configurar SMTP)
     Web-->>Adm: Muestra el nuevo usuario en la lista
-    Note over Svc,BD: El usuario define su contraseña con el enlace y se guarda con hash (bcrypt)
+    Note over Web,BD: El usuario define su contraseña con el enlace<br/>y se guarda con hash (bcrypt)
+    opt Desactivar usuario (baja de personal)
+        Adm->>Web: Desmarca "Cuenta activa" y guarda
+        Web->>BD: Marca la cuenta como inactiva (no se borra: se conserva el historial)
+        Note over Web,BD: Sus sesiones activas se cierran de inmediato
+    end

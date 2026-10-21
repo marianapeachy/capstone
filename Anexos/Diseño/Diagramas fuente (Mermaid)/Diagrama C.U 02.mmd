@@ -1,22 +1,22 @@
 sequenceDiagram
     autonumber
     participant Eng as Motor de Visión (CU01)
-    participant Not as Módulo de Notificaciones
+    participant Web as App web (Django)
     participant BD as Base de Datos
-    actor Rep as Reponedor de Sala (Dashboard Web en el teléfono)
-    Eng->>Not: Góndola con espacio libre >= umbral (30% por defecto)
-    Not->>BD: Verifica si existe alerta activa (menos de 15 min)
-    alt No existe alerta activa
-        Not->>BD: Registra alerta (pasillo, góndola, % libre, imagen con huecos)
-        Not->>Rep: Muestra la alerta en la vista de alertas
-    else Alerta ya notificada
-        Not->>BD: Consolida en la alerta existente
-    end
-    Rep->>Not: Marca la alerta "En Proceso" o "Completada"
-    Not->>BD: Actualiza el estado de la alerta
-    Eng->>Not: Siguiente captura de la misma góndola
-    alt Espacio libre sigue >= umbral
-        Not->>BD: Reabre la alerta
+    actor Rep as Reponedor de Sala (página "Alertas" en el teléfono)
+    Eng->>Web: Resultado de la góndola (% libre, alerta sí/no)
+    Web->>BD: Busca una alerta abierta (Activa o En proceso) de la misma góndola
+    alt Espacio libre >= umbral (30% por defecto)
+        alt No hay alerta abierta
+            Web->>BD: Registra alerta Activa (pasillo, góndola, % libre, imagen con huecos)
+        else Ya hay una alerta abierta
+            Web->>BD: La foto nueva reemplaza a la anterior y conserva su estado y quién la atiende
+        end
     else Bajo el umbral
-        Not->>BD: Confirma la reposición y cierra la alerta
+        Web->>BD: Confirma la reposición y cierra la alerta abierta (Completada)
     end
+    Rep->>Web: Abre "Alertas" (se recarga sola cada minuto)
+    Web-->>Rep: Alertas abiertas: primero las suyas, luego las activas de mayor a menor % libre
+    Rep->>Web: Toma la alerta ("En proceso") y, al reponer, la marca "Completada"
+    Web->>BD: Actualiza el estado de la alerta
+    Note over Web,Rep: Notificación push al teléfono: pendiente

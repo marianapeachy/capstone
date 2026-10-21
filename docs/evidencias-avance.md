@@ -150,7 +150,7 @@ Ajustada.
 | C1 | Primer demo operativo ante Walmart | App web, pipeline | 27-10 al 31-10 | Nicko | Solo fotos que se pueden mostrar (no SKU-110K) | No iniciado | - |
 | C1 | Instalación en el servidor del CITT | Imagen Docker | Por definir | Por definir | Faltan las instrucciones del CITT | No iniciado (bloqueado) | - |
 | C3 | Registro de requisitos y plazos del curso | `docs/curso.md` | 09-10 al 10-10 | Francisco | - | Completado | - |
-| C3 | Casos de uso y diagramas alineados con Walmart | Plantillas de C.U, Mermaid | 09-10 al 10-10 | Francisco | Falta adaptarlos a la app Django (#42) | Completado | - |
+| C3 | Casos de uso y diagramas alineados con Walmart | Plantillas de C.U, Mermaid | 09-10 al 10-10 | Francisco | Adaptados a la app Django el 21-10 (#42, Mariana) | Completado | - |
 | C2 | Plan de mejoras de la Fase 1 | `docs/plan-de-mejoras.md` | 20-10 | Mariana | Plazo 09-10 | Con retraso (terminado el 20-10) | - |
 | C2 | Informe intermedio | Word | 19-10 al 21-10 | Francisco | Borrador en `Fase 2/`; entrega 21-10 | En curso | Antes era de Nicko; reasignado el 19-10 |
 | C1 | Análisis de resultados: 10 mejores y 10 peores casos | Kaggle CC0, pipeline | 20-10 | Francisco | Alerta correcta en el 84% de 44 fotos | Completado | - |
