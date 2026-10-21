@@ -82,6 +82,9 @@ hitos" en `docs/curso.md`).
       al día, video (#36) a cargo de Nicko y borrador de la reflexión de
       Francisco. Falta el enlace al video y las reflexiones de Nicko y
       Mariana (resaltadas en amarillo).
+      Actualización (2026-10-21): reflexión de Mariana agregada y plan de
+      mejoras (#26) corregido a cumplido (Tabla 11, resumen de la Gantt y
+      retrasos). Falta el enlace al video y la reflexión de Nicko.
 - [ ] **#29** Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
