@@ -1,4 +1,8 @@
-# Cambios pendientes en los C.U y diagramas por la app web (#28)
+# Cambios en los C.U y diagramas por la app web (#28)
+
+**Aplicados el 2026-10-21 (ítem #42)** en las plantillas, en las fuentes
+Mermaid (incluidas las nuevas de CU00 y del diagrama de arquitectura) y
+en sus PNG. Este documento queda como registro de qué cambió y por qué.
 
 La app web (`web/`, ítem #28, 2026-10-18) se construyó con Django y
 sesiones, no con la API FastAPI/Flask + JWT + React del diseño de la Fase
@@ -6,8 +10,7 @@ sesiones, no con la API FastAPI/Flask + JWT + React del diseño de la Fase
 Este documento lista qué hay que cambiar en las plantillas de C.U
 (`Anexos/Diseño/Plantilla de C.U 0X.docx`), en sus diagramas de secuencia
 (fuentes en `Anexos/Diseño/Diagramas fuente (Mermaid)/`) y en el diagrama
-de arquitectura, para rehacerlos en el ítem #42. Hasta entonces, manda lo
-que hace el código.
+de arquitectura, para rehacerlos en el ítem #42.
 
 ## Cambio general (aplica a todos los diagramas)
 

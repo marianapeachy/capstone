@@ -18,7 +18,9 @@ nombre.
   ```
 
   También en draw.io: Organizar > Insertar > Avanzado > Mermaid, pegar el
-  contenido y exportar a PNG. CU01-CU04 y CU07 se regeneraron con
-  mermaid-cli el 2026-10-19 (ítem #40); CU05 y CU06, con draw.io.
-
-CU00 no cambió y no tiene fuente aquí (solo su PNG).
+  contenido y exportar a PNG. CU00-CU06 se regeneraron con mermaid-cli el
+  2026-10-21 (ítem #42, app Django); CU07, el 2026-10-19 (ítem #40). Las
+  notas largas se parten con `<br/>` para que no se salgan del recuadro.
+- `Diagrama de Arquitectura.mmd`: diagrama de arquitectura (flowchart).
+  PNG en `Anexos/Diseño/Diagrama de arquitectura/Diagrama de Arquitectura.png`,
+  con el mismo comando y configuración.
