@@ -113,3 +113,22 @@ espacio vacío). Solo la variante ganadora se evalúa una vez en `test`
 - Registrar en el ítem #5 de `PROGRESS.md` las métricas de ambas variantes
   en `val`, la ganadora y su resultado en `test`, junto con la GPU, las
   épocas y el tiempo de entrenamiento.
+
+## 7. Fine-tuning con fotos fuera de SKU-110K (#33)
+
+Afina `yolo26s` con las fotos de Kaggle CC0 (24 de entrenamiento, reducidas
+a 2560 px y giradas a 20° y 35° con `oblique_view()`) más 300 fotos de
+SKU-110K para no olvidar. Las otras 12 fotos de Kaggle quedan para medir.
+
+```bash
+python scripts/prepare_finetune_dataset.py --sku-images 300
+python scripts/train_detector.py finetune --weights data/processed/training/yolo26s/weights/best.pt --data data/processed/yolo/finetune/data.yaml --workers 2
+# medir en las 3 vistas (f, y20, y35) y en el test de SKU-110K
+python scripts/train_detector.py val --weights data/processed/training/yolo26s-finetune/weights/best.pt --data data/processed/yolo/finetune/data-y20.yaml --batch 2
+python scripts/train_detector.py val --weights data/processed/training/yolo26s-finetune/weights/best.pt --split test
+```
+
+Son 30 épocas, SGD lr0 0.002 y ~8 min en una RTX 5060. Con más fotos de
+SKU-110K (1500) y lr0 0.0005 (`--lr0`) la mejora fuera de dominio baja y el
+mAP50-95 en SKU-110K sube solo de 0.533 a 0.548: no compensa. Resultados en
+DET-07 de `docs/test-plan.md`.
