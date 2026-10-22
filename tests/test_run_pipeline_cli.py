@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import cv2
+import numpy as np
 import pytest
 
 from tests.pipeline_fixtures import ColorDetector, gondola
@@ -71,6 +72,17 @@ def test_unreadable_photo_is_reported_and_the_rest_processed(cli, photos, tmp_pa
     assert not (out / "c_rota.json").exists()
     assert (out / "b_vacia.json").exists()
     assert "no se pudo leer" in capsys.readouterr().out
+
+
+def test_photo_without_products_has_no_free_space_or_alert(cli, photos, tmp_path, capsys):
+    # #52: sin detecciones no se informa % libre ni alerta (daría 100% libre y una alerta falsa).
+    folder, weights, _ = photos
+    cv2.imwrite(str(folder / "c_tapada.png"), np.full((600, 800, 3), 90, np.uint8))
+    out = tmp_path / "salida"
+    assert _run(cli, folder, "--weights", weights, "--out", out) == 0
+    assert not (out / "c_tapada.json").exists() and not (out / "c_tapada.jpg").exists()
+    assert (out / "b_vacia.json").exists()
+    assert "sin productos detectados" in capsys.readouterr().out
 
 
 def test_annotations_produce_iou_and_alert_metrics(cli, photos, tmp_path):

@@ -106,6 +106,9 @@ def analyze(upload, user, pasillo, gondola) -> Analysis:
         raise ValueError("No se pudo leer la imagen.")
     with _model_lock:  # el modelo se comparte entre los hilos del servidor
         result = run_image(image, get_detector())
+    if not result.products:  # #52: daría 100% libre y una alerta falsa; no se toca la alerta abierta
+        raise ValueError("No se detectaron productos en la foto: revisa que muestre la góndola, "
+                         "con luz y sin nada que la tape.")
     _, jpg = cv2.imencode(".jpg", draw_availability(image, result, banner=False))
     analysis = Analysis(created_by=user, pasillo=pasillo, gondola=gondola, photo_name=upload.name,
                         free_fraction=result.free_fraction, critical=result.critical, result=result.to_dict())
