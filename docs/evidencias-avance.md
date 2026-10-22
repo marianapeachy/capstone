@@ -221,7 +221,7 @@ Ajustada.
 | Login y CRUD (pedidos para la semana 8) | Terminados el 19-10 | - |
 | Verificar el detector fuera de SKU-110K | Medido: de frente cumple (mAP50 0,713); a 35° no (0,637). El fine-tuning del 21-10 sube 35° a 0,818 y se aceptó; baja el mAP50-95 en SKU-110K a 0,533 | Medirlo con el set de fotos propias (#32) y con ruido de cámara de sala (#55, 2026-11-06) |
 | Reportes (CU04) | Terminado el 21-10, antes del plazo (27-10) | Se muestra en la demo del 31-10 |
-| Dashboard (CU03) y configuración (CU05) | No iniciados, sin responsable | Asignarlos en la próxima reunión del equipo. Con CU04 ya se llegó al 50% de los C.U para la Evaluación 2 |
+| Dashboard (CU03) y configuración (CU05) | No iniciados; asignados a Mariana el 22-10 (#43, #44) | Hacerlos después de #52 y #53 (28-10). Con CU04 ya se llegó al 50% de los C.U para la Evaluación 2 |
 | Instalación en el CITT | Bloqueada | Imagen Docker lista; se instala cuando lleguen las instrucciones |
 | Aporte equitativo en el repositorio | Desigual | Cada integrante abre los PR de sus ítems y revisa los de otro; `.mailmap` para unificar las identidades de autor (mejora M9) |
 
@@ -275,10 +275,10 @@ profesor están en `docs/curso.md`. Por ejemplo:
 concentrado en Francisco. Propuesta del plan de mejoras (M9):
 
 - Mariana tomó los reportes (CU04, #7) y las plantillas de C.U (#42),
-  y los terminó el 21-10. Se propuso que tome las correcciones #52 y
-  #53 de la app web (al 28-10).
+  y los terminó el 21-10. El 22-10 tomó las correcciones #52 y #53 de
+  la app web (al 28-10), el dashboard (CU03, #43) y la configuración
+  (CU05, #44).
 - Nicko, el video (#36), la demo (#29) y la feria (#38).
-- Falta asignar el dashboard (CU03, #43) y la configuración (CU05, #44).
 - Cada integrante revisa los PR de otro.
 
 **6. Evaluación del trabajo en grupo.**
