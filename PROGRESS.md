@@ -172,10 +172,22 @@ hitos" en `docs/curso.md`).
       foto reciente) e historial de capturas. Con el pasillo y la
       góndola de cada análisis (#28) es una consulta por góndola.
       Hallazgo 12 de `docs/auditoria-app-web.md`.
-- [ ] **#44** (dueño: Mariana) Configuración del umbral y de las cámaras (CU05, RF07):
+- [x] **#44** (dueño: Mariana) Configuración del umbral y de las cámaras (CU05, RF07):
       umbral de espacio libre entre 1% y 100% (hoy fijo en 30%,
       `AvailabilityParams.critical_free_fraction`) y cámaras asociadas a
       pasillo y góndola con su calibración de lente. Hallazgo 14.
+      Hecho (2026-10-22): `run_image()` recibe `critical_free_fraction`
+      (None: 30%, así el CLI y CU07 no cambian); modelos `Config` (una
+      fila, umbral 1-100) y `Camera` (nombre, pasillo, góndola y
+      calibración JSON de OpenCV validada con `LensCalibration`),
+      migración 0004; página "Configuración" (solo Administrador) con
+      "Umbral inválido" y "Parámetros actualizados"; al analizar, el
+      umbral configurado y la calibración de la cámara de esa góndola.
+      Alertas muestra el umbral configurado. 11 tests nuevos. De paso, el
+      menú del Administrador en el teléfono se desliza en vez de empujar
+      la página (desde #7 tapaba el botón de salir). Fuera del ítem: el
+      "tiempo de tolerancia" de la plantilla de CU05, borrar cámaras y
+      más de una cámara por góndola (hoy una, con restricción única).
 - [ ] **#46** Falsas alertas en refrigeradores con puerta de vidrio
       (#34, fotos 020 y 003 de Kaggle): el reflejo y el desenfoque de la
       puerta en primer plano, los marcos entre puertas y una repisa en

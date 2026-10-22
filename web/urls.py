@@ -19,5 +19,8 @@ urlpatterns = [
     path("analisis/<int:pk>/imagen.jpg", views.analisis_imagen, name="analisis_imagen"),
     path("alertas/", views.alertas, name="alertas"),
     path("reportes/", views.reportes, name="reportes"),
+    path("configuracion/", views.configuracion, name="configuracion"),
+    path("configuracion/camaras/nueva/", views.camara_form, name="camara_nueva"),
+    path("configuracion/camaras/<int:pk>/", views.camara_form, name="camara_editar"),
     path("alertas/<int:pk>/<str:accion>/", views.alerta_accion, name="alerta_accion"),
 ]

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{% if nueva %}Nueva cámara{% else %}Editar cámara{% endif %} · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{% if nueva %}Nueva cámara{% else %}Editar {{ form.instance.nombre }}{% endif %}</h1>
+    <p>Las fotos de esta góndola se corrigen con la calibración de la cámara. No se dibuja la región de interés: el sistema segmenta la góndola solo.</p>
+  </div>
+</div>
+<form method="post" enctype="multipart/form-data" class="panel form narrow-form" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="form-errors" role="alert">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  {% include "web/_field.html" with field=form.nombre %}
+  {% include "web/_field.html" with field=form.pasillo %}
+  {% include "web/_field.html" with field=form.gondola %}
+  {% include "web/_field.html" with field=form.calibracion %}
+  {% if not nueva %}<p class="help">{% if form.instance.calibracion %}Tiene una calibración cargada: si no eliges un archivo, se conserva.{% else %}Sin calibración cargada.{% endif %}</p>{% endif %}
+  <div class="actions"><button type="submit" class="btn">{% if nueva %}Crear cámara{% else %}Guardar cambios{% endif %}</button><a class="btn quiet" href="{% url 'configuracion' %}">Cancelar</a></div>
+</form>
+{% endblock %}

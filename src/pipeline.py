@@ -25,7 +25,12 @@ from typing import Protocol
 
 import numpy as np
 
-from src.postprocessing.availability import GondolaAvailability, compute_availability
+from src.postprocessing.availability import (
+    CRITICAL_FREE_FRACTION,  # la app web lo toma de aqui (umbral por defecto de CU05)
+    AvailabilityParams,
+    GondolaAvailability,
+    compute_availability,
+)
 from src.postprocessing.shelf_levels import shelf_levels
 from src.preprocessing.gondola_segmentation import GondolaSegmentation, segment_gondola
 from src.preprocessing.image_correction import CorrectedImage, LensCalibration, correct_image
@@ -104,16 +109,21 @@ def run_image(
     detector: Detector,
     calibration: LensCalibration | None = None,
     conf: float | None = None,
+    critical_free_fraction: float | None = None,
 ) -> PipelineResult:
     """Corre el pipeline sobre una foto BGR. Sin `calibration` solo se
-    aplica CLAHE. `conf` se pasa al detector (None: su valor por defecto)."""
+    aplica CLAHE. `conf` se pasa al detector (None: su valor por defecto).
+    `critical_free_fraction` es el espacio libre desde el que se alerta
+    (None: 30%, el umbral por defecto; lo configura CU05)."""
 
     def detect(corrected: np.ndarray, segmentation: GondolaSegmentation) -> list[BBox]:
         crop = crop_roi(corrected, segmentation.roi)
         found = detector.detect(crop.image) if conf is None else detector.detect(crop.image, conf)
         return [crop.to_original(d.bbox) for d in found]
 
-    return _measure(image, calibration, detect)
+    params = AvailabilityParams() if critical_free_fraction is None else AvailabilityParams(
+        critical_free_fraction=critical_free_fraction)
+    return _measure(image, calibration, detect, params=params)
 
 
 def measure_boxes(image: np.ndarray, boxes: Sequence[BBox]) -> PipelineResult:
@@ -130,6 +140,7 @@ def _measure(
     calibration: LensCalibration | None,
     get_boxes: Callable[[np.ndarray, GondolaSegmentation], list[BBox]] | None = None,
     given: list[BBox] | None = None,
+    params: AvailabilityParams = AvailabilityParams(),
 ) -> PipelineResult:
     """Con `get_boxes` detecta (y mide su tiempo); con `given`, usa esas
     cajas y la deteccion queda en 0 segundos."""
@@ -142,7 +153,7 @@ def _measure(
     detected_at = time.perf_counter() if get_boxes is not None else segmented_at
     lines = [astuple(line) for line in segmentation.shelf_lines]
     levels = shelf_levels(boxes, lines, segmentation.roi)
-    availability = compute_availability(boxes, levels)
+    availability = compute_availability(boxes, levels, params)
     result = _to_original(image, corrected, segmentation, boxes, availability)
     finished_at = time.perf_counter()
     times = StageTimes(

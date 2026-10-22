@@ -5,7 +5,7 @@
 <div class="page-head">
   <div>
     <h1>{% if alertas %}<em>{{ alertas|length }}</em> {{ alertas|length|pluralize:"góndola,góndolas" }} en quiebre{% else %}Alertas{% endif %}</h1>
-    <p>Espacio libre de al menos 30% del frente. La lista se actualiza sola cada minuto.</p>
+    <p>Espacio libre de al menos {{ umbral }}% del frente. La lista se actualiza sola cada minuto.</p>
   </div>
 </div>
 {% if alertas %}
@@ -34,7 +34,7 @@
 <div class="panel empty">
   <svg class="icon" aria-hidden="true"><use href="#i-check-circle"/></svg>
   <h2>Sin quiebres abiertos</h2>
-  <p>Cuando una foto muestre una góndola con 30% o más de espacio libre, aparecerá aquí con su pasillo y sus repisas.</p>
+  <p>Cuando una foto muestre una góndola con {{ umbral }}% o más de espacio libre, aparecerá aquí con su pasillo y sus repisas.</p>
 </div>
 {% endif %}
 {% endblock %}

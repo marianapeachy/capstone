@@ -61,9 +61,10 @@ p { margin: 0; }
 .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-weight: 800; font-stretch: var(--narrow); font-size: 19px; letter-spacing: -.01em; }
 .brand-mark { width: 22px; height: 22px; }
 .brand b { color: var(--act-on-ink); font-weight: 800; }
-.nav { display: flex; gap: 4px; height: 100%; margin-right: auto; }
+/* Con muchas secciones (Administrador en el teléfono) el menú se desliza en vez de empujar la página. */
+.nav { display: flex; gap: 4px; height: 100%; margin-right: auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
 .nav a {
-  display: flex; align-items: center; gap: 8px; padding: 0 12px;
+  display: flex; flex-shrink: 0; align-items: center; gap: 8px; padding: 0 12px; white-space: nowrap;
   color: rgb(255 255 255 / .78); text-decoration: none; font-weight: 600;
   border-bottom: 3px solid transparent; border-top: 3px solid transparent;
 }
@@ -114,7 +115,7 @@ p { margin: 0; }
 .form-after { margin-top: 14px; }
 .narrow-form { max-width: 640px; }
 .form-errors { padding: 10px 14px; border-radius: var(--radius-control); background: var(--gap-tint); }
-input[type=text], input[type=email], input[type=password], input[type=date], select, input[type=file] {
+input[type=text], input[type=email], input[type=password], input[type=date], input[type=number], select, input[type=file] {
   width: 100%; min-height: 44px; padding: 9px 12px;
   border: 1.5px solid #aebbc1; border-radius: 8px; background: #fff; color: var(--ink);
   font: 400 16px "Archivo", system-ui, sans-serif;

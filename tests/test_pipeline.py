@@ -65,6 +65,15 @@ def test_emptying_shelves_creates_gaps_there_and_the_alert():
     assert any(not s.gaps for s in result.shelves)
 
 
+def test_alert_threshold_can_be_changed():
+    # CU05 (#44): el umbral es configurable; el % libre no depende de él.
+    image = gondola(EMPTIED)[0]
+    default = run_image(image, ColorDetector())
+    higher = run_image(image, ColorDetector(), critical_free_fraction=default.free_fraction + 0.05)
+    assert default.critical and not higher.critical
+    assert higher.free_fraction == default.free_fraction
+
+
 def test_alert_and_free_space_are_reported_only_for_the_whole_gondola():
     # Una repisa vacia en su 70% central no llega al 30% de la gondola.
     result = run_image(gondola({1: (0.15, 0.85)})[0], ColorDetector())

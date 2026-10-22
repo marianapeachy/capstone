@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from src.pipeline import CRITICAL_FREE_FRACTION
 
 REPONEDOR, JEFE, ADMIN = ROLES = ("Reponedor", "Jefe de Salón", "Administrador")
 
@@ -73,3 +76,37 @@ class Analysis(models.Model):
 def _x_range(polygon) -> tuple[float, float]:
     xs = [point[0] for point in polygon]
     return min(xs), max(xs)
+
+
+class Config(models.Model):
+    """Parametros de la tienda que configura el Administrador (CU05). Una
+    sola fila: `Config.get()`."""
+
+    umbral = models.PositiveSmallIntegerField(
+        "umbral de espacio libre (%)", default=round(CRITICAL_FREE_FRACTION * 100),
+        validators=[MinValueValidator(1), MaxValueValidator(100)])
+
+    @classmethod
+    def get(cls) -> "Config":
+        return cls.objects.get_or_create(pk=1)[0]
+
+
+class Camera(models.Model):
+    """Camara de sala asociada a un pasillo y una gondola (CU05). Su
+    calibracion de lente (formato de OpenCV, ver LensCalibration) se aplica
+    a las fotos de esa gondola; sin ella solo se corrige el contraste."""
+
+    nombre = models.CharField(max_length=60, unique=True)
+    pasillo = models.CharField(max_length=20)
+    gondola = models.CharField("góndola", max_length=20)
+    calibracion = models.JSONField("calibración de lente", null=True, blank=True)
+
+    class Meta:
+        ordering = ["pasillo", "gondola"]
+        # shortcut: una camara por gondola; si una gondola necesita dos, elegir la camara al subir la foto.
+        constraints = [models.UniqueConstraint(fields=["pasillo", "gondola"], name="una_camara_por_gondola",
+                                               violation_error_message="Esa góndola ya tiene una cámara.")]
+
+    @property
+    def location(self) -> str:
+        return f"Pasillo {self.pasillo} · Góndola {self.gondola}"
