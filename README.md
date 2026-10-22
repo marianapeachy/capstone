@@ -415,6 +415,13 @@ python manage.py runserver          # http://localhost:8000
   corrigen con esa calibración; sin ella, solo se aplica CLAHE. Los
   cambios rigen para las fotos siguientes: lo ya analizado no cambia. No
   se configura la profundidad (25 cm fijos) ni se dibuja la ROI.
+- **Privacidad de las fotos (RNF05)**: las fotos de tienda pueden mostrar
+  clientes. `python manage.py borrar_fotos --dias 30` borra las fotos
+  analizadas con más de 30 días y conserva sus resultados (% libre,
+  alerta, estado e historial), así que el dashboard y los reportes siguen
+  igual; el detalle muestra "La foto se borró". Pensado para correr una
+  vez al día (cron o el programador del servidor del CITT). El plazo de 30
+  días es una propuesta a confirmar con Walmart (#24).
 - **Diseño**: el mundo visual es el "fleje de góndola": cada góndola se
   dibuja como sus repisas de frente, con los huecos rayados en su posición
   real (contexto de producto en [PRODUCT.md](PRODUCT.md) y sistema en

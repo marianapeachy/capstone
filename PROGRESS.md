@@ -215,9 +215,18 @@ hitos" en `docs/curso.md`).
       (nitidez local) y acotar la góndola a la parte enfocada; tratar los
       marcos de puerta. Es la condición más parecida a una cámara de sala
       que falla dentro del alcance.
-- [ ] **#45** Privacidad de las fotos (RNF05): las fotos guardadas
+- [x] **#45** (dueño: Mariana) Privacidad de las fotos (RNF05): las fotos guardadas
       pueden mostrar clientes. Proponer a Walmart (#24) borrarlas tras N
       días o difuminar rostros antes de guardarlas. Hallazgo 17.
+      Hecho (2026-10-22): comando `python manage.py borrar_fotos --dias N`
+      (30 por defecto, >= 1) que borra el archivo de las fotos más
+      antiguas y conserva el análisis (% libre, alerta, estado,
+      historial); el detalle muestra "La foto se borró" y la imagen
+      responde 404. Se eligió borrar y no difuminar rostros: los
+      detectores clásicos confunden las caras impresas en los envases y
+      no ven clientes de perfil. Falta: que Walmart confirme el plazo
+      (#24) y programarlo una vez al día en el servidor del CITT (#39).
+      2 tests nuevos.
 - [ ] **#48** Modelar el diagrama de la base de datos (entidad-relación) a partir de
       `web/models.py` (`User`, perfiles como grupos de Django, `Analysis`)
       y dejarlo en `Anexos/Diseño/Diagramas fuente (Mermaid)/` (`erDiagram`).

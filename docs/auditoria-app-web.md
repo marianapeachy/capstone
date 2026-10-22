@@ -41,7 +41,7 @@ Evaluación 2 y del demo con Walmart (semana del 2026-10-28, a más tardar
 | 14 | Umbral configurable y cámaras asociadas a góndolas | CU05, RF07 | P1 | Ítem #44 |
 | 15 | Los pesos `yolo26s` no están en el servidor; sin ellos la app analiza con lo que encuentre | RF02 | P1 | Copiarlos al volumen `/data` del CITT (#39) |
 | 16 | Los correos (enlace para definir la contraseña) solo se imprimen en la consola | CU06 | P1 | Configurar SMTP en el servidor (#39) |
-| 17 | Las fotos guardadas pueden mostrar clientes: RNF05 pide no guardar rostros ni datos personales | RNF05 | P1 | Ítem #45, para conversar con Walmart (#24) |
+| 17 | Las fotos guardadas pueden mostrar clientes: RNF05 pide no guardar rostros ni datos personales | RNF05 | P1 | Ítem #45: `borrar_fotos` las borra tras 30 días (2026-10-22); el plazo y si además se difuminan rostros, a conversar con Walmart (#24) |
 | 18 | HTTPS en el CITT: sin él la cookie de sesión viaja en claro | RNF04 | P1 | Cookies seguras detrás de HTTPS (#39) |
 | 19 | Notificación push al reponedor y alerta de cámara defectuosa | CU02, CU01 1a | P2 | Backlog |
 | 20 | Registro de auditoría (quién hizo qué), como en el mockup Admin-4 | Mockups | P2 | Backlog |
