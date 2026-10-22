@@ -44,7 +44,7 @@ Resumen de lo acordado en las reuniones con Walmart Chile (las minutas no se ver
 | Problema | Detectar espacios vacíos (quiebres de stock) en góndolas; la pregunta central es si hay quiebre o no | 2026-09-03, 2026-09-30 | Vigente |
 | Alcance | La primera reunión propuso partir, en principio, con góndolas de pan y pollo. El equipo eligió no perecibles porque son los que tienen datasets públicos anotados, y después Walmart recomendó partir por la categoría con más datos | 2026-09-03, 2026-09-16 | Por confirmar (#24) |
 | Métrica | Porcentaje de espacio libre de la góndola completa (Nivel 1); como mínimo, alerta por umbral del 30% (Nivel 2). El acta pedía además detalle por repisa: lo reemplaza el cambio del 2026-10-19 | 2026-09-03, 2026-10-19 (profesor) | Vigente |
-| Sentido del umbral | El acta lo plantea como "menos del 30% de productos disponibles"; el sistema alerta con **espacio libre >= 30%** del frente (decidido 2026-09-30, #6). El umbral es configurable (`AvailabilityParams.critical_free_fraction`) y los reportes informan el % libre, así que sirven para cualquiera de las dos lecturas | 2026-09-03 | Por confirmar (#24) |
+| Sentido del umbral | El acta lo plantea como "menos del 30% de productos disponibles"; el sistema alerta con **espacio libre >= 30%** del frente (decidido 2026-09-30, #6). El umbral es configurable (CU05, página "Configuración" de la app web) y los reportes informan el % libre, así que sirven para cualquiera de las dos lecturas | 2026-09-03 | Por confirmar (#24) |
 | Nivel de la alerta | **Góndola completa**, no por nivel o repisa (cambio de alcance indicado por el profesor; antes lo elegía el equipo y se mostraba también el detalle por repisa). Implementación: #40 | 2026-09-30, 2026-10-19 (profesor) | Vigente |
 | Criterios | Todo criterio del equipo (fachada visible, sin apilamiento, hueco de al menos un ancho de producto) es válido si se justifica ante el negocio | 2026-09-16 | Vigente |
 | Imágenes | Las fotos de Walmart son de muchos tipos (frontales, en ángulo, desde arriba) y no vienen recortadas a la góndola. Walmart no comparte fotogramas de sus cámaras (ver "Estrategia de Datos y Evaluación") | 2026-09-16, 2026-10-01 | Vigente |
@@ -82,7 +82,7 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ## 👥 Perfiles de Usuario
 
-La interfaz va después del pipeline: Walmart pidió priorizar que la lógica funcione. La aplicación web (ver "Aplicación web") ya tiene el login por perfil (CU00), la gestión de usuarios y roles (CU06) el análisis de fotos (CU01), las alertas (CU02) y los reportes (CU04); el dashboard y la configuración siguen pendientes. Los casos de uso CU00-CU07 están en `Anexos/Diseño/`.
+La interfaz va después del pipeline: Walmart pidió priorizar que la lógica funcione. La aplicación web (ver "Aplicación web") ya tiene el login por perfil (CU00), la gestión de usuarios y roles (CU06) el análisis de fotos (CU01), las alertas (CU02), los reportes (CU04) y la configuración de umbral y cámaras (CU05); el dashboard sigue pendiente. Los casos de uso CU00-CU07 están en `Anexos/Diseño/`.
 
 1. **Reponedor de Tienda**: Recibe alertas inmediatas en dispositivos móviles para acudir a los pasillos con quiebre crítico.
 2. **Jefe de Salón / Supervisor**: Visualiza dashboards de disponibilidad por pasillo y exporta reportes periódicos de desempeño.
@@ -144,7 +144,7 @@ Cada etapa vive en su paquete y no importa los detalles de otra: se pasan arrays
 | **YOLO26 con cabeza sin NMS** (`nms=False`, `max_det=1000`, `imgsz=1280`) | En góndolas densas y apiladas, el NMS suprime productos vecinos que se tocan, y el límite por defecto de 300 cajas trunca góndolas llenas. Entrenar y validar con los mismos valores hace que `best.pt` salga del mismo modelo que se usa al inferir | 690 latas detectadas como 714 en una foto densa (foto 002 de Kaggle); la variante `yolo26s-p2` (cabeza para objetos chicos) no mejoró (mAP50-95 0,596 contra 0,606) y costó el doble, así que se eligió `yolo26s` |
 | **Niveles de repisa híbridos** (`shelf_levels()`: filas de productos + líneas de la segmentación) | Con la cámara en ángulo las repisas se ven inclinadas y los rectángulos horizontales de la segmentación se meten en las repisas vecinas: los productos de una tapan los huecos de otra. Las bases de los productos marcan la repisa aunque esté inclinada, y las líneas de la segmentación aportan las repisas vacías | Foto real en ángulo (Kaggle 039): 3 franjas siguiendo las repisas y 5% libre, contra 5 niveles cruzados y huecos falsos de 77% y 36% solo con la segmentación (ítem #22) |
 | **Profundidad constante de 25 cm** | Walmart confirmó que el análisis 2D de la vista frontal basta; las góndolas miden entre 20 y 30 cm. Estimar profundidad (modelos de profundidad o estéreo) agregaría un error que no se puede verificar sin fotos de Walmart | Una sola constante global; si Walmart envía las medidas estándar, se cambia ese valor |
-| **Umbral: alerta con espacio libre ≥ 30% del frente** | El acta lo plantea como "menos del 30% de productos disponibles"; leído al pie de la letra alertaba con la góndola llena, así que se invirtió a espacio libre. Es configurable (`AvailabilityParams.critical_free_fraction`) | Con recall simulado de 0,9, umbrales de 20/25/30/35% dan 20,7/8,7/4,0/1,0% de falsas alertas con la góndola llena, y un quiebre de 30% se detecta en 87% de los casos (ítem #6) |
+| **Umbral: alerta con espacio libre ≥ 30% del frente** | El acta lo plantea como "menos del 30% de productos disponibles"; leído al pie de la letra alertaba con la góndola llena, así que se invirtió a espacio libre. Lo configura el Administrador en la app web (CU05, entre 1% y 100%; `run_image(critical_free_fraction=...)`) | Con recall simulado de 0,9, umbrales de 20/25/30/35% dan 20,7/8,7/4,0/1,0% de falsas alertas con la góndola llena, y un quiebre de 30% se detecta en 87% de los casos (ítem #6) |
 | **Una alerta por góndola completa, repisas solo para medir** | Cambio de alcance indicado por el profesor el 2026-10-19. Las repisas siguen siendo el método interno, porque medir la cobertura a lo largo de cada repisa funciona con la cámara en ángulo; pero no se informa alerta ni % por repisa | Ítem #40; JSON con `free_fraction` y `critical` de la góndola y `shelves` solo con geometría |
 | **Fachada visible, sin apilamiento, hueco de al menos un ancho de producto** | Es lo que ve el cliente; la altura es el eje que más deforma una cámara de sala. Un hueco más angosto que un producto no se puede reponer | Criterio del equipo, válido ante Walmart si se justifica (reunión 2026-09-16) |
 | **Reportes en Excel, CSV y PDF**, una fila por análisis | Walmart no pide un formato (RF05), así que se eligió uno por uso: Excel para que el Jefe de Salón filtre y grafique (el % libre va como número), CSV para cargarlo en otros sistemas (UTF-8 con BOM, para que Excel muestre bien las tildes) y PDF para imprimir o archivar una auditoría sin que se edite. Cada fila trae fecha, pasillo, góndola, % libre de la góndola completa y alerta sí/no (el contenido mínimo), más el estado de la alerta y quién subió la foto; nada por repisa (#40). Sin análisis en el período no se genera un archivo vacío (CU04) | `tests/test_report_export.py` y las pruebas de CU04 en `tests/test_web.py` (ítem #7) |
@@ -190,7 +190,8 @@ Al 2026-10-20. El detalle por ítem y su dueño están en [PROGRESS.md](PROGRESS
 | Ingesta y evaluación por lotes (RF01, RF06, CU07) | Operativo (`scripts/run_pipeline.py`); ~0,5 s por foto en lote, en CPU |
 | Aplicación web: login (CU00), usuarios y roles (CU06), análisis (CU01) y alertas (CU02) | Operativo |
 | Reportes Excel, CSV y PDF (RF05, CU04, #7) | Operativo: página "Reportes" de la app web (`src/reporting/export.py`) |
-| Dashboard de disponibilidad (CU03, #43) y configuración de umbral y cámaras (CU05, #44) | Pendiente |
+| Configuración de umbral y cámaras (CU05, #44) | Operativo: página "Configuración" de la app web |
+| Dashboard de disponibilidad (CU03, #43) | Pendiente |
 | Instalación en el servidor del CITT (#39) | Bloqueado: esperan las instrucciones |
 
 **Limitaciones conocidas** (análisis completo en [docs/analisis-resultados.md](docs/analisis-resultados.md)):
@@ -400,6 +401,14 @@ python manage.py runserver          # http://localhost:8000
   análisis de un período, opcionalmente de un pasillo o una góndola, en
   Excel, CSV o PDF. Si no hay análisis en el período lo avisa y no genera
   un archivo vacío.
+- **CU05**: "Configuración" (solo el Administrador) fija el umbral de
+  espacio libre desde el que se alerta (1% a 100%, 30% por defecto) y
+  asocia cámaras a un pasillo y una góndola, con su calibración de lente
+  opcional: un JSON con `camera_matrix` (3x3), `dist_coeffs` y `fisheye`,
+  como lo entrega la calibración de OpenCV. Las fotos de esa góndola se
+  corrigen con esa calibración; sin ella, solo se aplica CLAHE. Los
+  cambios rigen para las fotos siguientes: lo ya analizado no cambia. No
+  se configura la profundidad (25 cm fijos) ni se dibuja la ROI.
 - **Diseño**: el mundo visual es el "fleje de góndola": cada góndola se
   dibuja como sus repisas de frente, con los huecos rayados en su posición
   real (contexto de producto en [PRODUCT.md](PRODUCT.md) y sistema en
