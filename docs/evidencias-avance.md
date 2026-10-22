@@ -16,11 +16,16 @@ estructura que describe "Requisitos vigentes" en `docs/curso.md`:
 - **Parte A:** ya está en la plantilla oficial, en
   `Fase 2/2.4_GuiaEstudiante_Fase 2_DesarrolloProyecto APT.docx`
   (2026-10-20).
-- **Parte B:** espera la plantilla 2.1, que no venía en la carpeta
-  subida al repositorio (PR #42).
+- **Parte B:** el diario 2.1 de Mariana está en
+  `Fase 2/Ramirez_Mariana_2.1_APT122_DiarioReflexionFase2.docx` y su
+  autoevaluación 2.2 en
+  `Fase 2/Ramirez_Mariana_2.2_APT122_AutoevaluacionAvanceFase2.docx`
+  (2026-10-22). Las plantillas vienen de la carpeta de AVANCE de Drive
+  (mensaje del profesor del 2026-10-16). Francisco y Nicko suben su
+  propio diario 2.1.
 
-Las partes marcadas **[A completar por el equipo]** son opiniones o
-datos que el repositorio no registra.
+Las opiniones de la parte B (causa de la semana sin avances y
+evaluación del trabajo en grupo) las dio Mariana el 2026-10-22.
 
 Datos al corte del 2026-10-21. Fuentes: `PROGRESS.md`,
 `Anexos/Gestion/Carta Gantt Fase 2.xlsx`, `docs/plan-de-mejoras.md`, el
@@ -193,7 +198,7 @@ Ajustada.
   configuración del entrenamiento (#18).
 - **Servidor del CITT bloqueado:** todavía no llegan las instrucciones.
 - **Semana del 12 al 16 de octubre sin commits de desarrollo.** Causa:
-  **[A completar por el equipo]**.
+  dificultades personales del equipo.
 - **Trabajo concentrado en un integrante:** 43 de los 61 Pull Requests
   mergeados vienen de una sola cuenta (al 2026-10-22). La planilla de avance da 15
   puntos al aporte visible de cada integrante.
@@ -255,27 +260,33 @@ Facilitadores y obstáculos: ver A.3.
 - **Atrasos:** se reasignaron ítems, por ejemplo el informe intermedio el
   19-10.
 
-**3. Autoevaluación del trabajo.** **[A completar por el equipo]**
+**3. Autoevaluación del trabajo.** Individual: cada integrante responde
+en su propio diario 2.1 (el de Mariana, en `Fase 2/`).
 
 **4. Dudas para el docente o los pares.** Las preguntas abiertas para el
 profesor están en `docs/curso.md`. Por ejemplo:
 
 - el día de la Evaluación 2;
 - qué documentos se entregan el 26-10;
-- si Django + SQLite cuenta como "estándar de la industria".
-
-**[A completar por el equipo, si hay más]**
+- si Django + SQLite cuenta como "estándar de la industria";
+- cómo y cuándo será la instalación en el servidor del CITT.
 
 **5. ¿Hay que redistribuir actividades?** Sí. El desarrollo está
 concentrado en Francisco. Propuesta del plan de mejoras (M9):
 
 - Mariana tomó los reportes (CU04, #7) y las plantillas de C.U (#42),
-  y los terminó el 21-10.
-- Nicko, la demo (#29) y la feria (#38).
-- Asignar el dashboard (CU03, #43) y la configuración (CU05, #44) a
-  Mariana y Nicko.
+  y los terminó el 21-10. Se propuso que tome las correcciones #52 y
+  #53 de la app web (al 28-10).
+- Nicko, el video (#36), la demo (#29) y la feria (#38).
+- Falta asignar el dashboard (CU03, #43) y la configuración (CU05, #44).
 - Cada integrante revisa los PR de otro.
 
-**[A confirmar por el equipo]**
+**6. Evaluación del trabajo en grupo.**
 
-**6. Evaluación del trabajo en grupo.** **[A completar por el equipo]**
+- **Positivo:** el flujo con ramas, Pull Requests e integración
+  continua nos mantuvo ordenados, y la documentación compartida
+  (backlog, Carta Gantt y README) permite retomar el ítem de otro.
+- **Por mejorar:** la carga estuvo concentrada en un integrante (43 de
+  62 PR) y faltó avisar a tiempo los atrasos, como en la semana del 12
+  al 16 de octubre. Repartir los ítems de forma más pareja y avisar
+  antes cuando alguien no pueda avanzar.
