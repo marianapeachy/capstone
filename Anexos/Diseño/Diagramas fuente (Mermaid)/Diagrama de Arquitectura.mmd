@@ -16,7 +16,7 @@ flowchart TB
         end
         subgraph M3["Módulo 3: Postprocesamiento (src/postprocessing)"]
             LVL["Niveles de repisa híbridos (shelf_levels)"] --> AV["Espacio libre de la góndola completa (profundidad fija 25 cm)"]
-            AV --> ALR["Alerta con espacio libre >= 30%"]
+            AV --> ALR["Alerta con espacio libre >= umbral (30% por defecto, configurable en CU05)"]
         end
         ROI -->|"ROI de la imagen corregida"| DET
         DET -->|"Cajas [x_min, y_min, x_max, y_max]"| LVL
@@ -26,16 +26,16 @@ flowchart TB
         VIEWS["Vistas de Django: formularios y páginas"]
         AUTH["Sesiones + bcrypt, perfiles por grupo (RBAC)"]
         REP["Reportes Excel / CSV / PDF (CU04, src/reporting)"]
-        DB[("SQLite: usuarios, análisis y alertas (volumen /data en Docker)")]
+        DB[("SQLite: usuarios, análisis, alertas, umbral y cámaras (volumen /data en Docker)")]
         VIEWS --> AUTH
         VIEWS --> REP
         VIEWS --> DB
     end
 
     subgraph C4["Capa 4: Plantillas HTML de Django (servidas por la misma app)"]
-        V_ADM["Administrador: Usuarios y roles (CU06)"]
-        V_JEFE["Jefe de Salón: Análisis de fotos (CU01)"]
-        V_REP["Reponedor: Alertas en el teléfono (CU02)"]
+        V_ADM["Administrador: Usuarios y roles (CU06) y configuración (CU05)"]
+        V_JEFE["Jefe de Salón: Góndolas (CU03), análisis de fotos (CU01) y reportes (CU04)"]
+        V_REP["Reponedor: Alertas en el teléfono (CU02) y góndolas (CU03)"]
     end
 
     subgraph C5["Capa 5: Evaluación y Validación Externa"]

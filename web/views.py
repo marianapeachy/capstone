@@ -1,5 +1,6 @@
 import functools
 import logging
+import re
 import threading
 import uuid
 from datetime import timedelta
@@ -13,7 +14,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.mail import send_mail
-from django.http import FileResponse, HttpResponse
+from django.db.models import OuterRef, Subquery
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -31,7 +33,7 @@ from web.models import (ABIERTAS, ACTIVA, ADMIN, COMPLETADA, EN_PROCESO, JEFE, R
 logger = logging.getLogger(__name__)
 
 # Vista principal de cada perfil (CU00).
-HOME = {ADMIN: "usuarios", JEFE: "analisis", REPONEDOR: "alertas"}
+HOME = {ADMIN: "usuarios", JEFE: "gondolas", REPONEDOR: "alertas"}
 TODOS = (ADMIN, JEFE, REPONEDOR)
 
 
@@ -269,3 +271,54 @@ def camara_form(request, pk=None):
         messages.success(request, f"{saved.nombre} quedó asociada a {saved.location}.")
         return redirect("configuracion")
     return render(request, "web/camara_form.html", {"form": form, "nueva": camera is None})
+
+
+# --- CU03: dashboard de gondolas ---
+
+# Una foto mas antigua que esto ya no dice como esta la gondola: "Sin datos".
+RECENT = timedelta(hours=24)
+
+
+def gondola_state(analysis, umbral, now) -> tuple[str, str]:
+    """(clase CSS, texto) del estado de una gondola segun su ultima foto:
+    quiebre si esa foto tiene alerta; en riesgo desde la mitad del umbral;
+    disponible bajo la mitad; sin datos si no hay foto reciente."""
+    if analysis is None or now - analysis.created_at > RECENT:
+        return "ok", "Sin datos"
+    if analysis.critical:
+        return "activa", "Quiebre"
+    if analysis.free_fraction * 100 >= umbral / 2:
+        return "off", "En riesgo"
+    return "completada", "Disponible"
+
+
+def _natural(text: str) -> list:
+    """Orden natural: "Góndola 2" antes que "Góndola 10"."""
+    return [int(part) if part.isdigit() else part for part in re.split(r"(\d+)", text)]
+
+
+@roles(*TODOS)
+def gondolas(request):
+    newest = (Analysis.objects.filter(pasillo=OuterRef("pasillo"), gondola=OuterRef("gondola"))
+              .order_by("-created_at").values("pk")[:1])
+    latest = {(a.pasillo, a.gondola): a for a in Analysis.objects.filter(pk=Subquery(newest)).defer("result")}
+    for camera in Camera.objects.all():  # una camara sin fotos todavia tambien es una gondola, sin datos
+        latest.setdefault((camera.pasillo, camera.gondola), None)
+    umbral, now = Config.get().umbral, timezone.now()
+    pasillos: dict[str, list] = {}
+    for (pasillo, gondola), analysis in sorted(latest.items(), key=lambda item: (_natural(item[0][0]), _natural(item[0][1]))):
+        state, label = gondola_state(analysis, umbral, now)
+        pasillos.setdefault(pasillo, []).append(
+            {"pasillo": pasillo, "gondola": gondola, "a": analysis, "state": state, "label": label})
+    return render(request, "web/gondolas.html", {
+        "pasillos": pasillos.items(), "umbral": umbral, "recent_hours": int(RECENT.total_seconds() // 3600)})
+
+
+@roles(*TODOS)
+def gondola_detalle(request, pasillo, gondola):
+    historial = list(Analysis.objects.filter(pasillo=pasillo, gondola=gondola).select_related("created_by")[:30])
+    if not historial and not Camera.objects.filter(pasillo=pasillo, gondola=gondola).exists():
+        raise Http404
+    state, label = gondola_state(historial[0] if historial else None, Config.get().umbral, timezone.now())
+    return render(request, "web/gondola_detalle.html", {
+        "pasillo": pasillo, "gondola": gondola, "historial": historial, "state": state, "label": label})

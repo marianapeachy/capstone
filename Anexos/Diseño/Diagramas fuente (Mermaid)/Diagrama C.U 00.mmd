@@ -9,7 +9,7 @@ sequenceDiagram
         BD-->>Web: Usuario validado + perfil asignado
         Web->>BD: Reinicia los intentos fallidos
         Web-->>U: Abre la sesión y redirige según el rol
-        Note over U,Web: Reponedor: Alertas<br/>Jefe de Salón: Análisis<br/>Administrador: Usuarios
+        Note over U,Web: Reponedor: Alertas<br/>Jefe de Salón: Góndolas<br/>Administrador: Usuarios
     else Credenciales incorrectas
         Web->>BD: Suma un intento fallido (al quinto seguido, la cuenta queda inactiva)
         Web-->>U: Muestra "Credenciales incorrectas. Intente nuevamente."

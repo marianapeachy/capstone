@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Pasillo {{ pasillo }} · Góndola {{ gondola }} · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Pasillo {{ pasillo }} · Góndola {{ gondola }}</h1>
+    <p><span class="state {{ state }}">{{ label }}</span>
+      {% if historial %}Última foto hace {{ historial.0.created_at|timesince }}, con {% widthratio historial.0.free_fraction 1 100 %}% libre.{% else %}La cámara todavía no envía fotos.{% endif %}</p>
+  </div>
+  {% if historial %}<a class="btn quiet" href="{% url 'analisis_detalle' historial.0.pk %}"><svg class="icon" aria-hidden="true"><use href="#i-image"/></svg>Ver la última foto</a>{% endif %}
+</div>
+<h2 class="section-title">Historial de capturas</h2>
+{% if historial %}
+<div class="panel table-wrap">
+  <table>
+    <thead><tr><th>Fecha</th><th>Repisas</th><th class="num">Libre</th><th class="hide-phone">Alerta</th><th class="hide-phone">Subida por</th></tr></thead>
+    <tbody>
+    {% for a in historial %}
+    <tr>
+      <td><a class="strong" href="{% url 'analisis_detalle' a.pk %}">{{ a.created_at|date:"Y-m-d H:i" }}</a></td>
+      <td>{% include "web/_fleje.html" with size="mini" %}</td>
+      <td class="num"><span class="pct{% if a.critical %} hot{% endif %}">{% widthratio a.free_fraction 1 100 %}%</span></td>
+      <td class="hide-phone">{% if a.estado %}<span class="state {{ a.estado }}">{{ a.get_estado_display }}</span>{% else %}<span class="state ok">Sin quiebre</span>{% endif %}</td>
+      <td class="muted hide-phone">{{ a.created_by.username|default:"-" }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="panel empty"><svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg><h2>Sin capturas</h2><p>Cuando llegue la primera foto de esta góndola, aparecerá aquí.</p></div>
+{% endif %}
+{% endblock %}
