@@ -25,7 +25,7 @@ flowchart TB
     subgraph C3["Capa 3: App web Django (vistas, ORM, migraciones)"]
         VIEWS["Vistas de Django: formularios y páginas"]
         AUTH["Sesiones + bcrypt, perfiles por grupo (RBAC)"]
-        REP["Reportes Excel / CSV / PDF (CU04, src/reporting, en desarrollo)"]
+        REP["Reportes Excel / CSV / PDF (CU04, src/reporting)"]
         DB[("SQLite: usuarios, análisis y alertas (volumen /data en Docker)")]
         VIEWS --> AUTH
         VIEWS --> REP
