@@ -140,10 +140,11 @@ hitos" en `docs/curso.md`).
       Actualización (2026-10-21): guía 2.4 y `docs/evidencias-avance.md`
       al corte del 21-10 (CU04, #42 y #33 hechos, 233 pruebas, Gantt y PR).
       Actualización (2026-10-22): diario 2.1 y autoevaluación 2.2 de
-      Mariana llenados en `Fase 2/` (plantillas de la carpeta de AVANCE);
-      partes de opinión de `docs/evidencias-avance.md` completadas. Falta
-      el diario 2.1 de Francisco y de Nicko y recalcular las cifras antes
-      de entregar (2026-10-26).
+      Mariana llenados en `Fase 2/Evidencias Individuales/` (plantillas de
+      la carpeta de AVANCE); partes de opinión de
+      `docs/evidencias-avance.md` completadas. Nicko subió su diario 2.1
+      a la misma carpeta. Falta el de Francisco y recalcular las cifras
+      antes de entregar (2026-10-26).
 - [ ] **#38** Feria de informática (semana del 2026-10-26; día y hora
       por informar): definir qué integrante va (al menos uno) y qué se
       muestra.

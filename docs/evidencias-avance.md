@@ -16,13 +16,11 @@ estructura que describe "Requisitos vigentes" en `docs/curso.md`:
 - **Parte A:** ya está en la plantilla oficial, en
   `Fase 2/2.4_GuiaEstudiante_Fase 2_DesarrolloProyecto APT.docx`
   (2026-10-20).
-- **Parte B:** el diario 2.1 de Mariana está en
-  `Fase 2/Ramirez_Mariana_2.1_APT122_DiarioReflexionFase2.docx` y su
-  autoevaluación 2.2 en
-  `Fase 2/Ramirez_Mariana_2.2_APT122_AutoevaluacionAvanceFase2.docx`
-  (2026-10-22). Las plantillas vienen de la carpeta de AVANCE de Drive
-  (mensaje del profesor del 2026-10-16). Francisco y Nicko suben su
-  propio diario 2.1.
+- **Parte B:** las evidencias individuales van en
+  `Fase 2/Evidencias Individuales/`: ahí están el diario 2.1 y la
+  autoevaluación 2.2 de Mariana (2026-10-22) y el diario 2.1 de Nicko.
+  Las plantillas vienen de la carpeta de AVANCE de Drive (mensaje del
+  profesor del 2026-10-16). Falta el diario 2.1 de Francisco.
 
 Las opiniones de la parte B (causa de la semana sin avances y
 evaluación del trabajo en grupo) las dio Mariana el 2026-10-22.
@@ -261,7 +259,7 @@ Facilitadores y obstáculos: ver A.3.
   19-10.
 
 **3. Autoevaluación del trabajo.** Individual: cada integrante responde
-en su propio diario 2.1 (el de Mariana, en `Fase 2/`).
+en su propio diario 2.1 (en `Fase 2/Evidencias Individuales/`).
 
 **4. Dudas para el docente o los pares.** Las preguntas abiertas para el
 profesor están en `docs/curso.md`. Por ejemplo:
