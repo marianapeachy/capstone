@@ -221,11 +221,18 @@ hitos" en `docs/curso.md`).
       en paralelo pasan de 5. Propuesta: contar con `F()` y bloquear por
       tiempo (ej. 15 min) en vez de desactivar la cuenta. Requiere
       confirmar el cambio de CU00 con el equipo.
-- [ ] **#52** (dueño: Mariana) Foto sin productos detectados (auditoría 2026-10-21): con 0
+- [x] **#52** (dueño: Mariana) Foto sin productos detectados (auditoría 2026-10-21): con 0
       detecciones, `compute_availability()` da 100% libre y alerta
       crítica (foto tapada, oscura o sin góndola). Rechazar el análisis
       en la app web ("no se detectaron productos") y definir qué
       informa `run_pipeline.py` en ese caso. Cruza con #24 (alcance).
+      Hecho (2026-10-22): la app web rechaza la foto con un aviso, sin
+      guardar el análisis ni tocar la alerta abierta de la góndola;
+      `run_pipeline.py` la anota en la tabla ("sin productos detectados")
+      sin % libre ni alerta y sin escribir su vista ni su JSON, pero si
+      tiene anotación entra igual en las métricas (sacarla inflaría el
+      recall). `compute_availability()` no cambia: el rechazo va en
+      quien informa el resultado. Un test en la app y otro en el CLI.
 - [ ] **#53** (dueño: Mariana) Rendimiento y robustez de la app web (auditoría 2026-10-21): las
       listas de análisis y de alertas cargan el JSON `result` de cada
       fila sin usarlo (`.defer("result")`); y si el correo del enlace de

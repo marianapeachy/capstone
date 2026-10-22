@@ -321,7 +321,9 @@ el resultado completo (`<nombre>.json`), e imprime el % libre, la alerta y
 los segundos por etapa. En el JSON, `free_fraction` y `critical` son los
 de la góndola completa; `shelves` solo trae la geometría de cada repisa
 medida (contorno, huecos y número de productos), sin % ni alerta por
-repisa: las repisas son el método para medir, no una salida. Usa por defecto los pesos de
+repisa: las repisas son el método para medir, no una salida. Una foto
+sin productos detectados (tapada, oscura o sin góndola) no tiene % libre
+ni alerta: se anota en la tabla y no se escriben su vista ni su JSON. Usa por defecto los pesos de
 `data/processed/training/yolo26s/weights/best.pt` (no se versionan: se
 comparten dentro del equipo, ver `docs/training.md`).
 
@@ -383,7 +385,9 @@ python manage.py runserver          # http://localhost:8000
 - **CU01**: el Administrador y el Jefe de Salón suben una foto con su
   pasillo y góndola (hasta 20 MB). La app corre el pipeline y guarda en la
   base el % libre de la góndola completa, la alerta y la foto anotada.
-  Las fotos solo se ven con sesión iniciada.
+  Las fotos solo se ven con sesión iniciada. Si el detector no encuentra
+  ningún producto (foto tapada, oscura o sin góndola), el análisis se
+  rechaza con un aviso y no se toca la alerta abierta de esa góndola.
 - **CU02**: "Alertas" (los tres perfiles, pensada para el teléfono del
   reponedor) lista las góndolas con quiebre abierto y se actualiza sola
   cada minuto. Cada alerta pasa por Activa -> En proceso (quién la tomó y
