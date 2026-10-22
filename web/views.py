@@ -216,7 +216,10 @@ def analisis_detalle(request, pk):
 @roles(*TODOS)
 def analisis_imagen(request, pk):
     # Las fotos de tienda se sirven solo con sesion, no como archivos publicos.
-    return FileResponse(get_object_or_404(Analysis, pk=pk).annotated.open("rb"), content_type="image/jpeg")
+    analysis = get_object_or_404(Analysis, pk=pk)
+    if not analysis.annotated:  # borrada por antigua (RNF05, borrar_fotos)
+        raise Http404
+    return FileResponse(analysis.annotated.open("rb"), content_type="image/jpeg")
 
 
 # --- CU04: reportes ---

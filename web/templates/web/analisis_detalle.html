@@ -15,7 +15,8 @@
   {% endif %}
 </div>
 <div class="detail">
-  <img class="photo" src="{% url 'analisis_imagen' a.pk %}" alt="Foto analizada de {{ a.location }}: huecos en rojo y espacio libre por repisa" width="{{ a.result.image_size.0 }}" height="{{ a.result.image_size.1 }}">
+  {% if a.annotated %}<img class="photo" src="{% url 'analisis_imagen' a.pk %}" alt="Foto analizada de {{ a.location }}: huecos en rojo y espacio libre por repisa" width="{{ a.result.image_size.0 }}" height="{{ a.result.image_size.1 }}">
+  {% else %}<div class="panel empty"><svg class="icon" aria-hidden="true"><use href="#i-image"/></svg><h2>La foto se borró</h2><p>Por privacidad, las fotos se borran tras un tiempo: pueden mostrar clientes. El resultado del análisis se conserva.</p></div>{% endif %}
   <div>
     <section class="panel">
       <div class="alert-top">

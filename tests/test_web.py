@@ -1,15 +1,17 @@
 """App web (item #28): login por perfil (CU00), usuarios y roles (CU06),
 analisis de fotos (CU01), ciclo de las alertas (CU02), reportes (CU04, #7),
-configuracion de umbral y camaras (CU05, #44) y dashboard de gondolas (CU03, #43) con la gondola
+configuracion de umbral y camaras (CU05, #44) dashboard de gondolas (CU03, #43) y borrado de fotos antiguas (RNF05, #45) con la gondola
 sintetica y el detector falso de pipeline_fixtures (sin pesos de YOLO26)."""
 
 import json
+import os
 from datetime import timedelta
 
 import cv2
 import numpy as np
 import pytest
 from django.contrib.auth.models import Group
+from django.core.management import CommandError, call_command
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from django.utils import timezone
@@ -439,3 +441,28 @@ def test_detalle_de_gondola_con_su_historial(client, analyzer):
 def test_dashboard_vacio(client):
     client.force_login(make_user("1-9", REPONEDOR))
     assert "Todavía no hay góndolas" in client.get(reverse("gondolas")).content.decode()
+
+
+# --- RNF05: privacidad de las fotos ---
+
+def test_borrar_fotos_antiguas_conserva_el_analisis(client, analyzer, capsys):
+    # #45: las fotos pueden mostrar clientes; tras N días se borra la foto y se conservan los datos.
+    client.force_login(make_user("1-9", JEFE))
+    old, recent = analyzer(client), analyzer(client, gondola_id="15")
+    Analysis.objects.filter(pk=old.pk).update(created_at=timezone.now() - timedelta(days=31))
+    old_file = old.annotated.path
+    call_command("borrar_fotos", dias=30)
+    assert "1 foto" in capsys.readouterr().out
+    old.refresh_from_db()
+    recent.refresh_from_db()
+    assert not old.annotated and recent.annotated
+    assert old.free_fraction > 0.3 and old.critical  # el resultado queda
+    assert not os.path.exists(old_file)
+    assert client.get(reverse("analisis_imagen", args=[old.pk])).status_code == 404
+    page = client.get(reverse("analisis_detalle", args=[old.pk])).content.decode()
+    assert "La foto se borró" in page
+
+
+def test_borrar_fotos_rechaza_dias_invalidos():
+    with pytest.raises(CommandError, match="al menos 1"):
+        call_command("borrar_fotos", dias=0)
