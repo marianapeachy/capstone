@@ -1,9 +1,10 @@
 """App web (item #28): login por perfil (CU00), usuarios y roles (CU06),
 analisis de fotos (CU01), ciclo de las alertas (CU02), reportes (CU04, #7),
-configuracion de umbral y camaras (CU05, #44) con la gondola
+configuracion de umbral y camaras (CU05, #44) y dashboard de gondolas (CU03, #43) con la gondola
 sintetica y el detector falso de pipeline_fixtures (sin pesos de YOLO26)."""
 
 import json
+from datetime import timedelta
 
 import cv2
 import numpy as np
@@ -54,7 +55,7 @@ def analyzer(settings, tmp_path, monkeypatch):
 
 # --- CU00 ---
 
-@pytest.mark.parametrize("role, home", [(ADMIN, "usuarios"), (JEFE, "analisis"), (REPONEDOR, "alertas")])
+@pytest.mark.parametrize("role, home", [(ADMIN, "usuarios"), (JEFE, "gondolas"), (REPONEDOR, "alertas")])
 def test_login_lleva_a_la_vista_de_su_perfil(client, role, home):
     make_user("11111111-1", role)
     login(client, "11.111.111-1")  # con puntos: se normaliza
@@ -385,3 +386,56 @@ def test_solo_el_admin_configura(client):
     client.force_login(make_user("1-9", JEFE))
     assert client.get(reverse("configuracion")).status_code == 403
     assert client.get(reverse("camara_nueva")).status_code == 403
+
+
+# --- CU03 ---
+
+def tile(page, gondola_id):
+    """Texto de la tarjeta de una góndola en el dashboard."""
+    start = page.index(f"Góndola {gondola_id}<")
+    return page[start:page.index("</article>", start)]
+
+
+def test_dashboard_muestra_el_estado_de_la_ultima_foto_de_cada_gondola(client, analyzer):
+    client.force_login(make_user("1-9", JEFE))
+    analyzer(client)  # 14B: 36% libre, con alerta
+    analyzer(client, empty=None, gondola_id="15")  # 15: llena
+    page = client.get(reverse("gondolas")).content.decode()
+    assert "Quiebre" in tile(page, "14B") and "Disponible" in tile(page, "15")
+
+    analyzer(client, empty=None)  # 14B repuesta: manda la foto más nueva
+    assert "Disponible" in tile(client.get(reverse("gondolas")).content.decode(), "14B")
+
+
+def test_amarillo_desde_la_mitad_del_umbral(client, analyzer):
+    client.force_login(make_user("2-7", ADMIN))
+    client.post(reverse("configuracion"), {"umbral": 70})  # 36% libre: sobre la mitad (35%), bajo el umbral
+    analyzer(client)
+    tile_text = tile(client.get(reverse("gondolas")).content.decode(), "14B")
+    assert "En riesgo" in tile_text and "Quiebre" not in tile_text
+
+
+def test_sin_foto_reciente_o_camara_sin_fotos_es_sin_datos(client, analyzer):
+    client.force_login(make_user("2-7", ADMIN))
+    client.post(reverse("camara_nueva"), {"nombre": "Cámara 9", "pasillo": "9", "gondola": "1"})
+    old = analyzer(client)
+    Analysis.objects.filter(pk=old.pk).update(created_at=timezone.now() - views.RECENT - timedelta(minutes=1))
+    page = client.get(reverse("gondolas")).content.decode()
+    assert "Sin datos" in tile(page, "14B") and "Sin datos" in tile(page, "1")
+
+
+def test_detalle_de_gondola_con_su_historial(client, analyzer):
+    client.force_login(make_user("2-7", JEFE))
+    first = analyzer(client)
+    second = analyzer(client, empty=None)
+    analyzer(client, gondola_id="15")  # otra góndola: no va en el historial
+    client.force_login(make_user("1-9", REPONEDOR))  # el reponedor también lo ve
+    response = client.get(reverse("gondola_detalle", args=["3", "14B"]))
+    history = list(response.context["historial"])
+    assert history == [second, first]
+    assert "Disponible" in response.content.decode()
+
+
+def test_dashboard_vacio(client):
+    client.force_login(make_user("1-9", REPONEDOR))
+    assert "Todavía no hay góndolas" in client.get(reverse("gondolas")).content.decode()

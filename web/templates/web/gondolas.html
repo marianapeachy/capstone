@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Góndolas · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Góndolas</h1>
+    <p>Estado de cada góndola según su última foto. Disponible: menos de {% widthratio umbral 2 1 %}% libre; en riesgo: desde {% widthratio umbral 2 1 %}%; quiebre: alerta con {{ umbral }}% o más. Sin una foto en las últimas {{ recent_hours }} horas, «Sin datos».</p>
+  </div>
+</div>
+{% for pasillo, lista in pasillos %}
+<h2 class="section-title">Pasillo {{ pasillo }}</h2>
+<div class="alerts">
+  {% for g in lista %}
+  <article class="panel alert">
+    <div class="alert-top">
+      <h3 class="alert-loc"><a href="{% url 'gondola_detalle' g.pasillo g.gondola %}">Góndola {{ g.gondola }}</a></h3>
+      {% if g.a and g.state != "ok" %}<span class="alert-pct{% if g.state != 'activa' %} calm{% endif %}">{% widthratio g.a.free_fraction 1 100 %}<small>% libre</small></span>{% endif %}
+    </div>
+    <p class="alert-meta"><span class="state {{ g.state }}">{{ g.label }}</span>
+      {% if g.a %}Foto de hace {{ g.a.created_at|timesince }}.{% else %}La cámara todavía no envía fotos.{% endif %}</p>
+  </article>
+  {% endfor %}
+</div>
+{% empty %}
+<div class="panel empty">
+  <svg class="icon" aria-hidden="true"><use href="#i-storefront"/></svg>
+  <h2>Todavía no hay góndolas</h2>
+  <p>Aparecen cuando se analiza la primera foto de una góndola o cuando el Administrador asocia una cámara a ella.</p>
+</div>
+{% endfor %}
+{% endblock %}

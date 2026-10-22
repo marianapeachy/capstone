@@ -19,6 +19,7 @@
   <nav class="nav" aria-label="Principal">
     {% if role == "Administrador" %}<a href="{% url 'usuarios' %}"{% if page == "usuarios" or page == "usuario_nuevo" or page == "usuario_editar" %} aria-current="page"{% endif %}><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg>Usuarios</a>
     <a href="{% url 'configuracion' %}"{% if page == "configuracion" or page == "camara_nueva" or page == "camara_editar" %} aria-current="page"{% endif %}><svg class="icon" aria-hidden="true"><use href="#i-gear-six"/></svg>Configuración</a>{% endif %}
+    <a href="{% url 'gondolas' %}"{% if page == "gondolas" or page == "gondola_detalle" %} aria-current="page"{% endif %}><svg class="icon" aria-hidden="true"><use href="#i-storefront"/></svg>Góndolas</a>
     {% if role == "Administrador" or role == "Jefe de Salón" %}<a href="{% url 'analisis' %}"{% if page == "analisis" or page == "analisis_detalle" %} aria-current="page"{% endif %}><svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>Análisis</a>
     <a href="{% url 'reportes' %}"{% if page == "reportes" %} aria-current="page"{% endif %}><svg class="icon" aria-hidden="true"><use href="#i-download-simple"/></svg>Reportes</a>{% endif %}
     <a href="{% url 'alertas' %}"{% if page == "alertas" %} aria-current="page"{% endif %}><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg>Alertas{% if open_alerts %} <span class="count" aria-label="{{ open_alerts }} abiertas">{{ open_alerts }}</span>{% endif %}</a>
