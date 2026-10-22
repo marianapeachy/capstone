@@ -62,8 +62,9 @@ un modelo que el equipo pueda explicar a uno con más rendimiento.
 - Hecho: login con RUT o correo y vista por perfil (CU00), usuarios y
   roles (CU06), análisis de fotos con % libre de la góndola completa,
   alerta y foto anotada (CU01), lista de alertas, reportes
-  Excel/CSV/PDF (CU04), umbral y cámaras configurables (CU05).
-- Pendiente: pasillos y góndolas como entidades, dashboard (CU03),
+  Excel/CSV/PDF (CU04), umbral y cámaras configurables (CU05), dashboard
+  de góndolas con su historial (CU03).
+- Pendiente: pasillos y góndolas como entidades,
   notificaciones push, alerta de cámara defectuosa.
 - Stack: Django 6.1 + SQLite con plantillas HTML (decidido 2026-10-18,
   ver README). Sin API REST ni frontend aparte.

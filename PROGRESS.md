@@ -166,12 +166,22 @@ hitos" en `docs/curso.md`).
       (`Anexos/Diseño/Diagramas fuente (Mermaid)/`), con sus PNG
       regenerados con mermaid-cli. Verificado contra `web/` (login con
       RUT o correo, bloqueo tras 5 intentos, vista por rol, alertas).
-- [ ] **#43** (dueño: Mariana) Dashboard de disponibilidad (CU03, RF05): estado de cada
+- [x] **#43** (dueño: Mariana) Dashboard de disponibilidad (CU03, RF05): estado de cada
       góndola según su última foto (verde con menos de la mitad del
       umbral, amarillo hasta el umbral, rojo con alerta, "Sin datos" sin
       foto reciente) e historial de capturas. Con el pasillo y la
       góndola de cada análisis (#28) es una consulta por góndola.
       Hallazgo 12 de `docs/auditoria-app-web.md`.
+      Hecho (2026-10-22): página "Góndolas" (los tres perfiles; el Jefe
+      de Salón entra ahí, como anticipaba CU00) con una tarjeta por
+      góndola agrupada por pasillo, en orden natural: Disponible, En
+      riesgo (desde la mitad del umbral configurado, #44), Quiebre (la
+      última foto tiene alerta) y Sin datos (sin foto en 24 h,
+      `views.RECENT`, o cámara sin fotos). Una consulta con subconsulta
+      trae la última foto de cada góndola, sin cargar `result`. Detalle
+      por góndola con su historial (30 capturas). Plantilla y diagrama
+      de CU00 y diagrama de arquitectura al día. 5 tests nuevos. El plazo
+      de 24 h lo eligió el equipo: ni el ítem ni CU03 lo definen.
 - [x] **#44** (dueño: Mariana) Configuración del umbral y de las cámaras (CU05, RF07):
       umbral de espacio libre entre 1% y 100% (hoy fijo en 30%,
       `AvailabilityParams.critical_free_fraction`) y cámaras asociadas a

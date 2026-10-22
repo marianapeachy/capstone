@@ -82,7 +82,7 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ## 👥 Perfiles de Usuario
 
-La interfaz va después del pipeline: Walmart pidió priorizar que la lógica funcione. La aplicación web (ver "Aplicación web") ya tiene el login por perfil (CU00), la gestión de usuarios y roles (CU06) el análisis de fotos (CU01), las alertas (CU02), los reportes (CU04) y la configuración de umbral y cámaras (CU05); el dashboard sigue pendiente. Los casos de uso CU00-CU07 están en `Anexos/Diseño/`.
+La interfaz va después del pipeline: Walmart pidió priorizar que la lógica funcione. La aplicación web (ver "Aplicación web") ya tiene el login por perfil (CU00), la gestión de usuarios y roles (CU06), el análisis de fotos (CU01), las alertas (CU02), el dashboard de góndolas (CU03), los reportes (CU04) y la configuración de umbral y cámaras (CU05). Los casos de uso CU00-CU07 están en `Anexos/Diseño/`.
 
 1. **Reponedor de Tienda**: Recibe alertas inmediatas en dispositivos móviles para acudir a los pasillos con quiebre crítico.
 2. **Jefe de Salón / Supervisor**: Visualiza dashboards de disponibilidad por pasillo y exporta reportes periódicos de desempeño.
@@ -191,7 +191,7 @@ Al 2026-10-20. El detalle por ítem y su dueño están en [PROGRESS.md](PROGRESS
 | Aplicación web: login (CU00), usuarios y roles (CU06), análisis (CU01) y alertas (CU02) | Operativo |
 | Reportes Excel, CSV y PDF (RF05, CU04, #7) | Operativo: página "Reportes" de la app web (`src/reporting/export.py`) |
 | Configuración de umbral y cámaras (CU05, #44) | Operativo: página "Configuración" de la app web |
-| Dashboard de disponibilidad (CU03, #43) | Pendiente |
+| Dashboard de disponibilidad (CU03, #43) | Operativo: página "Góndolas" de la app web |
 | Instalación en el servidor del CITT (#39) | Bloqueado: esperan las instrucciones |
 
 **Limitaciones conocidas** (análisis completo en [docs/analisis-resultados.md](docs/analisis-resultados.md)):
@@ -372,7 +372,7 @@ python manage.py runserver          # http://localhost:8000
 ```
 
 - **CU00**: se entra con RUT (con o sin puntos) o correo; cada perfil
-  llega a su vista (Administrador -> Usuarios, Jefe de Salón -> Análisis,
+  llega a su vista (Administrador -> Usuarios, Jefe de Salón -> Góndolas,
   Reponedor -> Alertas). Tras 5 intentos fallidos seguidos la cuenta queda
   inactiva hasta que el Administrador la reactive. La sesión expira tras
   2 h sin uso.
@@ -401,6 +401,12 @@ python manage.py runserver          # http://localhost:8000
   análisis de un período, opcionalmente de un pasillo o una góndola, en
   Excel, CSV o PDF. Si no hay análisis en el período lo avisa y no genera
   un archivo vacío.
+- **CU03**: "Góndolas" (los tres perfiles; el Jefe de Salón entra ahí)
+  muestra, por pasillo, el estado de cada góndola según su última foto:
+  disponible con menos de la mitad del umbral libre, en riesgo desde la
+  mitad, quiebre si la foto tiene alerta y "Sin datos" sin foto en las
+  últimas 24 horas (o si es la góndola de una cámara que aún no envía
+  fotos). Cada góndola tiene su historial de capturas.
 - **CU05**: "Configuración" (solo el Administrador) fija el umbral de
   espacio libre desde el que se alerta (1% a 100%, 30% por defecto) y
   asocia cámaras a un pasillo y una góndola, con su calibración de lente
