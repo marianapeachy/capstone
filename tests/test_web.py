@@ -112,6 +112,35 @@ def test_admin_crea_usuario_que_define_su_clave_con_enlace_de_un_uso(client, mai
     assert not client.get(link, follow=True).context["validlink"]
 
 
+def test_si_falla_el_correo_el_usuario_queda_creado_y_se_reenvia_el_enlace(client, mailoutbox, monkeypatch):
+    # #53: antes daba error 500 y el usuario quedaba sin contraseña ni forma de recibir el enlace.
+    client.force_login(make_user("2-7", ADMIN))
+
+    def fails(*args, **kwargs):
+        raise OSError("servidor de correo caído")
+
+    monkeypatch.setattr(views, "send_mail", fails)
+    response = client.post(reverse("usuario_nuevo"), {
+        "username": "12.345.678-5", "email": "ana@tienda.cl", "is_active": "on", "role": REPONEDOR}, follow=True)
+    assert response.status_code == 200
+    assert "no se pudo enviar el correo" in response.content.decode()
+    user = User.objects.get(username="12345678-5")
+    assert not user.has_usable_password()
+    assert "Reenviar enlace" in client.get(reverse("usuario_editar", args=[user.pk])).content.decode()
+
+    monkeypatch.undo()
+    client.force_login(User.objects.get(username="2-7"))
+    client.post(reverse("usuario_enlace", args=[user.pk]))
+    assert len(mailoutbox) == 1 and mailoutbox[0].to == ["ana@tienda.cl"]
+
+
+def test_solo_el_admin_reenvia_el_enlace(client, mailoutbox):
+    user = make_user("1-9", REPONEDOR)
+    client.force_login(make_user("2-7", JEFE))
+    assert client.post(reverse("usuario_enlace", args=[user.pk])).status_code == 403
+    assert not mailoutbox
+
+
 @pytest.mark.parametrize("rut, valid", [
     ("12345678-5", True), ("11111111-1", True), ("1-9", True), ("12345678-6", False), ("abc-1", False)])
 def test_digito_verificador_del_rut(rut, valid):
