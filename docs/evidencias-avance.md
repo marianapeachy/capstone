@@ -1,7 +1,7 @@
 # Evidencias de avance de la Fase 2 (borrador)
 
 Ítem #37 de `PROGRESS.md`. Plazo: 2026-10-26. Responsable: Mariana
-Ramírez. Borrador del 2026-10-20.
+Ramírez. Borrador del 2026-10-20, actualizado el 2026-10-21.
 
 Este documento junta el contenido de dos evidencias de avance, con la
 estructura que describe "Requisitos vigentes" en `docs/curso.md`:
@@ -22,7 +22,7 @@ estructura que describe "Requisitos vigentes" en `docs/curso.md`:
 Las partes marcadas **[A completar por el equipo]** son opiniones o
 datos que el repositorio no registra.
 
-Datos al corte del 2026-10-20. Fuentes: `PROGRESS.md`,
+Datos al corte del 2026-10-21. Fuentes: `PROGRESS.md`,
 `Anexos/Gestion/Carta Gantt Fase 2.xlsx`, `docs/plan-de-mejoras.md`, el
 historial de Pull Requests y el README.
 
@@ -32,7 +32,7 @@ historial de Pull Requests y el README.
 
 ### A.1 Resumen del avance
 
-**Actividades realizadas (2026-09-27 a 2026-10-20).** El pipeline de
+**Actividades realizadas (2026-09-27 a 2026-10-21).** El pipeline de
 visión artificial está completo y funcionando. Toma una foto de góndola y
 entrega el % de espacio libre de la góndola completa, la alerta de quiebre
 (espacio libre ≥ 30%) y la imagen anotada. Sus etapas son:
@@ -50,7 +50,11 @@ Además, hay una aplicación web en Django (#28) con:
 - login por perfil (CU00);
 - gestión de usuarios y roles (CU06);
 - carga y análisis de fotos (CU01);
-- alertas con estado para el reponedor (CU02).
+- alertas con estado para el reponedor (CU02);
+- exportación de reportes en Excel, CSV y PDF (CU04, #7).
+
+Las plantillas de casos de uso, sus diagramas de secuencia y el de
+arquitectura se rehicieron según la app Django (#42).
 
 En gestión, se armó un flujo de trabajo con ramas, Pull Requests,
 integración continua y una bitácora (`PROGRESS.md`), y se mantienen la
@@ -65,14 +69,14 @@ específicos de la Fase 1 se cumplen así:
 | Procesar imágenes del entorno de operación para distinguir un espacio libre real por quiebre de stock | Un hueco cuenta como espacio libre solo si mide al menos un ancho de producto. Es un criterio del equipo, y Walmart acepta cualquier criterio que se justifique ante el negocio (2026-09-16). El quiebre se informa para la góndola completa |
 
 El plan de mejoras (`docs/plan-de-mejoras.md`, sección 4) los reformula
-como cinco objetivos con meta medible. Su estado al 2026-10-20:
+como cinco objetivos con meta medible. Su estado al 2026-10-21:
 
 | Objetivo | Meta | Estado |
 | --- | --- | --- |
 | OE1. Segmentación de góndola y repisas | F1 ≥ 0,80 | Cumplido: F1 0,823 contra SHARD, en 1000 fotos no usadas para ajustar |
-| OE2. Detección de productos | mAP50 ≥ 0,70 fuera de SKU-110K | En curso: 0,950 en el test de SKU-110K y 0,713 en 45 fotos de Kaggle; con la cámara a 35° baja a 0,637, así que se planificó un fine-tuning (#33) |
+| OE2. Detección de productos | mAP50 ≥ 0,70 fuera de SKU-110K | En curso: 0,950 en el test de SKU-110K y 0,713 en 45 fotos de Kaggle; con la cámara a 35° baja a 0,637. El primer fine-tuning (21-10) sube 35° a 0,818 en 12 fotos de prueba, pero no se aceptó porque baja el mAP50-95 en SKU-110K de 0,610 a 0,533 (#33) |
 | OE3. % libre y alerta de la góndola completa | Diferencia con el % anotado (meta a fijar) | En curso: con productos envasados, alerta correcta en el 92% de 36 fotos y error medio de 6,2 puntos (#34) |
-| OE4. App web con login por rol (CU00 a CU06) | 50% de los C.U para la Evaluación 2 | En curso: CU00, CU01, CU02 y CU06 operativos; CU03, CU04 y CU05 pendientes |
+| OE4. App web con login por rol (CU00 a CU06) | 50% de los C.U para la Evaluación 2 | En curso, con la meta de la Evaluación 2 alcanzada: CU00, CU01, CU02, CU04 y CU06 operativos en la app (5 de 8, más CU07 por línea de comandos); CU03 y CU05 pendientes |
 | OE5. Pruebas automatizadas y evaluación por lotes | CI en verde en cada PR | Cumplido: CI en cada PR; evaluación por lotes en `scripts/run_pipeline.py` |
 
 **Objetivos y metodología ajustados.**
@@ -103,7 +107,7 @@ como cinco objetivos con meta medible. Su estado al 2026-10-20:
 evidencias está en la sección 5 de `docs/plan-de-mejoras.md`. La calidad
 se resguardó así:
 
-- **Pruebas automatizadas:** 185 pruebas en 19 archivos con pytest,
+- **Pruebas automatizadas:** 233 pruebas en 21 archivos con pytest,
   escritas antes del código en los módulos nuevos (TDD).
 - **Integración continua:** GitHub Actions corre las pruebas y construye
   la imagen Docker en cada Pull Request, y `main` solo acepta cambios
@@ -143,20 +147,21 @@ Ajustada.
 | C1 | Repisas inclinadas (niveles híbridos) | OpenCV, YOLO26 | 01-10 | Francisco | Para cámaras en ángulo | Completado | - |
 | C1 | Pipeline completo, vista anotada y evaluación por lotes (CU07) | Python, Docker | 10-10 al 18-10 | Francisco | - | Completado | - |
 | C3 | Quiebre por góndola completa (cambio de alcance) | - | 19-10 | Francisco | Pedido del profesor | Completado | - |
-| C1 | Verificar el detector fuera de SKU-110K | Kaggle CC0, Roboflow | 20-10 al 21-10 | Francisco | mAP50 0,713 de frente; 0,637 a 35° | En curso | Fine-tuning planificado |
-| C1 | Reportes Excel, CSV y PDF (CU04) | openpyxl, fpdf2 | 20-10 al 27-10 | Mariana | Fechas propuestas | No iniciado | - |
+| C1 | Verificar el detector fuera de SKU-110K | Kaggle CC0, Roboflow | 20-10 al 21-10 | Francisco | mAP50 0,713 de frente; 0,637 a 35° | Completado | Primer fine-tuning (21-10) no aceptado: olvida SKU-110K |
+| C1 | Reportes Excel, CSV y PDF (CU04) | openpyxl, fpdf2, Django | 21-10 | Mariana | Página "Reportes" de la app web; 13 pruebas | Completado | Terminado antes del plazo (27-10) |
 | C1 | Diseño, modelamiento y script de la base de datos | Django, SQLite | 18-10 al 19-10 | Francisco | Planificado en la Fase 1 para septiembre | Completado | Hecho con las migraciones de Django |
 | C1 | Login, CRUD de usuarios y roles (CU00, CU06) | Django, bcrypt | 18-10 al 19-10 | Francisco | 22 pruebas de la app web | Completado | Django con sesiones en vez de API REST con JWT |
 | C1 | Primer demo operativo ante Walmart | App web, pipeline | 27-10 al 31-10 | Nicko | Solo fotos que se pueden mostrar (no SKU-110K) | No iniciado | - |
 | C1 | Instalación en el servidor del CITT | Imagen Docker | Por definir | Por definir | Faltan las instrucciones del CITT | No iniciado (bloqueado) | - |
 | C3 | Registro de requisitos y plazos del curso | `docs/curso.md` | 09-10 al 10-10 | Francisco | - | Completado | - |
-| C3 | Casos de uso y diagramas alineados con Walmart | Plantillas de C.U, Mermaid | 09-10 al 10-10 | Francisco | Adaptados a la app Django el 21-10 (#42, Mariana) | Completado | - |
+| C3 | Casos de uso y diagramas alineados con Walmart | Plantillas de C.U, Mermaid | 09-10 al 10-10 | Francisco | - | Completado | - |
+| C3 | Plantillas de C.U y diagramas según la app Django (#42) | Plantillas de C.U, Mermaid | 21-10 | Mariana | CU00-CU06 y diagrama de arquitectura; fuentes Mermaid nuevas de CU00 y de la arquitectura | Completado | Sin API REST, JWT ni React |
 | C2 | Plan de mejoras de la Fase 1 | `docs/plan-de-mejoras.md` | 20-10 | Mariana | Plazo 09-10 | Con retraso (terminado el 20-10) | - |
 | C2 | Informe intermedio | Word | 19-10 al 21-10 | Francisco | Borrador en `Fase 2/`; entrega 21-10 | En curso | Antes era de Nicko; reasignado el 19-10 |
 | C1 | Análisis de resultados: 10 mejores y 10 peores casos | Kaggle CC0, pipeline | 20-10 | Francisco | Alerta correcta en el 84% de 44 fotos | Completado | - |
 | C2 | README completo | README.md | 20-10 | Francisco | Ejemplo reproducible | Completado | - |
 | C2 | Video de demostración (5 a 10 min) | App web, fotos sin SKU-110K | 21-10 | Nicko | Entrega 21-10 | No iniciado | Antes era de Francisco; reasignado el 20-10 |
-| C2 | Evidencias de avance (diario 2.1 y guía 2.4) | Este documento | 20-10 al 26-10 | Mariana | Faltan las plantillas oficiales | En curso | - |
+| C2 | Evidencias de avance (diario 2.1 y guía 2.4) | Este documento | 20-10 al 26-10 | Mariana | Guía 2.4 llenada; falta la plantilla del diario 2.1 | En curso | - |
 | C2 | Feria de informática | - | Semana del 26-10 | Nicko | Día y hora por informar | No iniciado | - |
 
 ### A.3 Ajustes a partir del monitoreo
@@ -189,8 +194,8 @@ Ajustada.
 - **Servidor del CITT bloqueado:** todavía no llegan las instrucciones.
 - **Semana del 12 al 16 de octubre sin commits de desarrollo.** Causa:
   **[A completar por el equipo]**.
-- **Trabajo concentrado en un integrante:** 36 de los 40 Pull Requests
-  mergeados vienen de una sola cuenta. La planilla de avance da 15
+- **Trabajo concentrado en un integrante:** 39 de los 53 Pull Requests
+  mergeados vienen de una sola cuenta (al 2026-10-21). La planilla de avance da 15
   puntos al aporte visible de cada integrante.
 
 **Actividades ajustadas o eliminadas.**
@@ -209,9 +214,9 @@ Ajustada.
 | --- | --- | --- |
 | Plan de mejoras de la Fase 1 | Terminado el 20-10 (plazo 09-10) | Seguimiento de sus 10 mejoras en `docs/plan-de-mejoras.md` |
 | Login y CRUD (pedidos para la semana 8) | Terminados el 19-10 | - |
-| Verificar el detector fuera de SKU-110K | Medido: de frente cumple (mAP50 0,713); a 35° no (0,637) | Fine-tuning con Kaggle CC0 separado en entrenamiento y prueba, con aumentación de giros, color y ruido |
-| Reportes (CU04) | No iniciado | Mariana, del 20 al 27-10, para la demo del 31-10 |
-| Dashboard (CU03) y configuración (CU05) | No iniciados, sin responsable | Asignarlos en la próxima reunión del equipo. Con CU04 se llega al 50% de los C.U para la Evaluación 2 |
+| Verificar el detector fuera de SKU-110K | Medido: de frente cumple (mAP50 0,713); a 35° no (0,637). El primer fine-tuning (21-10) mejora 35° pero baja el mAP50-95 en SKU-110K a 0,533 y no se aceptó | Nuevo intento con más fotos de SKU-110K para no olvidar (ej. 1500), lr0 menor o menos épocas; después, el set de fotos propias (#32) |
+| Reportes (CU04) | Terminado el 21-10, antes del plazo (27-10) | Se muestra en la demo del 31-10 |
+| Dashboard (CU03) y configuración (CU05) | No iniciados, sin responsable | Asignarlos en la próxima reunión del equipo. Con CU04 ya se llegó al 50% de los C.U para la Evaluación 2 |
 | Instalación en el CITT | Bloqueada | Imagen Docker lista; se instala cuando lleguen las instrucciones |
 | Aporte equitativo en el repositorio | Desigual | Cada integrante abre los PR de sus ítems y revisa los de otro; `.mailmap` para unificar las identidades de autor (mejora M9) |
 
@@ -221,12 +226,12 @@ Ajustada.
 
 **1. ¿Se cumplió la Carta Gantt? ¿Qué lo facilitó o lo dificultó?**
 
-Se cumplió en lo técnico y se atrasó en lo documental. Al 2026-10-20, la
+Se cumplió en lo técnico y se atrasó en lo documental. Al 2026-10-21, la
 Carta Gantt de la Fase 2 registra:
 
-- 33 actividades cumplidas;
-- 4 en curso;
-- 7 pendientes;
+- 36 actividades cumplidas;
+- 3 en curso;
+- 6 pendientes;
 - 1 bloqueada.
 
 El pipeline de visión se terminó antes de lo planificado. Estas
@@ -264,7 +269,8 @@ profesor están en `docs/curso.md`. Por ejemplo:
 **5. ¿Hay que redistribuir actividades?** Sí. El desarrollo está
 concentrado en Francisco. Propuesta del plan de mejoras (M9):
 
-- Mariana toma los reportes (CU04, #7).
+- Mariana tomó los reportes (CU04, #7) y las plantillas de C.U (#42),
+  y los terminó el 21-10.
 - Nicko, la demo (#29) y la feria (#38).
 - Asignar el dashboard (CU03, #43) y la configuración (CU05, #44) a
   Mariana y Nicko.
