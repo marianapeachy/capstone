@@ -198,6 +198,16 @@ hitos" en `docs/curso.md`).
       la página (desde #7 tapaba el botón de salir). Fuera del ítem: el
       "tiempo de tolerancia" de la plantilla de CU05, borrar cámaras y
       más de una cámara por góndola (hoy una, con restricción única).
+- [x] **#56** (dueño: Mariana) Que Claude Code no se agregue como
+      coautor: los commits con `Co-Authored-By: Claude` le dan a "claude"
+      77 commits en el gráfico de contribuidores de GitHub (66 de
+      Francisco y 11 de Mariana, todos hasta el 2026-10-20), y la
+      planilla de avance mide el aporte de cada integrante. Hecho
+      (2026-10-22): `"attribution": {"commit": "", "pr": ""}` en
+      `.claude/settings.json`, que vale para todo el equipo (desde
+      Claude Code v2.0.62; la forma `"attribution": false` pide v2.1.281
+      y en versiones anteriores invalida el archivo entero). Los commits
+      ya publicados no cambian: reescribir `main` lo prohíbe la regla 5.
 - [ ] **#46** Falsas alertas en refrigeradores con puerta de vidrio
       (#34, fotos 020 y 003 de Kaggle): el reflejo y el desenfoque de la
       puerta en primer plano, los marcos entre puertas y una repisa en
