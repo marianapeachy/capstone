@@ -233,11 +233,20 @@ hitos" en `docs/curso.md`).
       tiene anotación entra igual en las métricas (sacarla inflaría el
       recall). `compute_availability()` no cambia: el rechazo va en
       quien informa el resultado. Un test en la app y otro en el CLI.
-- [ ] **#53** (dueño: Mariana) Rendimiento y robustez de la app web (auditoría 2026-10-21): las
+- [x] **#53** (dueño: Mariana) Rendimiento y robustez de la app web (auditoría 2026-10-21): las
       listas de análisis y de alertas cargan el JSON `result` de cada
       fila sin usarlo (`.defer("result")`); y si el correo del enlace de
       contraseña falla al crear un usuario, queda creado sin contraseña
       y un error 500 (capturar el error y ofrecer reenviar el enlace).
+      Hecho (2026-10-22): si el correo falla, la cuenta queda creada con
+      un aviso (sin error 500, el error queda en el log) y el
+      Administrador reenvía el enlace desde «Editar» mientras el usuario
+      no defina su contraseña (`usuarios/<pk>/enlace/`, solo POST y
+      solo Administrador). El `.defer("result")` **no se aplicó**: las
+      dos listas sí usan `result`, porque dibujan el fleje de cada
+      góndola (`Analysis.strips` en `_fleje.html`); diferirlo agregaría
+      una consulta por fila. Si las listas se ponen lentas, guardar las
+      franjas en su propio campo. Dos tests nuevos en `tests/test_web.py`.
 - [ ] **#54** Limpieza (auditoría 2026-10-21): `free_volume_cm3()` solo la
       usan los tests (Nivel 1 no se informa, #40) y `openpyxl` y `fpdf2`
       están en `requirements.txt` sin que nada los importe (los traerá
