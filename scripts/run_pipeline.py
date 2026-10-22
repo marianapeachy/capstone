@@ -11,7 +11,10 @@ las repisas medidas y cartel con la alerta y el % libre de la gondola) y
 `<out>/<nombre>.json` (resultado completo, en coordenadas de la foto: la
 alerta y el % libre son los de la gondola completa; por repisa, solo la
 geometria). Imprime una tabla con el % libre y la alerta de cada gondola
-y los segundos por etapa, con la mediana al final.
+y los segundos por etapa, con la mediana al final. Una foto sin productos
+detectados (tapada, oscura o sin gondola) no tiene % libre ni alerta: se
+anota en la tabla y no se escriben su vista ni su JSON (#52); si tiene
+anotacion, igual entra en las metricas.
 
 Evaluacion por lotes (CU07, RF06): con `--annotations` (CSV en el formato
 estandar de data/processed/annotations/, filas con class_group "product")
@@ -203,12 +206,16 @@ def main(argv: list[str] | None = None) -> int:
             table.append((path.name, None, "no se pudo leer"))
             continue
         result = run_image(image, detector, conf=args.conf)
-        note = "" if result.segmentation_found else "sin repisas: analisis global"
-        table.append((path.name, result, note))
-        cv2.imencode(".jpg", draw_availability(image, result))[1].tofile(str(args.out / f"{path.stem}.jpg"))
-        (args.out / f"{path.stem}.json").write_text(
-            json.dumps(result.to_dict(), indent=2), encoding="utf-8"
-        )
+        if not result.products:
+            # Sin productos el calculo da 100% libre y alerta (foto tapada, oscura o sin gondola, #52).
+            table.append((path.name, None, "sin productos detectados: no se informa % libre ni alerta"))
+        else:
+            note = "" if result.segmentation_found else "sin repisas: analisis global"
+            table.append((path.name, result, note))
+            cv2.imencode(".jpg", draw_availability(image, result))[1].tofile(str(args.out / f"{path.stem}.jpg"))
+            (args.out / f"{path.stem}.json").write_text(
+                json.dumps(result.to_dict(), indent=2), encoding="utf-8"
+            )
         if path.name in annotations:
             row, image_metrics = evaluate(path.name, image, result, annotations[path.name], args.iou)
             metric_rows.append(row)

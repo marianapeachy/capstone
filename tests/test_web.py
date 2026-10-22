@@ -3,6 +3,7 @@ analisis de fotos (CU01), ciclo de las alertas (CU02) y reportes (CU04, #7), con
 sintetica y el detector falso de pipeline_fixtures (sin pesos de YOLO26)."""
 
 import cv2
+import numpy as np
 import pytest
 from django.contrib.auth.models import Group
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -173,6 +174,19 @@ def test_foto_nueva_reemplaza_la_alerta_o_confirma_la_reposicion(client, analyze
     second.refresh_from_db()
     assert second.estado == COMPLETADA
     assert not Analysis.objects.filter(estado__in=[ACTIVA, EN_PROCESO]).exists()
+
+
+def test_foto_sin_productos_se_rechaza_y_no_toca_la_alerta_abierta(client, analyzer):
+    # #52: sin detecciones el cálculo daría 100% libre y una alerta falsa (foto tapada u oscura).
+    client.force_login(make_user("1-9", JEFE))
+    open_alert = analyzer(client)
+    blank = SimpleUploadedFile("tapada.png", cv2.imencode(".png", np.full((600, 800, 3), 90, np.uint8))[1].tobytes(),
+                               "image/png")
+    response = client.post(reverse("analisis"), {"pasillo": "3", "gondola": "14B", "foto": blank})
+    assert "No se detectaron productos" in response.content.decode()
+    assert Analysis.objects.count() == 1
+    open_alert.refresh_from_db()
+    assert open_alert.estado == ACTIVA
 
 
 def test_foto_demasiado_grande_se_rechaza(client, analyzer, monkeypatch):
