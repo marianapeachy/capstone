@@ -165,13 +165,13 @@ hitos" en `docs/curso.md`).
       (`Anexos/Diseño/Diagramas fuente (Mermaid)/`), con sus PNG
       regenerados con mermaid-cli. Verificado contra `web/` (login con
       RUT o correo, bloqueo tras 5 intentos, vista por rol, alertas).
-- [ ] **#43** Dashboard de disponibilidad (CU03, RF05): estado de cada
+- [ ] **#43** (dueño: Mariana) Dashboard de disponibilidad (CU03, RF05): estado de cada
       góndola según su última foto (verde con menos de la mitad del
       umbral, amarillo hasta el umbral, rojo con alerta, "Sin datos" sin
       foto reciente) e historial de capturas. Con el pasillo y la
       góndola de cada análisis (#28) es una consulta por góndola.
       Hallazgo 12 de `docs/auditoria-app-web.md`.
-- [ ] **#44** Configuración del umbral y de las cámaras (CU05, RF07):
+- [ ] **#44** (dueño: Mariana) Configuración del umbral y de las cámaras (CU05, RF07):
       umbral de espacio libre entre 1% y 100% (hoy fijo en 30%,
       `AvailabilityParams.critical_free_fraction`) y cámaras asociadas a
       pasillo y góndola con su calibración de lente. Hallazgo 14.
@@ -220,12 +220,12 @@ hitos" en `docs/curso.md`).
       en paralelo pasan de 5. Propuesta: contar con `F()` y bloquear por
       tiempo (ej. 15 min) en vez de desactivar la cuenta. Requiere
       confirmar el cambio de CU00 con el equipo.
-- [ ] **#52** Foto sin productos detectados (auditoría 2026-10-21): con 0
+- [ ] **#52** (dueño: Mariana) Foto sin productos detectados (auditoría 2026-10-21): con 0
       detecciones, `compute_availability()` da 100% libre y alerta
       crítica (foto tapada, oscura o sin góndola). Rechazar el análisis
       en la app web ("no se detectaron productos") y definir qué
       informa `run_pipeline.py` en ese caso. Cruza con #24 (alcance).
-- [ ] **#53** Rendimiento y robustez de la app web (auditoría 2026-10-21): las
+- [ ] **#53** (dueño: Mariana) Rendimiento y robustez de la app web (auditoría 2026-10-21): las
       listas de análisis y de alertas cargan el JSON `result` de cada
       fila sin usarlo (`.defer("result")`); y si el correo del enlace de
       contraseña falla al crear un usuario, queda creado sin contraseña
