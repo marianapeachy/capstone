@@ -379,7 +379,9 @@ python manage.py runserver          # http://localhost:8000
   verificador validado, nombre, correo, rol y estado); no puede
   desactivarse a sí mismo. La contraseña no se envía por correo: el usuario recibe
   un enlace de un solo uso para definirla. En desarrollo el correo se
-  imprime en la consola de `runserver`. Desactivar una cuenta cierra sus
+  imprime en la consola de `runserver`. Si el correo no sale, la cuenta
+  queda creada con un aviso y el enlace se reenvía desde «Editar».
+  Desactivar una cuenta cierra sus
   sesiones abiertas. Los usuarios no se borran, se desactivan, para no
   perder quién hizo cada análisis.
 - **CU01**: el Administrador y el Jefe de Salón suben una foto con su

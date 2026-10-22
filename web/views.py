@@ -1,4 +1,5 @@
 import functools
+import logging
 import threading
 import uuid
 from datetime import timedelta
@@ -26,6 +27,8 @@ from src.reporting.export import MEDIA_TYPES, export
 from web.forms import PhotoForm, ReportForm, UserForm
 from web.models import (ABIERTAS, ACTIVA, ADMIN, COMPLETADA, EN_PROCESO, JEFE, REEMPLAZADA, REPONEDOR,
                         Analysis, User)
+
+logger = logging.getLogger(__name__)
 
 # Vista principal de cada perfil (CU00).
 HOME = {ADMIN: "usuarios", JEFE: "analisis", REPONEDOR: "alertas"}
@@ -68,21 +71,43 @@ def usuario_form(request, pk=None):
     if form.is_valid():
         saved = form.save()
         if user is None:
-            send_password_link(request, saved)
-            messages.success(request, f"Usuario {saved.username} creado. Se envió a {saved.email} el enlace para definir su contraseña.")
+            if send_password_link(request, saved):
+                messages.success(request, f"Usuario {saved.username} creado. Se envió a {saved.email} el enlace para definir su contraseña.")
+            else:
+                messages.error(request, f"Usuario {saved.username} creado, pero no se pudo enviar el correo a {saved.email}. "
+                                        "Reenvía el enlace desde «Editar».")
         else:
             messages.success(request, f"Usuario {saved.username} actualizado.")
         return redirect("usuarios")
     return render(request, "web/usuario_form.html", {"form": form, "nuevo": user is None})
 
 
-def send_password_link(request, user):
+@require_POST
+@roles(ADMIN)
+def usuario_enlace(request, pk):
+    """CU06: reenvía el enlace para definir la contraseña (por ejemplo, si el
+    correo falló al crear la cuenta)."""
+    user = get_object_or_404(User, pk=pk)
+    if send_password_link(request, user):
+        messages.success(request, f"Se envió a {user.email} el enlace para definir la contraseña.")
+    else:
+        messages.error(request, f"No se pudo enviar el correo a {user.email}. Intenta de nuevo más tarde.")
+    return redirect("usuario_editar", pk)
+
+
+def send_password_link(request, user) -> bool:
     """CU06: no se envian contrasenas por correo, sino un enlace de un solo
-    uso (deja de valer cuando el usuario define su contrasena)."""
+    uso (deja de valer cuando el usuario define su contrasena). Devuelve si
+    el correo salio: un servidor de correo caido no debe dar un error 500 (#53)."""
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     link = request.build_absolute_uri(reverse("definir_clave", args=[uid, default_token_generator.make_token(user)]))
-    send_mail("ShelfVision AI: define tu contraseña",
-              f"Hola {user.first_name}, define tu contraseña en {link}", None, [user.email])
+    try:
+        send_mail("ShelfVision AI: define tu contraseña",
+                  f"Hola {user.first_name}, define tu contraseña en {link}", None, [user.email])
+    except OSError:  # smtplib.SMTPException y los errores de red heredan de OSError
+        logger.exception("No se pudo enviar el enlace de contraseña a %s", user.email)
+        return False
+    return True
 
 
 # --- CU01: analisis de fotos ---

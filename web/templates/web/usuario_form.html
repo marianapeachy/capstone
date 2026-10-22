@@ -18,4 +18,11 @@
   {% include "web/_field.html" with field=form.is_active %}
   <div class="actions"><button type="submit" class="btn">{% if nuevo %}Crear usuario{% else %}Guardar cambios{% endif %}</button><a class="btn quiet" href="{% url 'usuarios' %}">Cancelar</a></div>
 </form>
+{% if not nuevo and not form.instance.has_usable_password %}
+<form method="post" action="{% url 'usuario_enlace' form.instance.pk %}" class="panel form narrow-form form-after">
+  {% csrf_token %}
+  <p>Este usuario todavía no define su contraseña. Si no recibió el correo, o el enlace venció, envíale uno nuevo a {{ form.instance.email }}.</p>
+  <div class="actions"><button type="submit" class="btn quiet">Reenviar enlace</button></div>
+</form>
+{% endif %}
 {% endblock %}
