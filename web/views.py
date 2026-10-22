@@ -21,12 +21,12 @@ from django.utils.encoding import force_bytes
 from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_encode
 from django.views.decorators.http import require_POST
 
-from src.pipeline import run_image
+from src.pipeline import LensCalibration, run_image
 from src.reporting.annotate import draw_availability
 from src.reporting.export import MEDIA_TYPES, export
-from web.forms import PhotoForm, ReportForm, UserForm
+from web.forms import CameraForm, ConfigForm, PhotoForm, ReportForm, UserForm
 from web.models import (ABIERTAS, ACTIVA, ADMIN, COMPLETADA, EN_PROCESO, JEFE, REEMPLAZADA, REPONEDOR,
-                        Analysis, User)
+                        Analysis, Camera, Config, User)
 
 logger = logging.getLogger(__name__)
 
@@ -129,8 +129,12 @@ def analyze(upload, user, pasillo, gondola) -> Analysis:
     image = cv2.imdecode(np.frombuffer(upload.read(), np.uint8), cv2.IMREAD_COLOR)
     if image is None:
         raise ValueError("No se pudo leer la imagen.")
+    # CU05: umbral configurado y, si la gondola tiene camara, su calibracion de lente.
+    camera = Camera.objects.filter(pasillo__iexact=pasillo, gondola__iexact=gondola).first()
+    calibration = LensCalibration(**camera.calibracion) if camera and camera.calibracion else None
     with _model_lock:  # el modelo se comparte entre los hilos del servidor
-        result = run_image(image, get_detector())
+        result = run_image(image, get_detector(), calibration=calibration,
+                           critical_free_fraction=Config.get().umbral / 100)
     if not result.products:  # #52: daría 100% libre y una alerta falsa; no se toca la alerta abierta
         raise ValueError("No se detectaron productos en la foto: revisa que muestre la góndola, "
                          "con luz y sin nada que la tape.")
@@ -179,7 +183,7 @@ def alertas(request):
         group = 0 if a.estado == EN_PROCESO and a.taken_by_id == request.user.pk else 1 if a.estado == ACTIVA else 2
         return group, -a.free_fraction
 
-    return render(request, "web/alertas.html", {"alertas": sorted(open_alerts, key=order)})
+    return render(request, "web/alertas.html", {"alertas": sorted(open_alerts, key=order), "umbral": Config.get().umbral})
 
 
 @require_POST
@@ -241,3 +245,27 @@ def reportes(request):
             return response
         form.add_error(None, "No hay análisis en el período elegido: no se genera un archivo vacío.")
     return render(request, "web/reportes.html", {"form": form})
+
+
+# --- CU05: umbral y camaras ---
+
+@roles(ADMIN)
+def configuracion(request):
+    config = Config.get()
+    form = ConfigForm(request.POST or None, instance=config)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Parámetros actualizados. Rigen para las fotos siguientes.")
+        return redirect("configuracion")
+    return render(request, "web/configuracion.html", {"form": form, "camaras": Camera.objects.all()})
+
+
+@roles(ADMIN)
+def camara_form(request, pk=None):
+    camera = get_object_or_404(Camera, pk=pk) if pk else None
+    form = CameraForm(request.POST or None, request.FILES or None, instance=camera)
+    if form.is_valid():
+        saved = form.save()
+        messages.success(request, f"{saved.nombre} quedó asociada a {saved.location}.")
+        return redirect("configuracion")
+    return render(request, "web/camara_form.html", {"form": form, "nueva": camera is None})

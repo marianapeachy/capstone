@@ -1,6 +1,9 @@
 """App web (item #28): login por perfil (CU00), usuarios y roles (CU06),
-analisis de fotos (CU01), ciclo de las alertas (CU02) y reportes (CU04, #7), con la gondola
+analisis de fotos (CU01), ciclo de las alertas (CU02), reportes (CU04, #7),
+configuracion de umbral y camaras (CU05, #44) con la gondola
 sintetica y el detector falso de pipeline_fixtures (sin pesos de YOLO26)."""
+
+import json
 
 import cv2
 import numpy as np
@@ -13,7 +16,8 @@ from django.utils import timezone
 from tests.pipeline_fixtures import ColorDetector, gondola
 from web import forms, views
 from web.auth import normalize_rut, valid_rut
-from web.models import ACTIVA, ADMIN, COMPLETADA, EN_PROCESO, JEFE, REEMPLAZADA, REPONEDOR, Analysis, User
+from web.models import (ACTIVA, ADMIN, COMPLETADA, EN_PROCESO, JEFE, REEMPLAZADA, REPONEDOR, Analysis, Camera,
+                        Config, User)
 
 pytestmark = pytest.mark.django_db
 PASSWORD = "clave-de-prueba-123"
@@ -303,3 +307,81 @@ def test_reporte_rechaza_periodo_invertido(client):
 def test_reponedor_no_exporta_reportes(client):
     client.force_login(make_user("1-9", REPONEDOR))
     assert client.get(reverse("reportes")).status_code == 403
+
+
+# --- CU05 ---
+
+CALIBRATION = {"camera_matrix": [[800, 0, 399.5], [0, 800, 299.5], [0, 0, 1]],
+               "dist_coeffs": [-0.1, 0, 0, 0], "fisheye": False}
+
+
+def calibration_file(data):
+    return SimpleUploadedFile("calibracion.json", json.dumps(data).encode(), "application/json")
+
+
+def test_admin_cambia_el_umbral_y_rige_para_las_fotos_siguientes(client, analyzer):
+    client.force_login(make_user("2-7", ADMIN))
+    before = analyzer(client)  # 36% libre: con el umbral de 30% por defecto, alerta
+    response = client.post(reverse("configuracion"), {"umbral": 40}, follow=True)
+    assert "Parámetros actualizados" in response.content.decode()
+    after = analyzer(client, gondola_id="15")
+    before.refresh_from_db()
+    assert before.critical and not after.critical  # lo ya analizado no cambia
+    assert "al menos 40%" in client.get(reverse("alertas")).content.decode()
+
+
+@pytest.mark.parametrize("umbral", [0, 101, ""])
+def test_umbral_fuera_de_rango_se_rechaza_y_queda_el_anterior(client, umbral):
+    client.force_login(make_user("2-7", ADMIN))
+    response = client.post(reverse("configuracion"), {"umbral": umbral})
+    assert "Umbral inválido" in response.content.decode()
+    assert Config.get().umbral == 30
+
+
+def test_la_calibracion_de_la_camara_se_usa_al_analizar_su_gondola(client, analyzer, monkeypatch):
+    client.force_login(make_user("2-7", ADMIN))
+    client.post(reverse("camara_nueva"), {
+        "nombre": "Cámara 1", "pasillo": "3", "gondola": "14B", "calibracion": calibration_file(CALIBRATION)})
+    seen = []
+    real = views.run_image
+    monkeypatch.setattr(views, "run_image", lambda image, detector, **kw: seen.append(kw) or real(image, detector, **kw))
+    analyzer(client)  # pasillo 3, góndola 14B: tiene cámara
+    analyzer(client, gondola_id="15")  # sin cámara: solo CLAHE
+    assert seen[0]["calibration"].dist_coeffs[0] == -0.1
+    assert seen[1]["calibration"] is None
+
+
+def test_editar_camara_sin_archivo_conserva_la_calibracion(client):
+    client.force_login(make_user("2-7", ADMIN))
+    client.post(reverse("camara_nueva"), {
+        "nombre": "Cámara 1", "pasillo": "3", "gondola": "14B", "calibracion": calibration_file(CALIBRATION)})
+    camera = Camera.objects.get()
+    client.post(reverse("camara_editar", args=[camera.pk]), {"nombre": "Cámara 1", "pasillo": "4", "gondola": "14B"})
+    camera.refresh_from_db()
+    assert camera.pasillo == "4" and camera.calibracion == CALIBRATION
+
+
+@pytest.mark.parametrize("data", [
+    {"camera_matrix": [[1, 0], [0, 1]], "dist_coeffs": [0, 0, 0, 0]},  # matriz que no es 3x3
+    {"camera_matrix": CALIBRATION["camera_matrix"]},  # faltan los coeficientes
+])
+def test_calibracion_invalida_se_rechaza(client, data):
+    client.force_login(make_user("2-7", ADMIN))
+    response = client.post(reverse("camara_nueva"), {
+        "nombre": "Cámara 1", "pasillo": "3", "gondola": "14B", "calibracion": calibration_file(data)})
+    assert "Calibración inválida" in response.content.decode()
+    assert not Camera.objects.exists()
+
+
+def test_una_gondola_tiene_una_sola_camara(client):
+    client.force_login(make_user("2-7", ADMIN))
+    client.post(reverse("camara_nueva"), {"nombre": "Cámara 1", "pasillo": "3", "gondola": "14B"})
+    response = client.post(reverse("camara_nueva"), {"nombre": "Cámara 2", "pasillo": "3", "gondola": "14B"})
+    assert response.context["form"].errors
+    assert Camera.objects.count() == 1
+
+
+def test_solo_el_admin_configura(client):
+    client.force_login(make_user("1-9", JEFE))
+    assert client.get(reverse("configuracion")).status_code == 403
+    assert client.get(reverse("camara_nueva")).status_code == 403

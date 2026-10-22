@@ -1,9 +1,12 @@
+import json
+
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 
+from src.pipeline import LensCalibration
 from web.auth import normalize_rut, valid_rut
-from web.models import ADMIN, ROLES, User
+from web.models import ADMIN, ROLES, Camera, Config, User
 
 MAX_PHOTO_MB = 20
 
@@ -88,3 +91,61 @@ class ReportForm(forms.Form):
         if data.get("desde") and data.get("hasta") and data["desde"] > data["hasta"]:
             raise forms.ValidationError("La fecha «Desde» no puede ser posterior a «Hasta».")
         return data
+
+
+class ConfigForm(forms.ModelForm):
+    """CU05: umbral de espacio libre desde el que se alerta (1% a 100%)."""
+
+    class Meta:
+        model = Config
+        fields = ["umbral"]
+        help_texts = {"umbral": "Se alerta cuando el espacio libre de la góndola llega a este porcentaje del frente. "
+                                "Rige para las fotos siguientes."}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        invalid = "Umbral inválido: debe ser un número entero entre 1 y 100."
+        self.fields["umbral"].error_messages.update(required=invalid, invalid=invalid, min_value=invalid,
+                                                    max_value=invalid)
+        self.fields["umbral"].widget.attrs.update(min=1, max=100)
+
+
+class CameraForm(forms.ModelForm):
+    """CU05: camara asociada a un pasillo y una gondola, con su calibracion
+    de lente opcional (JSON de OpenCV). Sin archivo nuevo se conserva la
+    calibracion que ya tenia."""
+
+    calibracion = forms.FileField(
+        label="Calibración de lente (opcional)", required=False,
+        help_text='Archivo JSON con "camera_matrix" (3x3), "dist_coeffs" y "fisheye" (true o false), '
+                  "como lo entrega la calibración de OpenCV. Sin calibración solo se corrige el contraste.",
+        widget=forms.FileInput(attrs={"accept": "application/json,.json"}))
+
+    class Meta:
+        model = Camera
+        fields = ["nombre", "pasillo", "gondola"]
+
+    def clean_calibracion(self):
+        upload = self.cleaned_data["calibracion"]
+        if not upload:
+            return None
+        if upload.size > 100_000:  # una calibracion ocupa unos cientos de bytes
+            raise forms.ValidationError("Calibración inválida: el archivo es demasiado grande.")
+        try:
+            data = json.loads(upload.read().decode("utf-8"))
+            calibration = LensCalibration(camera_matrix=data["camera_matrix"], dist_coeffs=data["dist_coeffs"],
+                                          fisheye=bool(data.get("fisheye", False)))
+        except KeyError as error:
+            raise forms.ValidationError(f"Calibración inválida: falta el campo {error}.") from error
+        except (ValueError, TypeError) as error:  # JSON mal formado o matrices con forma incorrecta
+            raise forms.ValidationError(f"Calibración inválida: {error}") from error
+        return {"camera_matrix": calibration.camera_matrix.tolist(), "dist_coeffs": calibration.dist_coeffs.tolist(),
+                "fisheye": calibration.fisheye}
+
+    def save(self, commit=True):
+        camera = super().save(commit=False)
+        if self.cleaned_data["calibracion"] is not None:
+            camera.calibracion = self.cleaned_data["calibracion"]
+        if commit:
+            camera.save()
+        return camera

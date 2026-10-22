@@ -114,7 +114,7 @@ p { margin: 0; }
 .form-after { margin-top: 14px; }
 .narrow-form { max-width: 640px; }
 .form-errors { padding: 10px 14px; border-radius: var(--radius-control); background: var(--gap-tint); }
-input[type=text], input[type=email], input[type=password], input[type=date], select, input[type=file] {
+input[type=text], input[type=email], input[type=password], input[type=date], input[type=number], select, input[type=file] {
   width: 100%; min-height: 44px; padding: 9px 12px;
   border: 1.5px solid #aebbc1; border-radius: 8px; background: #fff; color: var(--ink);
   font: 400 16px "Archivo", system-ui, sans-serif;

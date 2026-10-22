@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Configuración · ShelfVision AI{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Configuración</h1>
+    <p>Umbral de alerta y cámaras de sala. Los cambios rigen para las fotos siguientes; los análisis anteriores no cambian.</p>
+  </div>
+</div>
+<h2 id="umbral" class="section-title">Umbral de quiebre</h2>
+<section class="panel narrow-form" aria-labelledby="umbral">
+  <form method="post" class="form" novalidate>
+    {% csrf_token %}
+    {% include "web/_field.html" with field=form.umbral %}
+    <div class="actions"><button type="submit" class="btn">Guardar umbral</button></div>
+  </form>
+  <p class="help form-after">La profundidad de la góndola no se configura: es una constante de 25 cm.</p>
+</section>
+
+<div class="page-head form-after">
+  <h2 class="section-title">Cámaras de sala</h2>
+  <a href="{% url 'camara_nueva' %}" class="btn"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Nueva cámara</a>
+</div>
+{% if camaras %}
+<div class="panel table-wrap">
+  <table>
+    <thead><tr><th>Cámara</th><th>Góndola</th><th>Calibración</th><th><span class="sr-only">Acciones</span></th></tr></thead>
+    <tbody>
+    {% for c in camaras %}
+    <tr>
+      <td class="strong">{{ c.nombre }}</td>
+      <td>{{ c.location }}</td>
+      <td>{% if c.calibracion %}<span class="state completada">Cargada{% if c.calibracion.fisheye %} (fisheye){% endif %}</span>{% else %}<span class="state ok">Sin calibración</span>{% endif %}</td>
+      <td><a class="btn quiet" href="{% url 'camara_editar' c.pk %}"><svg class="icon" aria-hidden="true"><use href="#i-pencil-simple"/></svg>Editar</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="panel empty">
+  <svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>
+  <h2>Todavía no hay cámaras</h2>
+  <p>Asocia cada cámara a su pasillo y su góndola. Si tienes su calibración de lente, el sistema corrige la distorsión de las fotos de esa góndola; sin ella, solo el contraste.</p>
+</div>
+{% endif %}
+{% endblock %}
