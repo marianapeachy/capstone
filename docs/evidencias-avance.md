@@ -74,7 +74,7 @@ como cinco objetivos con meta medible. Su estado al 2026-10-21:
 | Objetivo | Meta | Estado |
 | --- | --- | --- |
 | OE1. Segmentación de góndola y repisas | F1 ≥ 0,80 | Cumplido: F1 0,823 contra SHARD, en 1000 fotos no usadas para ajustar |
-| OE2. Detección de productos | mAP50 ≥ 0,70 fuera de SKU-110K | En curso: 0,950 en el test de SKU-110K y 0,713 en 45 fotos de Kaggle; con la cámara a 35° baja a 0,637. El primer fine-tuning (21-10) sube 35° a 0,818 en 12 fotos de prueba, pero no se aceptó porque baja el mAP50-95 en SKU-110K de 0,610 a 0,533 (#33) |
+| OE2. Detección de productos | mAP50 ≥ 0,70 fuera de SKU-110K | En curso: 0,950 en el test de SKU-110K y 0,713 en 45 fotos de Kaggle; con la cámara a 35° baja a 0,637. El fine-tuning del 21-10 (#33) sube el mAP50 de 0,701 a 0,818 a 35° en 12 fotos de prueba y se aceptó, aunque el mAP50-95 en SKU-110K baja de 0,610 a 0,533, porque SKU-110K no es el dominio de Walmart. Falta confirmarlo con fotos propias (#32) y ruido de cámara de sala (#55) |
 | OE3. % libre y alerta de la góndola completa | Diferencia con el % anotado (meta a fijar) | En curso: con productos envasados, alerta correcta en el 92% de 36 fotos y error medio de 6,2 puntos (#34) |
 | OE4. App web con login por rol (CU00 a CU06) | 50% de los C.U para la Evaluación 2 | En curso, con la meta de la Evaluación 2 alcanzada: CU00, CU01, CU02, CU04 y CU06 operativos en la app (5 de 8, más CU07 por línea de comandos); CU03 y CU05 pendientes |
 | OE5. Pruebas automatizadas y evaluación por lotes | CI en verde en cada PR | Cumplido: CI en cada PR; evaluación por lotes en `scripts/run_pipeline.py` |
@@ -147,7 +147,7 @@ Ajustada.
 | C1 | Repisas inclinadas (niveles híbridos) | OpenCV, YOLO26 | 01-10 | Francisco | Para cámaras en ángulo | Completado | - |
 | C1 | Pipeline completo, vista anotada y evaluación por lotes (CU07) | Python, Docker | 10-10 al 18-10 | Francisco | - | Completado | - |
 | C3 | Quiebre por góndola completa (cambio de alcance) | - | 19-10 | Francisco | Pedido del profesor | Completado | - |
-| C1 | Verificar el detector fuera de SKU-110K | Kaggle CC0, Roboflow | 20-10 al 21-10 | Francisco | mAP50 0,713 de frente; 0,637 a 35° | Completado | Primer fine-tuning (21-10) no aceptado: olvida SKU-110K |
+| C1 | Verificar el detector fuera de SKU-110K | Kaggle CC0, Roboflow | 20-10 al 21-10 | Francisco | mAP50 0,713 de frente; 0,637 a 35° | Completado | Fine-tuning aceptado el 21-10 (mAP50 a 35°: 0,818) |
 | C1 | Reportes Excel, CSV y PDF (CU04) | openpyxl, fpdf2, Django | 21-10 | Mariana | Página "Reportes" de la app web; 13 pruebas | Completado | Terminado antes del plazo (27-10) |
 | C1 | Diseño, modelamiento y script de la base de datos | Django, SQLite | 18-10 al 19-10 | Francisco | Planificado en la Fase 1 para septiembre | Completado | Hecho con las migraciones de Django |
 | C1 | Login, CRUD de usuarios y roles (CU00, CU06) | Django, bcrypt | 18-10 al 19-10 | Francisco | 22 pruebas de la app web | Completado | Django con sesiones en vez de API REST con JWT |
@@ -194,8 +194,8 @@ Ajustada.
 - **Servidor del CITT bloqueado:** todavía no llegan las instrucciones.
 - **Semana del 12 al 16 de octubre sin commits de desarrollo.** Causa:
   **[A completar por el equipo]**.
-- **Trabajo concentrado en un integrante:** 39 de los 53 Pull Requests
-  mergeados vienen de una sola cuenta (al 2026-10-21). La planilla de avance da 15
+- **Trabajo concentrado en un integrante:** 43 de los 61 Pull Requests
+  mergeados vienen de una sola cuenta (al 2026-10-22). La planilla de avance da 15
   puntos al aporte visible de cada integrante.
 
 **Actividades ajustadas o eliminadas.**
@@ -214,7 +214,7 @@ Ajustada.
 | --- | --- | --- |
 | Plan de mejoras de la Fase 1 | Terminado el 20-10 (plazo 09-10) | Seguimiento de sus 10 mejoras en `docs/plan-de-mejoras.md` |
 | Login y CRUD (pedidos para la semana 8) | Terminados el 19-10 | - |
-| Verificar el detector fuera de SKU-110K | Medido: de frente cumple (mAP50 0,713); a 35° no (0,637). El primer fine-tuning (21-10) mejora 35° pero baja el mAP50-95 en SKU-110K a 0,533 y no se aceptó | Nuevo intento con más fotos de SKU-110K para no olvidar (ej. 1500), lr0 menor o menos épocas; después, el set de fotos propias (#32) |
+| Verificar el detector fuera de SKU-110K | Medido: de frente cumple (mAP50 0,713); a 35° no (0,637). El fine-tuning del 21-10 sube 35° a 0,818 y se aceptó; baja el mAP50-95 en SKU-110K a 0,533 | Medirlo con el set de fotos propias (#32) y con ruido de cámara de sala (#55, 2026-11-06) |
 | Reportes (CU04) | Terminado el 21-10, antes del plazo (27-10) | Se muestra en la demo del 31-10 |
 | Dashboard (CU03) y configuración (CU05) | No iniciados, sin responsable | Asignarlos en la próxima reunión del equipo. Con CU04 ya se llegó al 50% de los C.U para la Evaluación 2 |
 | Instalación en el CITT | Bloqueada | Imagen Docker lista; se instala cuando lleguen las instrucciones |
@@ -231,7 +231,7 @@ Carta Gantt de la Fase 2 registra:
 
 - 36 actividades cumplidas;
 - 3 en curso;
-- 6 pendientes;
+- 9 pendientes;
 - 1 bloqueada.
 
 El pipeline de visión se terminó antes de lo planificado. Estas
