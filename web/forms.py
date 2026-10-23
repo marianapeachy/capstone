@@ -15,7 +15,9 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(label="RUT o correo", max_length=254)
     error_messages = {
         **AuthenticationForm.error_messages,
-        "invalid_login": "Credenciales incorrectas. Intente nuevamente.",
+        # Igual para todos: no delata si el RUT existe ni si la cuenta esta bloqueada (#51).
+        "invalid_login": "Credenciales incorrectas. Intente nuevamente. Tras 5 intentos fallidos seguidos, "
+                         "la cuenta se bloquea 15 minutos.",
     }
 
 
@@ -56,7 +58,7 @@ class UserForm(forms.ModelForm):
         if user._state.adding:
             user.set_unusable_password()  # la define el usuario con el enlace del correo
         if user.is_active:
-            user.failed_logins = 0  # reactivar desbloquea una cuenta bloqueada por intentos
+            user.failed_logins, user.locked_until = 0, None  # guardarla activa la desbloquea
         user.save()
         user.groups.set([Group.objects.get(name=self.cleaned_data["role"])])
         return user

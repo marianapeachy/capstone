@@ -69,20 +69,40 @@ def test_login_con_correo(client):
     assert login(client, "1-9@tienda.cl").url == reverse("inicio")
 
 
-def test_bloquea_tras_5_intentos_y_el_admin_la_reactiva(client):
+def test_bloquea_15_minutos_tras_5_intentos_sin_desactivar_la_cuenta(client):
+    # #51: con solo saber el RUT se podía desactivar la cuenta de cualquiera, también la del Administrador.
     user = make_user("1-9", JEFE)
     for _ in range(5):
         response = login(client, "1-9", "mala")
-    assert "Credenciales incorrectas" in response.content.decode()
+    assert "se bloquea 15 minutos" in response.content.decode()
     user.refresh_from_db()
-    assert not user.is_active
-    assert login(client, "1-9").status_code == 200  # sigue bloqueada con la clave buena
+    assert user.is_active and user.locked_until > timezone.now()
+    assert login(client, "1-9").status_code == 200  # bloqueada aunque la clave sea la buena
 
+    User.objects.filter(pk=user.pk).update(locked_until=timezone.now() - timedelta(seconds=1))
+    assert login(client, "1-9").url == reverse("inicio")  # pasados los 15 minutos, entra
+
+
+def test_el_admin_desbloquea_antes_de_tiempo(client):
+    user = make_user("1-9", JEFE)
+    for _ in range(5):
+        login(client, "1-9", "mala")
     client.force_login(make_user("2-7", ADMIN))
     client.post(reverse("usuario_editar", args=[user.pk]), {
         "username": "1-9", "email": user.email, "is_active": "on", "role": JEFE})
     user.refresh_from_db()
-    assert user.is_active and user.failed_logins == 0
+    assert user.locked_until is None and user.failed_logins == 0
+
+
+def test_intentos_con_la_cuenta_bloqueada_no_alargan_el_bloqueo(client):
+    user = make_user("1-9", JEFE)
+    for _ in range(5):
+        login(client, "1-9", "mala")
+    user.refresh_from_db()
+    until = user.locked_until
+    login(client, "1-9", "mala")
+    user.refresh_from_db()
+    assert user.locked_until == until and user.failed_logins == 0
 
 
 def test_desactivar_cierra_la_sesion_abierta(client):

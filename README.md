@@ -376,9 +376,11 @@ python manage.py runserver          # http://localhost:8000
 
 - **CU00**: se entra con RUT (con o sin puntos) o correo; cada perfil
   llega a su vista (Administrador -> Usuarios, Jefe de Salón -> Góndolas,
-  Reponedor -> Alertas). Tras 5 intentos fallidos seguidos la cuenta queda
-  inactiva hasta que el Administrador la reactive. La sesión expira tras
-  2 h sin uso.
+  Reponedor -> Alertas). Tras 5 intentos fallidos seguidos la cuenta se
+  bloquea 15 minutos y después se desbloquea sola (no se desactiva: así
+  nadie saca a otro, ni al único Administrador, con solo saber su RUT); el
+  Administrador la desbloquea antes al guardarla en "Editar". La sesión
+  expira tras 2 h sin uso.
 - **CU06**: el Administrador crea y edita usuarios (RUT con dígito
   verificador validado, nombre, correo, rol y estado); no puede
   desactivarse a sí mismo. La contraseña no se envía por correo: el usuario recibe

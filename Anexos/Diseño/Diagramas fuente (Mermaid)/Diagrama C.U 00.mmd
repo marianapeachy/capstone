@@ -5,13 +5,13 @@ sequenceDiagram
     participant BD as Base de Datos (Usuarios)
     U->>Web: Ingresa RUT o correo y contraseña
     Web->>BD: Valida credenciales y estado de la cuenta
-    alt Credenciales válidas y cuenta activa
+    alt Credenciales válidas, cuenta activa y no bloqueada
         BD-->>Web: Usuario validado + perfil asignado
         Web->>BD: Reinicia los intentos fallidos
         Web-->>U: Abre la sesión y redirige según el rol
         Note over U,Web: Reponedor: Alertas<br/>Jefe de Salón: Góndolas<br/>Administrador: Usuarios
     else Credenciales incorrectas
-        Web->>BD: Suma un intento fallido (al quinto seguido, la cuenta queda inactiva)
-        Web-->>U: Muestra "Credenciales incorrectas. Intente nuevamente."
+        Web->>BD: Suma un intento fallido (al quinto seguido, la cuenta se bloquea 15 minutos)
+        Web-->>U: Muestra "Credenciales incorrectas" y avisa del bloqueo de 15 minutos
     end
-    Note over Web,BD: Sesión de Django: cookie firmada HttpOnly.<br/>Solo el Administrador reactiva una cuenta (CU06)
+    Note over Web,BD: Sesión de Django: cookie firmada HttpOnly.<br/>El Administrador puede desbloquear antes la cuenta (CU06)
