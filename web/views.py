@@ -14,6 +14,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.core.mail import send_mail
+from django.db import transaction
 from django.db.models import OuterRef, Subquery
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -143,22 +144,28 @@ def analyze(upload, user, pasillo, gondola) -> Analysis:
     _, jpg = cv2.imencode(".jpg", draw_availability(image, result, banner=False))
     analysis = Analysis(created_by=user, pasillo=pasillo, gondola=gondola, photo_name=upload.name,
                         free_fraction=result.free_fraction, critical=result.critical, result=result.to_dict())
-
-    # CU02: una gondola tiene a lo mas una alerta abierta. Con quiebre, la foto
-    # nueva reemplaza a la anterior (y hereda quien la atiende); sin quiebre, la
-    # foto confirma la reposicion y cierra la alerta abierta.
-    previous = Analysis.objects.filter(pasillo=pasillo, gondola=gondola, estado__in=ABIERTAS)
-    last_open = previous.first()
-    now = timezone.now()
-    if result.critical:
-        analysis.estado, analysis.taken_by = (last_open.estado, last_open.taken_by) if last_open else (ACTIVA, None)
-        analysis.estado_at = last_open.estado_at if last_open else now
-        previous.update(estado=REEMPLAZADA, estado_at=now)
-    else:
-        previous.update(estado=COMPLETADA, estado_at=now)
-
+    # La foto se guarda antes de tocar las alertas: si falla, ninguna alerta cambia (#49).
     analysis.annotated.save(f"{uuid.uuid4().hex}.jpg", ContentFile(jpg.tobytes()), save=False)
-    analysis.save()
+    try:
+        # CU02: una gondola tiene a lo mas una alerta abierta. Con quiebre, la foto
+        # nueva reemplaza a la anterior (y hereda quien la atiende); sin quiebre, la
+        # foto confirma la reposicion y cierra la alerta abierta. Todo o nada: con
+        # SQLite en modo IMMEDIATE, dos fotos de la misma gondola van una tras otra.
+        with transaction.atomic():
+            previous = Analysis.objects.select_for_update().filter(pasillo=pasillo, gondola=gondola,
+                                                                   estado__in=ABIERTAS)
+            last_open = previous.first()
+            now = timezone.now()
+            if result.critical:
+                analysis.estado, analysis.taken_by = (last_open.estado, last_open.taken_by) if last_open else (ACTIVA, None)
+                analysis.estado_at = last_open.estado_at if last_open else now
+                previous.update(estado=REEMPLAZADA, estado_at=now)
+            else:
+                previous.update(estado=COMPLETADA, estado_at=now)
+            analysis.save()
+    except Exception:
+        analysis.annotated.delete(save=False)  # sin foto huerfana
+        raise
     return analysis
 
 
@@ -192,17 +199,19 @@ def alertas(request):
 @roles(*TODOS)
 def alerta_accion(request, pk, accion):
     alert = get_object_or_404(Analysis, pk=pk)
-    if accion == "tomar" and alert.estado == ACTIVA:
-        alert.estado, alert.taken_by = EN_PROCESO, request.user
+    # El cambio solo se aplica si la alerta sigue en el estado de origen: si otra
+    # foto la reemplazo o alguien la tomo entremedio, no se reabre (#49).
+    pending = Analysis.objects.filter(pk=alert.pk)
+    now = timezone.now()
+    if accion == "tomar" and pending.filter(estado=ACTIVA).update(
+            estado=EN_PROCESO, taken_by=request.user, estado_at=now):
         messages.success(request, f"Tomaste {alert.location}.")
-    elif accion == "completar" and alert.estado == EN_PROCESO:  # se toma antes de completarla
-        alert.estado = COMPLETADA
+    elif accion == "completar" and pending.filter(estado=EN_PROCESO).update(  # se toma antes de completarla
+            estado=COMPLETADA, estado_at=now):
         messages.success(request, f"{alert.location} quedó como repuesta. La próxima foto lo confirmará.")
     else:
         messages.error(request, f"La alerta de {alert.location} ya cambió de estado: se muestra la lista al día.")
         return redirect("alertas")
-    alert.estado_at = timezone.now()
-    alert.save(update_fields=["estado", "taken_by", "estado_at"])
     target = request.POST.get("next", "")
     return redirect(target if url_has_allowed_host_and_scheme(target, {request.get_host()}) else "alertas")
 

@@ -58,7 +58,10 @@ TEMPLATES = [{
     ]},
 }]
 
-DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": DATA_DIR / "db.sqlite3"}}
+# IMMEDIATE: cada transaccion toma el bloqueo de escritura al empezar, asi dos fotos
+# de la misma gondola se procesan una tras otra y no quedan dos alertas abiertas (#49).
+DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": DATA_DIR / "db.sqlite3",
+                         "OPTIONS": {"transaction_mode": "IMMEDIATE"}}}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_ROOT = DATA_DIR / "media"
 # Estilos, fuente e iconos salen de la app (web/static/), sin CDN: la red de la

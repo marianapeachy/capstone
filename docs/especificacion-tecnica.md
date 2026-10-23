@@ -189,9 +189,13 @@ cubre `User`, los perfiles y `Analysis`. `Config` y `Camera` (#44) son posterior
 - **Análisis (CU01)**: foto JPG o PNG de hasta 20 MB, con pasillo y
   góndola. Se usan el umbral configurado y la calibración de la cámara de
   esa góndola, si existe. Una foto sin productos detectados se rechaza.
+  El pasillo y la góndola se guardan sin espacios y en mayúsculas.
 - **Alertas (CU02)**: una góndola tiene a lo más una alerta abierta. Una
   foto nueva con quiebre reemplaza a la anterior y conserva su estado; una
-  sin quiebre la cierra.
+  sin quiebre la cierra. Cerrar la alerta anterior y crear el análisis van en
+  una transacción (todo o nada), y SQLite en modo `IMMEDIATE` procesa una
+  tras otra dos fotos de la misma góndola. Tomar o completar una alerta
+  solo cambia su estado si sigue en el estado de origen.
 - **Dashboard (CU03)**: estado por la última foto. Quiebre si tiene
   alerta; en riesgo desde la mitad del umbral; disponible bajo la mitad;
   sin datos si no hay foto en 24 h.

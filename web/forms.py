@@ -62,9 +62,20 @@ class UserForm(forms.ModelForm):
         return user
 
 
+def location(value: str) -> str:
+    """Pasillo o gondola normalizado: " a1 " y "A1" son la misma gondola (#49)."""
+    return value.strip().upper()
+
+
 class PhotoForm(forms.Form):
     pasillo = forms.CharField(label="Pasillo", max_length=20)
     gondola = forms.CharField(label="Góndola", max_length=20)
+
+    def clean_pasillo(self):
+        return location(self.cleaned_data["pasillo"])
+
+    def clean_gondola(self):
+        return location(self.cleaned_data["gondola"])
     foto = forms.ImageField(label="Foto de la góndola", help_text=f"JPG o PNG, hasta {MAX_PHOTO_MB} MB.",
                             widget=forms.FileInput(attrs={"accept": "image/jpeg,image/png"}))
 
@@ -124,6 +135,12 @@ class CameraForm(forms.ModelForm):
     class Meta:
         model = Camera
         fields = ["nombre", "pasillo", "gondola"]
+
+    def clean_pasillo(self):
+        return location(self.cleaned_data["pasillo"])
+
+    def clean_gondola(self):
+        return location(self.cleaned_data["gondola"])
 
     def clean_calibracion(self):
         upload = self.cleaned_data["calibracion"]
