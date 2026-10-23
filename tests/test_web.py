@@ -212,6 +212,16 @@ def test_foto_nueva_reemplaza_la_alerta_o_confirma_la_reposicion(client, analyze
     assert not Analysis.objects.filter(estado__in=[ACTIVA, EN_PROCESO]).exists()
 
 
+def test_pasillo_y_gondola_se_normalizan(client, analyzer):
+    # #49: " a1 " y "A1" son la misma góndola; la foto nueva reemplaza a la alerta abierta.
+    client.force_login(make_user("1-9", JEFE))
+    first = analyzer(client, pasillo=" 3b ", gondola_id="14b ")
+    assert (first.pasillo, first.gondola) == ("3B", "14B")
+    second = analyzer(client, pasillo="3B", gondola_id="14B")
+    first.refresh_from_db()
+    assert first.estado == REEMPLAZADA and second.estado == ACTIVA
+
+
 def test_si_falla_el_guardado_la_alerta_abierta_no_se_cierra(client, analyzer, monkeypatch, settings):
     # #49: cerrar la alerta vieja y crear el análisis van juntos, o no va ninguno.
     client.force_login(make_user("1-9", JEFE))
