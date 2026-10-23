@@ -20,6 +20,7 @@ class User(AbstractUser):
 
     email = models.EmailField("correo", unique=True)
     failed_logins = models.PositiveSmallIntegerField(default=0)
+    locked_until = models.DateTimeField(null=True, blank=True)  # bloqueo por intentos fallidos (#51)
 
     @property
     def role(self) -> str:
