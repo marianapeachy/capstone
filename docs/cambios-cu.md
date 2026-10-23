@@ -34,7 +34,7 @@ Plantilla `Plantilla de C.U 00.docx` y diagrama `Diagrama C.U 00.png`
 | --- | --- |
 | Paso 5: "El sistema genera un token de sesión seguro (JWT) codificando el Rol del usuario" | "El sistema abre una sesión segura vinculada al usuario y su rol" |
 | Paso 6: Reponedor -> Vista de Alertas; Jefe de Salón -> Dashboard de Métricas; Admin -> Panel Global | Reponedor -> Alertas; Jefe de Salón -> Análisis (hasta que exista el dashboard, CU03; desde el 2026-10-22, #43: Góndolas); Administrador -> Gestión de usuarios (hasta que exista un panel global) |
-| Excepción 4a: bloquea la cuenta tras 5 intentos | Igual, y precisar: la cuenta queda inactiva y solo el Administrador la reactiva (CU06) |
+| Excepción 4a: bloquea la cuenta tras 5 intentos | Igual, y precisar: la cuenta queda inactiva y solo el Administrador la reactiva (CU06). Desde el 2026-10-23 (#51): se bloquea 15 minutos y se desbloquea sola |
 | Diagrama, paso 1: "Ingresa correo y contraseña" | "Ingresa RUT o correo y contraseña" (como ya dice la plantilla) |
 | Diagrama, pasos 2 y 5: `POST /api/v1/auth/login`, "Retorna Token JWT + Perfil" | "Envía el formulario de login" y "Abre la sesión y redirige según el rol" |
 | Diagrama, paso 8: "HTTP 401 Unauthorized" | "Muestra 'Credenciales incorrectas. Intente nuevamente.'" |
