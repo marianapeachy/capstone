@@ -239,7 +239,7 @@ hitos" en `docs/curso.md`).
       que unifica las identidades (hoy 6 autores para 3 personas) y
       commits y PR sin la línea `Co-Authored-By` ni el pie de Claude
       Code. Los commits ya publicados no se reescriben (regla 5).
-- [ ] **#49** (dueño: Mariana) Alertas atómicas en la app web (auditoría 2026-10-21, `web/views.py`
+- [x] **#49** (dueño: Mariana) Alertas atómicas en la app web (auditoría 2026-10-21, `web/views.py`
       `analyze()` y `alerta_accion()`): hoy cerrar la alerta anterior,
       guardar la foto y crear el análisis no van en una transacción. Si
       falla el guardado, la alerta vieja queda cerrada y no hay otra; con
@@ -249,6 +249,17 @@ hitos" en `docs/curso.md`).
       antes de cerrar la alerta vieja y `filter(pk, estado=...).update()`
       mirando cuántas filas cambió. Incluir normalizar pasillo y góndola
       (`strip().upper()`: "a1" y "A1" hoy son góndolas distintas). Con test.
+      Hecho (2026-10-22): la foto se guarda antes de tocar las alertas y
+      cerrar la alerta vieja y crear el análisis van en
+      `transaction.atomic()` (si falla, se borra la foto huérfana);
+      SQLite en modo `IMMEDIATE` (`settings.py`) toma el bloqueo al
+      empezar la transacción, así dos fotos de la misma góndola van una
+      tras otra (con dos hilos y la transacción forzada a durar 0,3 s:
+      una alerta abierta por góndola; sin el modo, "database is locked");
+      tomar y completar usan `filter(pk, estado=...).update()`; los
+      formularios de foto y de cámara normalizan pasillo y góndola, y la
+      migración 0005 normaliza lo ya guardado (si dos cámaras chocan, la
+      segunda queda como estaba). 3 tests nuevos.
 - [x] **#50** (dueño: Francisco) Configuración segura de la app web antes de instalarla (auditoría
       2026-10-21; se cruza con #39): `DJANGO_DEBUG` vale "1" si no se
       define (con la clave pública de desarrollo), faltan
