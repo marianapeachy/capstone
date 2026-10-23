@@ -172,7 +172,7 @@ Un perfil sin permiso recibe 403. CU07 (evaluación por lotes) va por
 
 | Tabla | Campos principales | Notas |
 | --- | --- | --- |
-| `User` | `username` (RUT normalizado, `12345678-5`), `email` (único), `is_active`, `failed_logins` | El perfil es su grupo de Django (Administrador, Jefe de Salón o Reponedor); un superusuario es Administrador. Las cuentas no se borran, se desactivan |
+| `User` | `username` (RUT normalizado, `12345678-5`), `email` (único), `is_active`, `failed_logins`, `locked_until` | El perfil es su grupo de Django (Administrador, Jefe de Salón o Reponedor); un superusuario es Administrador. Las cuentas no se borran, se desactivan |
 | `Analysis` | `created_at`, `created_by`, `pasillo`, `gondola`, `photo_name`, `free_fraction`, `critical`, `result` (JSON de la sección 5), `annotated` (foto anotada), `estado`, `taken_by`, `estado_at` | Un análisis por foto y, si hay quiebre, su alerta. `estado`: activa, en_proceso, completada o reemplazada |
 | `Config` | `umbral` (1-100, 30 por defecto) | Una sola fila (`Config.get()`) |
 | `Camera` | `nombre` (único), `pasillo`, `gondola`, `calibracion` (JSON de OpenCV) | Una cámara por góndola |
@@ -183,8 +183,10 @@ cubre `User`, los perfiles y `Analysis`. `Config` y `Camera` (#44) son posterior
 ### 6.3 Reglas de negocio
 
 - **Login (CU00)**: con RUT (con o sin puntos) o correo. Tras 5 intentos
-  fallidos seguidos la cuenta queda inactiva; solo el Administrador la
-  reactiva. La sesión expira tras 2 h sin uso. Contraseñas con bcrypt
+  fallidos seguidos la cuenta se bloquea 15 minutos (`locked_until`) y se
+  desbloquea sola; los intentos se cuentan en la base (`F()`), así que en
+  paralelo no se pierden. El mensaje de error es el mismo para todos, sin
+  delatar si el RUT existe. La sesión expira tras 2 h sin uso. Contraseñas con bcrypt
   (`BCryptSHA256PasswordHasher`).
 - **Análisis (CU01)**: foto JPG o PNG de hasta 20 MB, con pasillo y
   góndola. Se usan el umbral configurado y la calibración de la cámara de

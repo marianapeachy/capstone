@@ -276,13 +276,25 @@ hitos" en `docs/curso.md`).
       escribible. Los tests usan `web/settings_test.py`. Pendiente de
       verificar en su notebook: `docker build` y arrancar el contenedor
       (Docker Desktop no corre en el PC de Francisco; lo cubre el CI).
-- [ ] **#51** (dueño: Mariana) Bloqueo de cuentas (CU00, auditoría 2026-10-21, `web/auth.py`):
+- [x] **#51** (dueño: Mariana) Bloqueo de cuentas (CU00, auditoría 2026-10-21, `web/auth.py`):
       con solo saber el RUT se bloquea la cuenta de cualquiera, también la
       del único Administrador (nadie puede reactivarla desde la
       interfaz), y `failed_logins += 1` no es atómico, así que intentos
       en paralelo pasan de 5. Propuesta: contar con `F()` y bloquear por
       tiempo (ej. 15 min) en vez de desactivar la cuenta. Requiere
       confirmar el cambio de CU00 con el equipo.
+      Hecho (2026-10-23): tras 5 intentos fallidos seguidos la cuenta se
+      bloquea 15 minutos (campo `locked_until`, migración 0006) y se
+      desbloquea sola; ya no se desactiva. Los intentos se suman en la
+      base (`F()`): con 4 y 8 intentos simultáneos no se perdió ninguno.
+      Los intentos con la cuenta bloqueada no alargan el bloqueo. El
+      Administrador la desbloquea antes al guardarla en "Editar". El
+      mensaje de error es el mismo para todos (no delata si el RUT
+      existe). Cambio de CU00 propuesto en el ítem y asignado por
+      Francisco; plantilla y diagrama de CU00 al día. 3 tests (reemplazan
+      al del bloqueo por desactivación). Las cuentas que ya estaban
+      desactivadas por intentos siguen así hasta que el Administrador las
+      reactive.
 - [x] **#52** (dueño: Mariana) Foto sin productos detectados (auditoría 2026-10-21): con 0
       detecciones, `compute_availability()` da 100% libre y alerta
       crítica (foto tapada, oscura o sin góndola). Rechazar el análisis
