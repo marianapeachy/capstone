@@ -368,6 +368,7 @@ Resultado esperado con `yolo26s`: la foto 026 (botellas de vidrio en filas, de f
 ### Aplicación web
 
 ```bash
+export DJANGO_DEBUG=1               # desarrollo (PowerShell: $env:DJANGO_DEBUG="1"); sin esto exige DJANGO_SECRET_KEY y HTTPS
 python manage.py migrate            # crea la base (data/processed/web/db.sqlite3) y los 3 perfiles
 python manage.py createsuperuser    # primer Administrador (RUT, correo y contraseña)
 python manage.py runserver          # http://localhost:8000
@@ -434,9 +435,11 @@ python manage.py runserver          # http://localhost:8000
 Variables de entorno (todas opcionales en desarrollo):
 `SHELFVISION_WEIGHTS` (pesos de YOLO26; por defecto los de
 `run_pipeline.py`), `SHELFVISION_DATA_DIR` (base y fotos; por defecto
-`data/processed/web/`), `DJANGO_DEBUG` (`1` por defecto; `0` en el
-servidor), `DJANGO_SECRET_KEY` (obligatoria con `DJANGO_DEBUG=0`),
-`DJANGO_ALLOWED_HOSTS` (separados por coma) y `DJANGO_EMAIL_BACKEND`.
+`data/processed/web/`), `DJANGO_DEBUG` (`0` por defecto; `1` solo en tu
+PC de desarrollo), `DJANGO_SECRET_KEY` (obligatoria con `DJANGO_DEBUG=0`),
+`DJANGO_ALLOWED_HOSTS` (separados por coma), `DJANGO_HTTPS` (`1` por
+defecto sin debug: cookies seguras y redirección a https; `0` en un
+servidor sin TLS) y `DJANGO_EMAIL_BACKEND`.
 
 El CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) corre `pytest` y el `docker build` (con los tests dentro de la imagen) en cada Pull Request hacia `main` y en cada push a `main`; un PR solo se puede mergear con ambos checks en verde.
 
@@ -449,7 +452,7 @@ docker run --rm -v "$(pwd)/fotos:/app/fotos" -v "$(pwd)/data/processed/training:
   -v "$(pwd)/salida:/app/salida" shelfvision-ai python scripts/run_pipeline.py fotos --out salida
 # Aplicación web en http://localhost:8000. /data guarda la base, las fotos y los pesos
 # (copiar best.pt a ./web-data/); sin ese volumen se pierden al recrear el contenedor:
-docker run -d -p 8000:8000 -v "$(pwd)/web-data:/data" -e DJANGO_SECRET_KEY=<clave-larga-al-azar>   -e DJANGO_ALLOWED_HOSTS=localhost,<host-del-servidor> --name shelfvision shelfvision-ai
+docker run -d -p 8000:8000 -v "$(pwd)/web-data:/data" -e DJANGO_SECRET_KEY=<clave-larga-al-azar> -e DJANGO_HTTPS=0   -e DJANGO_ALLOWED_HOSTS=localhost,<host-del-servidor> --name shelfvision shelfvision-ai
 docker exec -it shelfvision python manage.py createsuperuser
 # Pruebas dentro del contenedor (tests/ no se copia a la imagen, se monta):
 docker run --rm -e DJANGO_SECRET_KEY=prueba -v "$(pwd)/tests:/app/tests" shelfvision-ai python -m pytest tests/
