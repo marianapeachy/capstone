@@ -98,7 +98,7 @@ GitHub. El incidente de LiteLLM en PyPI tampoco: no lo usamos.
 
 1. Un escáner de la imagen en el CI (`trivy` o `docker scout`) y
    `pip-audit` sobre `requirements.txt`. Se cruza con #54 (acciones del
-   CI fijadas por commit).
+   CI fijadas por commit: hecho el 2026-10-23).
 2. La configuración de la app (DEBUG apagado por defecto, cookies seguras,
    usuario sin privilegios en el contenedor) es el ítem #50.
 3. Si se instala en el CITT (#39), repetir `pip-audit` ese día: la lista
