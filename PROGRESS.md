@@ -362,7 +362,13 @@ hitos" en `docs/curso.md`).
       (1) medir IoU contra anotación a mano, como evaluará Walmart
       (agregarlo a `docs/test-plan.md`, #19); (2) control con ángulo real,
       que #22 no tiene; (3) demos sin SKU-110K. Probar CU07 con este set.
-- [ ] **#9** Documentar especificaciones técnicas y diagramas en `docs/`.
+- [x] **#9** (dueño: Mariana) Documentar especificaciones técnicas y diagramas en `docs/`.
+      Hecho (2026-10-22): `docs/especificacion-tecnica.md`, sacado del
+      código y no del diseño de la Fase 1: convenciones de coordenadas,
+      diagrama del flujo de datos, contrato de cada etapa (entrada,
+      salida y estructuras), parámetros con sus valores, formato del JSON
+      de salida, rutas y permisos de la app web, modelo de datos, reglas
+      de negocio por caso de uso y comandos. Enlazado desde el README.
 - [ ] **#14** Datasets con imágenes tipo cámara de seguridad (vista alta,
       oblicua, gran angular/fisheye, pasillo completo) para validar
       dewarping y segmentación en condiciones parecidas a Walmart.

@@ -136,6 +136,8 @@ flowchart TB
 
 Cada etapa vive en su paquete y no importa los detalles de otra: se pasan arrays, tuplas y *dataclasses*. `src/pipeline.py` es el único que las encadena, y tanto el CLI como la app web solo llaman a `run_image()`. Los diagramas de diseño de la Fase 1 (casos de uso y arquitectura) están en `Anexos/Diseño/`, actualizados a la app Django el 2026-10-21 (ítem #42); sus fuentes Mermaid, en `Anexos/Diseño/Diagramas fuente (Mermaid)/`.
 
+La especificación técnica (qué recibe y entrega cada etapa, parámetros con sus valores, formato del JSON de salida, rutas y permisos de la app web y modelo de datos) está en [docs/especificacion-tecnica.md](docs/especificacion-tecnica.md).
+
 ### Decisiones técnicas y su justificación
 
 | Decisión | Por qué | Evidencia |
@@ -209,7 +211,7 @@ Al 2026-10-20. El detalle por ítem y su dueño están en [PROGRESS.md](PROGRESS
 
 ```text
 .
-├── docs/                   # Documentación de diseño, especificaciones y requisitos del curso (curso.md)
+├── docs/                   # Especificación técnica (especificacion-tecnica.md), pruebas, datasets, entrenamiento y requisitos del curso (curso.md)
 ├── src/                    # Código fuente en scripts Python modulares
 │   ├── preprocessing/      # Filtros de imagen, segmentación automática y recorte de ROI
 │   ├── models/             # Módulos de inferencia (YOLO26 / CV Clásico)
