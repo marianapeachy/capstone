@@ -24,8 +24,9 @@ deforma una camara de sala (vista alta u oblicua).
 Alerta: espacio libre >= 30% del frente de la gondola completa (metros
 lineales de repisa). Las repisas son el metodo para medir, no una salida:
 la alerta y el % libre que se informan son solo los de la gondola
-(CLAUDE.md, "Quiebre por gondola completa"). Profundidad constante de
-25 cm para el volumen del Nivel 1 (ver CLAUDE.md).
+(CLAUDE.md, "Quiebre por gondola completa"). La profundidad es la
+constante global de 25 cm (ver CLAUDE.md); el analisis es 2D y el volumen
+libre del Nivel 1 no se informa (#40).
 """
 
 from __future__ import annotations
@@ -209,15 +210,6 @@ def compute_availability(
         free_fraction=free_fraction,
         critical=free_fraction >= params.critical_free_fraction,
     )
-
-
-def free_volume_cm3(free_area_px: float, cm_per_px: float) -> float:
-    """Volumen libre (Nivel 1) = area frontal libre x profundidad fija de
-    25 cm. `cm_per_px` es la escala de la vista frontal, que depende de la
-    camara (sin calibracion no hay escala: se informa el area en pixeles)."""
-    if not cm_per_px > 0:
-        raise ValueError("cm_per_px debe ser positivo.")
-    return free_area_px * cm_per_px**2 * GONDOLA_DEPTH_CM
 
 
 def _as_boxes(values: Sequence[BBox] | np.ndarray, name: str) -> np.ndarray:

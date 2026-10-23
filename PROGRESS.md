@@ -321,11 +321,18 @@ hitos" en `docs/curso.md`).
       góndola (`Analysis.strips` en `_fleje.html`); diferirlo agregaría
       una consulta por fila. Si las listas se ponen lentas, guardar las
       franjas en su propio campo. Dos tests nuevos en `tests/test_web.py`.
-- [ ] **#54** (dueño: Mariana) Limpieza (auditoría 2026-10-21): `free_volume_cm3()` solo la
+- [x] **#54** (dueño: Mariana) Limpieza (auditoría 2026-10-21): `free_volume_cm3()` solo la
       usan los tests (Nivel 1 no se informa, #40) y `openpyxl` y `fpdf2`
       están en `requirements.txt` sin que nada los importe (los traerá
       #7: si #7 no los usa, quitarlos). Fijar por commit las acciones de
       `.github/workflows/ci.yml`.
+      Hecho (2026-10-23): se borró `free_volume_cm3()` y su test (la
+      constante de 25 cm queda, con su test, porque es el acuerdo con
+      Walmart de CLAUDE.md); `openpyxl` y `fpdf2` se quedan porque desde
+      #7 los usan los reportes; las 4 acciones del CI van fijadas por
+      commit con la versión en un comentario (checkout v7.0.1,
+      setup-python v7.1.0, setup-buildx-action v4.4.1 y build-push-action
+      v7.4.0).
 - [ ] **#55** Entrenar y medir el detector con ruido visual de cámara de sala
       (pedido de Francisco, 2026-10-21): el mismo ruido que produce una
       cámara fija apuntando a una góndola de supermercado. Hoy ni el
