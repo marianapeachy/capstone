@@ -58,7 +58,7 @@ Los cuatro primeros responden al mensaje del profesor de la semana 8, y
 los siguientes hasta el #39, al del 2026-10-16 (ver "Próximos
 hitos" en `docs/curso.md`).
 
-- [ ] **#27** (dueño: Francisco) Informe de estado de avance para el
+- [x] **#27** (dueño: Francisco) Informe de estado de avance para el
       profesor, con los puntos que pidió su correo de la semana 7. Ya
       atrasado: el profesor lo está esperando. Ahora es el informe
       intermedio que pide el cliente, entrega 2026-10-21 (puntos en
@@ -98,6 +98,8 @@ hitos" en `docs/curso.md`).
       abstract en inglés; ningún mensaje del profesor ni del cliente pide
       inglés). Las pautas 2.2 y 2.3 sí lo piden para las evidencias de
       avance (#37): pregunta abierta en `docs/curso.md`.
+      Hecho (2026-10-22): entregado el 2026-10-21; queda de seguimiento
+      el enlace al video (#36) y la reflexión de Nicko.
 - [ ] **#29** Primer demo operativo ante Walmart, a más
       tardar 2026-10-31 (también se muestra en la Evaluación 2, semana
       del 2026-10-28): detector entrenado (#5), pipeline completo (#8)
@@ -237,7 +239,7 @@ hitos" en `docs/curso.md`).
       que unifica las identidades (hoy 6 autores para 3 personas) y
       commits y PR sin la línea `Co-Authored-By` ni el pie de Claude
       Code. Los commits ya publicados no se reescriben (regla 5).
-- [ ] **#49** Alertas atómicas en la app web (auditoría 2026-10-21, `web/views.py`
+- [ ] **#49** (dueño: Francisco) Alertas atómicas en la app web (auditoría 2026-10-21, `web/views.py`
       `analyze()` y `alerta_accion()`): hoy cerrar la alerta anterior,
       guardar la foto y crear el análisis no van en una transacción. Si
       falla el guardado, la alerta vieja queda cerrada y no hay otra; con
@@ -247,7 +249,7 @@ hitos" en `docs/curso.md`).
       antes de cerrar la alerta vieja y `filter(pk, estado=...).update()`
       mirando cuántas filas cambió. Incluir normalizar pasillo y góndola
       (`strip().upper()`: "a1" y "A1" hoy son góndolas distintas). Con test.
-- [ ] **#50** Configuración segura de la app web antes de instalarla (auditoría
+- [ ] **#50** (dueño: Francisco) Configuración segura de la app web antes de instalarla (auditoría
       2026-10-21; se cruza con #39): `DJANGO_DEBUG` vale "1" si no se
       define (con la clave pública de desarrollo), faltan
       `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE` y
@@ -255,7 +257,7 @@ hitos" en `docs/curso.md`).
       debug apagado por defecto, cookies seguras y HTTPS cuando
       `DEBUG` es falso, y `USER` sin privilegios en el Dockerfile con
       `/data` escribible.
-- [ ] **#51** Bloqueo de cuentas (CU00, auditoría 2026-10-21, `web/auth.py`):
+- [ ] **#51** (dueño: Francisco) Bloqueo de cuentas (CU00, auditoría 2026-10-21, `web/auth.py`):
       con solo saber el RUT se bloquea la cuenta de cualquiera, también la
       del único Administrador (nadie puede reactivarla desde la
       interfaz), y `failed_logins += 1` no es atómico, así que intentos
@@ -288,7 +290,7 @@ hitos" en `docs/curso.md`).
       góndola (`Analysis.strips` en `_fleje.html`); diferirlo agregaría
       una consulta por fila. Si las listas se ponen lentas, guardar las
       franjas en su propio campo. Dos tests nuevos en `tests/test_web.py`.
-- [ ] **#54** Limpieza (auditoría 2026-10-21): `free_volume_cm3()` solo la
+- [ ] **#54** (dueño: Francisco) Limpieza (auditoría 2026-10-21): `free_volume_cm3()` solo la
       usan los tests (Nivel 1 no se informa, #40) y `openpyxl` y `fpdf2`
       están en `requirements.txt` sin que nada los importe (los traerá
       #7: si #7 no los usa, quitarlos). Fijar por commit las acciones de
@@ -314,6 +316,26 @@ hitos" en `docs/curso.md`).
       imágenes (licencia). Se cruza con #14 (imágenes tipo CCTV
       sintéticas), #33 y #46; los parámetros reales de la cámara de
       Walmart (#24) afinarían los niveles de ruido.
+- [ ] **#57** (dueño: Francisco) Auditoría de seguridad por las vulnerabilidades
+      de lenguajes y librerías publicadas la semana del 2026-10-19 (pedido
+      de Francisco, 2026-10-22). Investigar cuáles afectan a lo que usa el
+      sitio (Python, Django, Pillow, OpenCV, ultralytics y PyTorch, fpdf2,
+      openpyxl, la imagen base del Dockerfile y las acciones del CI),
+      comparar con las versiones de `requirements.txt` y del contenedor, y
+      registrar el análisis en `docs/auditoria-seguridad.md`: qué
+      vulnerabilidad, si nos alcanza y cómo (CVE, versión corregida,
+      exposición real en la app). Aplicar los arreglos (subir versiones,
+      configuración) con test, o abrir un ítem por cada uno que sea
+      grande. Cruza con #50 (configuración segura), #51 (bloqueo de
+      cuentas) y #54 (acciones del CI fijadas por commit).
+      Avance (2026-10-22): análisis en `docs/auditoria-seguridad.md`.
+      Nos alcanzaba Pillow 12.3.0 (validación de la foto subida, ~35 CVE,
+      arreglo en 13.0.0) y certifi; se subieron en `requirements.txt`.
+      Django 6.1.2 ya traía los arreglos del 2026-10-06; PHP, Node y Java no
+      están en la pila. Falta: `docker build` local (Docker Desktop no
+      arranca en este PC, error de WSL; lo corre Francisco desde su notebook;
+      mientras tanto lo cubre el job `docker` del CI), escáner de imagen y `pip-audit` en el CI, y revisar
+      torch/torchvision, que `pip-audit` no cubre.
 - [x] **#7** (dueño: Mariana) Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
