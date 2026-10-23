@@ -14,11 +14,18 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 WEIGHTS = Path(os.environ.get(
     "SHELFVISION_WEIGHTS", ROOT / "data" / "processed" / "training" / "yolo26s" / "weights" / "best.pt"))
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+DEBUG = os.environ.get("DJANGO_DEBUG", "0") == "1"
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or ("solo-desarrollo-no-usar-en-servidor" if DEBUG else "")
 if not SECRET_KEY:
     raise ImproperlyConfigured("Sin DJANGO_DEBUG=1 hay que definir DJANGO_SECRET_KEY.")
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+# Sin DEBUG se exige HTTPS: cookies solo por TLS y redireccion de http a https.
+# DJANGO_HTTPS=0 lo apaga en un servidor que aun no tiene TLS (las cookies
+# seguras no viajan por http, ni siquiera el login funcionaria).
+HTTPS = os.environ.get("DJANGO_HTTPS", "0" if DEBUG else "1") == "1"
+SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = SECURE_SSL_REDIRECT = HTTPS
+# Detras de un proxy que termina TLS (nginx, Traefik) el aviso llega en este encabezado.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https") if HTTPS else None
 
 INSTALLED_APPS = [
     "django.contrib.auth",

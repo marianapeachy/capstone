@@ -239,7 +239,7 @@ hitos" en `docs/curso.md`).
       que unifica las identidades (hoy 6 autores para 3 personas) y
       commits y PR sin la línea `Co-Authored-By` ni el pie de Claude
       Code. Los commits ya publicados no se reescriben (regla 5).
-- [ ] **#49** (dueño: Francisco) Alertas atómicas en la app web (auditoría 2026-10-21, `web/views.py`
+- [ ] **#49** (dueño: Mariana) Alertas atómicas en la app web (auditoría 2026-10-21, `web/views.py`
       `analyze()` y `alerta_accion()`): hoy cerrar la alerta anterior,
       guardar la foto y crear el análisis no van en una transacción. Si
       falla el guardado, la alerta vieja queda cerrada y no hay otra; con
@@ -249,7 +249,7 @@ hitos" en `docs/curso.md`).
       antes de cerrar la alerta vieja y `filter(pk, estado=...).update()`
       mirando cuántas filas cambió. Incluir normalizar pasillo y góndola
       (`strip().upper()`: "a1" y "A1" hoy son góndolas distintas). Con test.
-- [ ] **#50** (dueño: Francisco) Configuración segura de la app web antes de instalarla (auditoría
+- [x] **#50** (dueño: Francisco) Configuración segura de la app web antes de instalarla (auditoría
       2026-10-21; se cruza con #39): `DJANGO_DEBUG` vale "1" si no se
       define (con la clave pública de desarrollo), faltan
       `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE` y
@@ -257,7 +257,15 @@ hitos" en `docs/curso.md`).
       debug apagado por defecto, cookies seguras y HTTPS cuando
       `DEBUG` es falso, y `USER` sin privilegios en el Dockerfile con
       `/data` escribible.
-- [ ] **#51** (dueño: Francisco) Bloqueo de cuentas (CU00, auditoría 2026-10-21, `web/auth.py`):
+      Hecho (2026-10-22): `DJANGO_DEBUG` vale 0 si no se define (en
+      desarrollo, `DJANGO_DEBUG=1`); sin debug, cookies de sesión y CSRF
+      seguras y redirección a https, con `DJANGO_HTTPS=0` para un servidor
+      sin TLS y `SECURE_PROXY_SSL_HEADER` para un proxy que termina TLS.
+      La imagen corre como `app` (uid 10001) y solo `/data` es
+      escribible. Los tests usan `web/settings_test.py`. Pendiente de
+      verificar en su notebook: `docker build` y arrancar el contenedor
+      (Docker Desktop no corre en el PC de Francisco; lo cubre el CI).
+- [ ] **#51** (dueño: Mariana) Bloqueo de cuentas (CU00, auditoría 2026-10-21, `web/auth.py`):
       con solo saber el RUT se bloquea la cuenta de cualquiera, también la
       del único Administrador (nadie puede reactivarla desde la
       interfaz), y `failed_logins += 1` no es atómico, así que intentos
@@ -290,7 +298,7 @@ hitos" en `docs/curso.md`).
       góndola (`Analysis.strips` en `_fleje.html`); diferirlo agregaría
       una consulta por fila. Si las listas se ponen lentas, guardar las
       franjas en su propio campo. Dos tests nuevos en `tests/test_web.py`.
-- [ ] **#54** (dueño: Francisco) Limpieza (auditoría 2026-10-21): `free_volume_cm3()` solo la
+- [ ] **#54** (dueño: Mariana) Limpieza (auditoría 2026-10-21): `free_volume_cm3()` solo la
       usan los tests (Nivel 1 no se informa, #40) y `openpyxl` y `fpdf2`
       están en `requirements.txt` sin que nada los importe (los traerá
       #7: si #7 no los usa, quitarlos). Fijar por commit las acciones de

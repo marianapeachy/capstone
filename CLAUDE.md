@@ -114,7 +114,7 @@ data/processed/        # Salidas intermedias/procesadas (no versionadas)
 pytest tests/
 python scripts/run_pipeline.py FOTOS_O_CARPETAS... [--annotations CSV]   # vista limpia + JSON (+ métricas IoU)
 python scripts/visualize_segmentation.py   # revisar la segmentación a ojo
-python manage.py migrate && python manage.py runserver   # app web en http://localhost:8000
+DJANGO_DEBUG=1 python manage.py migrate && DJANGO_DEBUG=1 python manage.py runserver   # app web en http://localhost:8000 (PowerShell: $env:DJANGO_DEBUG="1" antes)
 ```
 
 ## Notas
