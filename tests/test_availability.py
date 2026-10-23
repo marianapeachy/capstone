@@ -6,7 +6,6 @@ from src.postprocessing.availability import (
     GONDOLA_DEPTH_CM,
     AvailabilityParams,
     compute_availability,
-    free_volume_cm3,
 )
 
 # Dos niveles de 1000 px de ancho y 200 px de alto.
@@ -185,12 +184,8 @@ def test_invalid_params_raise(kwargs):
         AvailabilityParams(**kwargs)
 
 
-def test_free_volume_uses_the_constant_depth():
-    assert GONDOLA_DEPTH_CM == 25.0
-    # 400 x 200 px libres a 0.1 cm/px = 40 x 20 cm = 800 cm2 x 25 cm.
-    assert free_volume_cm3(400 * 200, 0.1) == pytest.approx(20000.0)
-    with pytest.raises(ValueError):
-        free_volume_cm3(100, 0)
+def test_depth_is_the_global_25_cm_constant():
+    assert GONDOLA_DEPTH_CM == 25.0  # acuerdo con Walmart (CLAUDE.md): una sola, global
 
 
 # Niveles inclinados (cuadrilateros de lados verticales, item #22).
