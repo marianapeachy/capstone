@@ -31,9 +31,16 @@ COPY scripts/ ./scripts/
 COPY web/ ./web/
 COPY manage.py pytest.ini ./
 
+# Sin privilegios: la app no necesita root. Solo /data (el volumen) es escribible;
+# -m crea un HOME donde ultralytics guarda su configuracion.
+RUN useradd -m -u 10001 app && mkdir /data && chown app /data
+USER app
+
 # App web (item #28). /data es el volumen con la base de datos, las fotos
 # analizadas y los pesos (best.pt): sin volumen se pierden al recrear el
-# contenedor. DJANGO_SECRET_KEY y DJANGO_ALLOWED_HOSTS se pasan con -e.
+# contenedor (con un volumen del host, `chown 10001` a esa carpeta).
+# DJANGO_SECRET_KEY y DJANGO_ALLOWED_HOSTS se pasan con -e; la app exige HTTPS
+# (DJANGO_HTTPS=0 solo para probar sin TLS).
 # El pipeline por lotes sigue disponible: docker run ... python scripts/run_pipeline.py
 ENV DJANGO_DEBUG=0 \
     SHELFVISION_DATA_DIR=/data \
