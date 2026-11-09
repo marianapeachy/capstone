@@ -96,3 +96,56 @@ def _rotation(yaw_deg: float, pitch_deg: float) -> np.ndarray:
 
 def _transform(homography: np.ndarray, points: np.ndarray) -> np.ndarray:
     return cv2.perspectiveTransform(points.reshape(-1, 1, 2).astype(np.float64), homography).reshape(-1, 2)
+
+
+def degrade(image: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+    """Foto como la veria una camara fija de sala (item #55): a cada efecto
+    le toca o no, al azar. Las cajas no se mueven, asi que las anotaciones
+    siguen valiendo; lo que tapa un producto lo deja con su caja, para que
+    el detector aprenda a encontrarlo parcialmente visible.
+
+    Orden: lo que hay en la escena (algo cerca de la camara o una persona
+    pasando, reflejo), luego la optica (foco o movimiento), la luz, y al
+    final el sensor y la compresion.
+    """
+    height, width = image.shape[:2]
+    out = image.astype(np.float32)
+
+    def blend(color, mask, strength):  # mancha de `color` donde `mask` (0-1)
+        nonlocal out
+        alpha = (cv2.GaussianBlur(mask, (0, 0), min(height, width) * 0.02) * strength)[..., None]
+        out = out * (1 - alpha) + np.array(color, np.float32) * alpha
+
+    if rng.random() < 0.5:  # persona (cabeza y cuerpo) o algo cerca de la camara (caja, carro)
+        mask = np.zeros((height, width), np.float32)
+        x, w = rng.uniform(0, 0.85) * width, rng.uniform(0.08, 0.15) * width
+        if rng.random() < 0.5:
+            cv2.ellipse(mask, (int(x + w / 2), int(height * 0.25)), (int(w * 0.3), int(w * 0.35)), 0, 0, 360, 1, -1)
+            cv2.rectangle(mask, (int(x), int(height * 0.32)), (int(x + w), height), 1, -1)
+        else:
+            cv2.rectangle(mask, (int(x), int(rng.uniform(0.3, 0.6) * height)), (int(x + 1.8 * w), height), 1, -1)
+        blend(rng.uniform(20, 110, 3), mask, rng.uniform(0.85, 1.0))
+    if rng.random() < 0.3:  # reflejo o brillo de una puerta de vidrio
+        mask = np.zeros((height, width), np.float32)
+        cv2.ellipse(mask, (int(rng.uniform(0, width)), int(rng.uniform(0, height))),
+                    (int(width * rng.uniform(0.1, 0.3)), int(height * rng.uniform(0.1, 0.3))),
+                    rng.uniform(0, 180), 0, 360, 1, -1)
+        blend((255, 255, 255), mask, rng.uniform(0.3, 0.6))
+    if rng.random() < 0.4:  # desenfoque de foco
+        out = cv2.GaussianBlur(out, (0, 0), rng.uniform(1, 3))
+    elif rng.random() < 0.3:  # desenfoque de movimiento
+        size = int(rng.integers(5, 15))
+        kernel = np.zeros((size, size), np.float32)
+        kernel[size // 2] = 1 / size
+        out = cv2.filter2D(out, -1, kernel)
+    roll = rng.random()  # luz: poca (noche), mucha (contraluz) o la normal
+    out *= rng.uniform(0.4, 0.85) if roll < 0.35 else rng.uniform(1.3, 1.8) if roll < 0.55 else 1.0
+    out = np.clip(out, 0, 255)
+    if rng.random() < 0.5:  # baja resolucion
+        scale = rng.uniform(0.3, 0.6)
+        out = cv2.resize(cv2.resize(out, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA),
+                         (width, height), interpolation=cv2.INTER_LINEAR)
+    out = out + rng.normal(0, rng.uniform(2, 12), out.shape)  # ruido del sensor
+    noisy = np.clip(out, 0, 255).astype(np.uint8)
+    quality = int(rng.integers(20, 70))  # compresion fuerte
+    return cv2.imdecode(cv2.imencode(".jpg", noisy, [cv2.IMWRITE_JPEG_QUALITY, quality])[1], cv2.IMREAD_COLOR)

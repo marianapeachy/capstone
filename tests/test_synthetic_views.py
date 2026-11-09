@@ -54,3 +54,22 @@ def test_rejects_rotation_out_of_view():
     image = np.full((300, 400, 3), 128, dtype=np.uint8)
     with pytest.raises(ValueError):
         oblique_view(image, [], yaw_deg=80)
+
+
+def test_degrade_changes_the_image_but_not_its_shape_and_is_reproducible():
+    from src.datasets.synthetic import degrade
+
+    image = np.random.default_rng(1).integers(0, 255, (300, 400, 3), dtype=np.uint8)
+    first = degrade(image, np.random.default_rng(7))
+    assert first.shape == image.shape and first.dtype == np.uint8
+    assert not np.array_equal(first, image)
+    np.testing.assert_array_equal(first, degrade(image, np.random.default_rng(7)))
+    assert not np.array_equal(first, degrade(image, np.random.default_rng(8)))
+
+
+def test_degrade_varies_the_brightness_across_seeds():
+    from src.datasets.synthetic import degrade
+
+    image = np.full((300, 400, 3), 128, dtype=np.uint8)
+    means = [degrade(image, np.random.default_rng(seed)).mean() for seed in range(30)]
+    assert min(means) < 100 and max(means) > 140  # de noche y de contraluz

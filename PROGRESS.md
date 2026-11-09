@@ -333,7 +333,7 @@ hitos" en `docs/curso.md`).
       commit con la versión en un comentario (checkout v7.0.1,
       setup-python v7.1.0, setup-buildx-action v4.4.1 y build-push-action
       v7.4.0).
-- [ ] **#55** Entrenar y medir el detector con ruido visual de cámara de sala
+- [ ] **#55** (dueño: Francisco) Entrenar y medir el detector con ruido visual de cámara de sala
       (pedido de Francisco, 2026-10-21): el mismo ruido que produce una
       cámara fija apuntando a una góndola de supermercado. Hoy ni el
       entrenamiento ni las pruebas lo tienen (SKU-110K y Kaggle son fotos
@@ -354,6 +354,27 @@ hitos" en `docs/curso.md`).
       imágenes (licencia). Se cruza con #14 (imágenes tipo CCTV
       sintéticas), #33 y #46; los parámetros reales de la cámara de
       Walmart (#24) afinarían los niveles de ruido.
+      Ampliación (2026-11-09, pedido de Francisco): el objetivo es un
+      modelo más robusto, así que el reentrenamiento con imágenes con ruido
+      se hace siempre (no solo si cae bajo mAP50 0.70) y se mide contra el
+      modelo sin ruido. Sumar a lo simulado: personas pasando (siluetas
+      sintéticas con desenfoque de movimiento), objetos cerca de la cámara
+      (carros, cajas, manos: manchas grandes y desenfocadas que tapan parte
+      de la góndola) y variaciones de luminosidad (día, noche, luz
+      fluorescente, sombras).
+      Avance (2026-11-09): pasos (1) y la generación del (3) hechos:
+      `degrade()` en `src/datasets/synthetic.py` (ruido del sensor, poca
+      luz y contraluz, JPEG, baja resolución, desenfoque de foco y de
+      movimiento, reflejo, persona u objeto que tapa; al azar y con
+      semilla) y `prepare_finetune_dataset.py --ruido N` (default 1) suma
+      N copias con ruido de cada vista de entrenamiento, con las mismas
+      cajas; la validación queda limpia. 3 tests nuevos. Falta: medir el
+      modelo con fotos degradadas (2), entrenar (necesita GPU) y comparar (4).
+      Para retomar: `python scripts/prepare_finetune_dataset.py` (con los
+      datasets de `scripts/download_datasets.py` y
+      `scripts/prepare_datasets.py`) arma el dataset con ruido; entrenar
+      con `docs/training.md`. Para el paso (2), degradar las 12 fotos de
+      prueba con `degrade()` y medir con `train_detector.py val`.
 - [ ] **#57** (dueño: Francisco) Auditoría de seguridad por las vulnerabilidades
       de lenguajes y librerías publicadas la semana del 2026-10-19 (pedido
       de Francisco, 2026-10-22). Investigar cuáles afectan a lo que usa el
