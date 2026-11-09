@@ -526,3 +526,24 @@ def test_borrar_fotos_antiguas_conserva_el_analisis(client, analyzer, capsys):
 def test_borrar_fotos_rechaza_dias_invalidos():
     with pytest.raises(CommandError, match="al menos 1"):
         call_command("borrar_fotos", dias=0)
+
+
+# --- Camara de sala simulada (#58) ---
+
+def test_simular_camara_registra_la_camara_y_analiza_las_fotos_degradadas(analyzer, tmp_path, capsys):
+    carpeta = tmp_path / "fotos"
+    carpeta.mkdir()
+    for nombre, vacio in (("llena.png", None), ("vacia.png", EMPTIED)):
+        cv2.imwrite(str(carpeta / nombre), gondola(vacio)[0])
+    (carpeta / "notas.txt").write_text("no es una foto")
+    call_command("simular_camara", str(carpeta), pasillo="3", gondola="14B")
+    camara = Camera.objects.get()
+    assert (camara.pasillo, camara.gondola) == ("3", "14B")
+    assert Analysis.objects.count() == 2  # ignora lo que no es foto
+    assert all(a.created_by is None and a.photo_name.endswith(".jpg") for a in Analysis.objects.all())
+    assert "2 de 2" in capsys.readouterr().out
+
+
+def test_simular_camara_rechaza_una_carpeta_sin_fotos(tmp_path):
+    with pytest.raises(CommandError, match="No hay fotos"):
+        call_command("simular_camara", str(tmp_path), pasillo="3", gondola="14B")

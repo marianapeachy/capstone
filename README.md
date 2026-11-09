@@ -421,6 +421,12 @@ python manage.py runserver          # http://localhost:8000
   corrigen con esa calibración; sin ella, solo se aplica CLAHE. Los
   cambios rigen para las fotos siguientes: lo ya analizado no cambia. No
   se configura la profundidad (25 cm fijos) ni se dibuja la ROI.
+- **Cámara de sala simulada (#58)**: `python manage.py simular_camara
+  CARPETA --pasillo 3 --gondola 14B --espera 10` registra la cámara y
+  analiza las fotos de la carpeta degradadas como una cámara fija (640 px,
+  poca luz, ruido, JPEG fuerte), una cada 10 s. Los resultados aparecen en
+  Góndolas, Alertas y Análisis. Usar fotos que se puedan mostrar (Kaggle
+  CC0, no SKU-110K).
 - **Privacidad de las fotos (RNF05)**: las fotos de tienda pueden mostrar
   clientes. `python manage.py borrar_fotos --dias 30` borra las fotos
   analizadas con más de 30 días y conserva sus resultados (% libre,

@@ -374,6 +374,16 @@ hitos" en `docs/curso.md`).
       arranca en este PC, error de WSL; lo corre Francisco desde su notebook;
       mientras tanto lo cubre el job `docker` del CI), escáner de imagen y `pip-audit` en el CI, y revisar
       torch/torchvision, que `pip-audit` no cubre.
+- [x] **#58** (dueño: Francisco) Cámara de sala simulada para comprobar la
+      app web con el flujo de una cámara fija (pedido de Francisco,
+      2026-11-09). Hecho (2026-11-09): `python manage.py simular_camara
+      CARPETA --pasillo 3 --gondola 14B [--espera 10]` registra la cámara
+      (CU05) y analiza una por una las fotos de la carpeta, degradadas como
+      una cámara de sala (640 px, 70% de luz, ruido, JPEG calidad 35), con
+      el mismo `analyze()` de la página: se ven en Góndolas, Alertas y
+      Análisis, sin usuario (`created_by` vacío). Probado con 6 fotos Kaggle
+      CC0 y el detector real; 2 tests nuevos. La degradación es mínima y
+      fija: la medición por tipo y nivel de ruido sigue en #55.
 - [x] **#7** (dueño: Mariana) Implementar generación de reportes (Excel, CSV, PDF) en
       `src/reporting/`. Contenido mínimo (#30, acuerdos con Walmart en el
       README): % libre de la góndola completa (#40) y alerta sí/no; así sirve
