@@ -69,10 +69,33 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
   archivos vacíos); README con descripción, tecnologías, arquitectura,
   funcionalidades e instrucciones de instalación y ejecución; evidencias
   de desarrollo (capturas, pruebas, diagramas); código más reciente con
-  commits; historial que muestre el aporte de cada integrante. El orden
-  de las carpetas viene en imágenes de los mensajes del 2026-10-26,
-  2026-11-02, 2026-11-06 y 2026-11-13, que no llegaron al registro
-  (pedirlas).
+  commits; historial que muestre el aporte de cada integrante. Orden
+  completo de las carpetas (imagen del mensaje del 2026-11-13, llegó al
+  equipo el 2026-11-14). En los nombres, "Apellido_Nombre" es el de
+  cada integrante, y la versión en inglés de las guías y presentaciones
+  es optativa:
+  - **Fase 1 / Evidencias Individuales**:
+    `Apellido_Nombre_1.1_APT122_AutoevaluacionCompetenciasFase1.docx`,
+    `Apellido_Nombre_1.2_APT122_DiarioReflexionFase1.docx` y
+    `Apellido_Nombre_1.3_APT122_AutoevaluacionFase1.docx`.
+  - **Fase 1 / Evidencias Grupales**: `Presentación Proyecto.pptx`,
+    `1.4_APT122_FormativaFase1.docx` y
+    `1.5_GuiaEstudiante_Fase 1_Definicion Proyecto APT (Español).docx`
+    (y `(Inglés)`, optativa).
+  - **Fase 2 / Evidencias Individuales**:
+    `Apellido_Nombre_2.1_APT122_DiarioReflexionFase2.docx`.
+  - **Fase 2 / Evidencias Grupales**:
+    `2.4_GuiaEstudiante_Fase 2_DesarrolloProyecto APT (Español).docx` y
+    `2.6_GuiaEstudiante_Fase 2_Informe Final Proyecto APT (Español).docx`
+    (y sus versiones `(Inglés)`, optativas).
+  - **Fase 2 / Evidencias Proyecto**: `Presentación Proyecto.pptx`,
+    `Evidencias de documentación` y `Evidencias de sistema`, esta con
+    `Aplicación` y `Base de datos`.
+  - **Fase 3 / Evidencias Individuales**:
+    `Apellido_Nombre_3.1_APT122_DiarioReflexionFase3.docx`.
+  - **Fase 3 / Evidencias Grupales**:
+    `Presentación Final del proyecto (Español).pptx` (y `(Inglés)`,
+    optativa).
 - **RESUMEN Estado de Avance Casos de Uso.xlsx**: una hoja por semana de
   desarrollo, con los C.U y funcionalidades de la semana, su estado,
   actividades completadas y pendientes, dificultades, observaciones y
@@ -266,8 +289,14 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
   Avance, "APT122". ¿Los documentos nuevos llevan "PTY4478"? ¿Dónde están
   las plantillas de la "Pauta de reflexión del informe de avance" y de
   la "Evaluación formativa final"?
-- Faltan las imágenes con el orden de carpetas de GitHub (mensajes del
-  2026-10-26, 2026-11-02, 2026-11-06 y 2026-11-13).
+- Orden de carpetas del GitHub (imagen del 2026-11-13): ¿dónde van los
+  archivos de la Fase 2 que la imagen no nombra (informe intermedio de
+  avance, autoevaluación 2.2, formativa 2.3, planilla de evaluación del
+  avance, video)? ¿"Evidencias de documentación" lleva por dentro las
+  mismas subcarpetas que la carpeta FINAL FASE 2 de Drive (diagramas,
+  SCRUM, anexos)? La carpeta `Fase 1/` ya evaluada tiene nombres
+  distintos a la imagen (por ejemplo, `Presentación Idea de
+  Proyecto.docx`): ¿hay que renombrarla o se deja como se evaluó?
 - ¿Qué cuenta como "C.U resuelto" para la Evaluación 2? Ya se sabe que
   espera Login y CRUD (CU00, CU06): ¿qué otros CRUD cuentan como
   "principales" (cámaras, góndolas, umbrales: CU05)?
@@ -323,7 +352,11 @@ Correo del profesor a todos los equipos.
 ### Semana 13 (2026-11-13): orden de carpetas en GitHub
 
 - Envió una imagen con el orden completo de las carpetas del GitHub
-  ("orden de carpetas GitHub (COMPLETO)"); no llegó al registro.
+  ("orden de carpetas GitHub (COMPLETO)"). Llegó al equipo el
+  2026-11-14 y quedó registrada como texto en "Requisitos vigentes"
+  (GitHub de la Fase 2): carpetas por fase (Fase 1, 2 y 3) con
+  Evidencias Individuales, Evidencias Grupales y, en la Fase 2,
+  Evidencias Proyecto.
 
 ### Semana 13 (2026-11-10): entrega del MVP al cliente
 
