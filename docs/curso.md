@@ -13,18 +13,80 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
 
 | Fecha | Hito | Qué se entrega / criterio | Fuente |
 | --- | --- | --- | --- |
-| Ya esperado (sin fecha) | CRUD principales y Login operativos | Según los perfiles de usuario (Reponedor, Jefe de Salón, Administrador) | Semana 8 |
-| 2026-10-21 | Informe intermedio de avance y video de demostración | Informe con los puntos pedidos por el cliente (ver "Requisitos vigentes") y video de 5 a 10 minutos; todo disponible en el repositorio GitHub. Evalúa el avance real, no el producto final | Semana 9 |
-| Semana del 2026-10-26 (día y hora por informar) | Feria de informática | Se presenta al menos 1 integrante por equipo | Semana 9 |
-| A más tardar 2026-10-26 | Evidencias de avance de la Fase 2 | Documentos administrativos de AVANCE (Drive, ver "Requisitos vigentes") y GitHub con el README bien documentado | Semana 9 |
-| Semana del 2026-10-28 (día exacto por confirmar) | Evaluación 2 (Avance), Fase 2 | 50% de los C.U de la fase resueltos; se muestra la demo del Sprint 1 | Semana 8 |
-| A más tardar 2026-10-31 | Primer demo operativo | Demo funcional para mostrar avances concretos al cliente (Walmart) y recibir su evaluación y retroalimentación | Semana 8 |
-| Semana 15 (por confirmar: 2026-11-23 a 2026-11-27 si no hay semanas de receso) | Entrega final Fase 2 | Documentos de la Fase 2 (ver "Requisitos vigentes") en la carpeta "FINAL FASE 2" de Drive (detalles por anunciar) | Semanas 8 y 9 |
+| 2026-11-16 (lunes) | GitHub al día para la revisión final de Walmart | El repositorio con la última versión del desarrollo y los entregables; el cliente lo revisa para cerrar las notas de la Fase 2 (inicio y final) | Semana 13 (2026-11-13, correo) |
+| A más tardar la semana del 2026-11-16 | Entrega del MVP al cliente (Walmart) | Correo al cliente con copia al profesor (o reenviarle el correo si ya se envió): video tutorial, manual de uso y manual de instalación; agradecer al cliente su participación. El profesor la valida antes de publicar los resultados finales | Semana 13 (2026-11-10) |
+| 2026-11-20, 12:00 | Entrega final Fase 2 | Carpeta "FINAL FASE 2" en Drive (estructura en "Requisitos vigentes") y GitHub ordenado; 100% de los C.U resueltos, un manual de usuario por perfil y manual de instalación | Semanas 12 (2026-11-02 y 2026-11-06) |
+| Semana del 2026-11-23 al 2026-11-27 | Ensayos de la presentación ante la comisión | Preparación de la presentación final | Semana 12 (2026-11-02) |
 | Por definir | Instalación en el servidor del CITT | La aplicación queda instalada en el servidor del CITT; instrucciones por sección por llegar | Semana 9 |
 | Por definir | Pre-examen (Fase 2) | - | README |
 | Por definir | Exposición ante la Comisión (Fase 3) | - | README |
 
 ## Requisitos vigentes
+
+- **GitHub para la revisión final de Walmart** (2026-11-16, lunes): el
+  repositorio debe tener la última versión del desarrollo y los
+  entregables. El cliente lo revisa para cerrar las calificaciones de la
+  Fase 2 (inicio y final), así que el plazo no se mueve.
+- **Entrega final de la Fase 2** (2026-11-20, 12:00): el 100% de los
+  casos de uso resueltos, un manual de usuario por perfil
+  (Administrador, Jefe de Salón y Reponedor), manual de instalación y
+  los demás entregables. Estructura de la carpeta "FINAL FASE 2" de
+  Drive (PDF del mensaje del 2026-11-06), aparte del GitHub:
+  - **FASE 2 / Evidencias individuales**: una por integrante,
+    `Apellido_Nombre_Pauta_de_reflexión_informe_de_avance_proyecto_APT`.
+  - **FASE 2 / Evidencias grupales**: `PTY4478 APT2.0 FASE 2.docx`,
+    `PTY4478 Evaluación formativa final`, `PTY4478 APT2.0 FASE 2 Informe
+    Final` y `PLANILLA DE EVALUACIÓN FASE 2.xlsx` (uso docente).
+  - **Evidencias proyecto / Presentación Proyecto**: ppt de la
+    presentación final.
+  - **Evidencias proyecto / Evidencias de documentación según
+    metodología**: diagramas de C.U (incluye nivel cero), planillas de
+    C.U, diagramas de actividad, listado de C.U y listado de RF y RNF.
+    **Documentación SCRUM**: análisis del caso; épicas, sprints e
+    historias de usuario; priorización de H.U.
+  - **ANEXOS**: instructivo del plan de instalación, manual de usuario,
+    plan de pruebas y Carta Gantt.
+  - **Evidencias de sistema / Aplicación**: APK del sistema, código del
+    sistema, PDF de implementación del ambiente de desarrollo y un txt
+    con el repositorio GitHub del proyecto documentado.
+  - **Evidencias de sistema / Base de datos**: script del sistema
+    (poblar tablas), diccionario de datos, modelo lógico, modelo
+    relacional y, si hay NoSQL, descripción de las colecciones.
+  - **RESUMEN Estado de Avance CU.xlsx**.
+  - **Video tutorial con audio**: solo la ejecución de los módulos
+    desarrollados, sin mostrar código.
+  - **Manual instructivo de uso** de la aplicación.
+- **Entrega del MVP al cliente** (a más tardar la semana del
+  2026-11-16): por correo, con video tutorial, manual de uso y, si
+  corresponde, manual de instalación. Con copia al profesor, o
+  reenviarle el correo si ya se envió: él valida la entrega antes de
+  publicar los resultados finales. El correo agradece al cliente su
+  participación en el Capstone (tiempo, disposición y apoyo para
+  resolver dudas).
+- **GitHub de la Fase 2** (auditoría semanal): estructura de carpetas y
+  nombres de archivo exactamente como en las instrucciones de
+  auditoría; documentos con información real y al día (no carpetas ni
+  archivos vacíos); README con descripción, tecnologías, arquitectura,
+  funcionalidades e instrucciones de instalación y ejecución; evidencias
+  de desarrollo (capturas, pruebas, diagramas); código más reciente con
+  commits; historial que muestre el aporte de cada integrante. El orden
+  de las carpetas viene en imágenes de los mensajes del 2026-10-26,
+  2026-11-02, 2026-11-06 y 2026-11-13, que no llegaron al registro
+  (pedirlas).
+- **RESUMEN Estado de Avance Casos de Uso.xlsx**: una hoja por semana de
+  desarrollo, con los C.U y funcionalidades de la semana, su estado,
+  actividades completadas y pendientes, dificultades, observaciones y
+  próximos pasos. Va en la raíz del Drive del equipo, compartido con el
+  profesor, y se actualiza cada semana.
+- **Base de datos relacional**: modelo lógico, modelo relacional,
+  diccionario de datos y scripts SQL para crear la estructura y poblar
+  las tablas con datos de prueba, coherentes con la implementación
+  actual.
+- **Video instructivo**: es el formato que mejor recibieron los
+  clientes; acompaña la entrega del MVP y la final.
+- **Material de ejemplo** en Drive (enlace en el mensaje del profesor
+  del 2026-11-06): plantillas de plan de pruebas, manuales de
+  instalación y de usuario, y ejemplos de presentación de proyecto.
 
 - **Evaluación 2 (Avance)**: el 50% de los casos de uso de la fase
   resueltos. Los C.U del diseño son 8 (CU00-CU07, en
@@ -39,9 +101,9 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
   (y CU05 si la configuración de cámaras y umbrales cuenta como CRUD
   principal). Implica base de datos, que también piden las evidencias
   del sistema.
-- **Primer demo operativo** a fines de octubre (a más tardar
-  2026-10-31): funcional y mostrable al cliente, para recibir su
-  evaluación y retroalimentación.
+- **Primer demo operativo**: entregado al cliente el 2026-10-26 a las
+  12:00 (antes "a más tardar 2026-10-31"), para recibir su evaluación y
+  retroalimentación.
 - **Plan de mejoras**: se elabora y empieza a implementar en la semana
   8, a partir de las observaciones de la evaluación y rúbrica de la
   Fase 1.
@@ -120,7 +182,7 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
   profesor volvió a compartir los de AVANCE, pedidos por auditoría, en
   otra carpeta de Drive (enlace en el mensaje del profesor del
   2026-10-16): fecha tope de las evidencias de avance 2026-10-26; la
-  Fase 2 final es en la semana 15.
+  Fase 2 final es el 2026-11-20 a las 12:00 (antes "semana 15").
   - Evidencias individuales (cada integrante):
     `Apellido_Nombre_2.1_APT122_DiarioReflexionFase2.docx`.
   - Evidencias grupales: `2.4_GuiaEstudiante_Fase 2_DesarrolloProyecto
@@ -187,15 +249,25 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
 
 ## Pendiente de parte del profesor
 
-- Detalles de la carpeta "FINAL FASE 2" en Drive (anunciado en la
-  semana 8).
-- Día y hora de la feria de informática (semana del 2026-10-26;
-  anunciado el 2026-10-16).
 - Instrucciones por sección para instalar la aplicación en el servidor
   del CITT (anunciado el 2026-10-16).
 
 ## Preguntas abiertas para el profesor
 
+- La entrega final pide un "APK sistema": ShelfVision AI es una app
+  web (Django) más la línea de comandos, sin app Android. ¿Basta con el
+  código, la imagen Docker y la URL del servidor del CITT?
+- Base de datos: el proyecto usa SQLite (relacional), sin NoSQL. ¿La
+  carpeta de colecciones NoSQL queda vacía o con una nota "no aplica"?
+- "100% de los C.U resueltos": CU07 (evaluar con un lote) corre por la
+  línea de comandos y CU02 no tiene notificación push al teléfono. ¿Cuentan
+  como resueltos?
+- Los nombres de la entrega final usan el código "PTY4478" y los de
+  Avance, "APT122". ¿Los documentos nuevos llevan "PTY4478"? ¿Dónde están
+  las plantillas de la "Pauta de reflexión del informe de avance" y de
+  la "Evaluación formativa final"?
+- Faltan las imágenes con el orden de carpetas de GitHub (mensajes del
+  2026-10-26, 2026-11-02, 2026-11-06 y 2026-11-13).
 - ¿Qué cuenta como "C.U resuelto" para la Evaluación 2? Ya se sabe que
   espera Login y CRUD (CU00, CU06): ¿qué otros CRUD cuentan como
   "principales" (cámaras, góndolas, umbrales: CU05)?
@@ -209,9 +281,6 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
   entrega final. El mensaje del 2026-10-16 dice que lo que adjunta
   "solo corresponde AVANCE", pero la carpeta trae también la guía 2.6
   y la planilla final: ¿cuáles se entregan a más tardar el 2026-10-26?
-- ¿Qué fechas tiene la semana 15 (entrega final de la Fase 2)? Contando
-  desde la semana 8 (2026-10-05) sería 2026-11-23 a 2026-11-27, si no
-  hay semanas de receso.
 - El informe intermedio (2026-10-21), ¿es el mismo informe de estado de
   avance que pidió el correo de la semana 7? Las pautas 2.2 y 2.3 dan
   el formato del informe de avance (ver "Requisitos vigentes"): ¿el
@@ -241,6 +310,84 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
 ## Registro de mensajes
 
 Del más reciente al más antiguo.
+
+### Semana 13 (2026-11-13): GitHub para la revisión final de Walmart
+
+Correo del profesor a todos los equipos.
+
+- Actualizar el repositorio GitHub con la última versión del desarrollo
+  y los entregables, para la revisión final del cliente (Walmart).
+- Plazo: lunes 2026-11-16. Con eso el cliente revisa y se cierran las
+  calificaciones de la Fase 2 (inicio y final).
+
+### Semana 13 (2026-11-13): orden de carpetas en GitHub
+
+- Envió una imagen con el orden completo de las carpetas del GitHub
+  ("orden de carpetas GitHub (COMPLETO)"); no llegó al registro.
+
+### Semana 13 (2026-11-10): entrega del MVP al cliente
+
+- Cuatro equipos ya entregaron el MVP a su cliente. El profesor debe
+  validar la entrega antes de publicar los resultados finales.
+- Plazo: a más tardar durante la semana del 2026-11-16. Si ya se
+  entregó, reenviarle el correo; si no, copiarlo en el correo.
+- La entrega incluye video tutorial, manual de uso y, si corresponde,
+  manual de instalación, y agradece al cliente su participación.
+
+### Semana 12 (2026-11-06): carpeta FINAL FASE 2 y material de ejemplo
+
+- Compartió en Drive ejemplos de plan de pruebas, manuales de
+  instalación y de usuario, y presentaciones de proyecto (enlace en
+  este mensaje).
+- Adjuntó el PDF con la estructura de la carpeta "FINAL FASE 2" de
+  Drive (detalle en "Requisitos vigentes"); el GitHub va aparte, con
+  carpetas en una imagen que no llegó.
+- Responde lo pendiente: los detalles de la carpeta "FINAL FASE 2"
+  (anunciados en la semana 8).
+
+### Semana 12 (2026-11-02): entrega final, ensayos y auditoría 4
+
+- Cuarto informe de auditoría de los repositorios: revisar sus
+  observaciones y corregir lo pendiente.
+- Entrega final de la Fase 2: viernes 2026-11-20 a las 12:00, con el
+  100% de los C.U resueltos, un manual de usuario por perfil, manual de
+  instalación y demás entregables. Cambia la entrega final: antes
+  "semana 15, por confirmar", ahora 2026-11-20 a las 12:00.
+- Ensayos de la presentación ante la comisión: semana del 2026-11-23 al
+  2026-11-27.
+- Los clientes ya deberían haber entregado su retroalimentación sobre la
+  versión presentada; usarla para los ajustes de la entrega final.
+
+### Semana 11 (2026-10-28): video instructivo para el cliente
+
+- Los clientes prefieren el video instructivo. Los equipos que aún no
+  lo envían deben mandarle al cliente un video instructivo básico esta
+  semana.
+
+### Semana 11 (2026-10-26): auditoría 4, demo al cliente y documentación
+
+- Reporte de auditoría N.º 4 (revisión del 2026-10-25, 21:00): revisar
+  sus observaciones y corregir el GitHub.
+- Enviar ese día (2026-10-26) el primer demo al cliente.
+- GitHub de la Fase 2 (Avance) según una imagen adjunta, que no llegó.
+  Para esta auditoría no se exige el Drive, pero hay que mantenerlo al
+  día: informe de estado de avance, Excel de C.U semanal y documentación
+  de la base de datos (modelo lógico, relacional, diccionario y scripts
+  SQL para crear y poblar), coherente con la implementación.
+
+### Semana 10 (2026-10-23): primera versión al cliente, GitHub y Excel semanal
+
+- Adjuntó un nuevo reporte del auditor.
+- Entrega formal de la primera versión funcional al cliente por correo,
+  con los módulos implementados, las funcionalidades disponibles y las
+  instrucciones para acceder y probar, para recibir su retroalimentación.
+- GitHub de la Fase 2 al día, con estructura y nombres exactos (detalle
+  en "Requisitos vigentes").
+- Espera el informe intermedio de estado de avance de cada equipo.
+- Desde esta semana, el Excel "RESUMEN Estado de Avance Casos de Uso"
+  con una hoja por semana, en la raíz del Drive compartido con él.
+- Priorizar una demostración funcional y estable antes que más
+  funcionalidades, e informar a tiempo cualquier impedimento.
 
 ### Semana 10 (2026-10-19): alcance por góndola completa y SKU-110K
 
@@ -277,6 +424,11 @@ Mensaje contado por un integrante (sin texto literal).
   carpeta en "Requisitos vigentes" (revisada el 2026-10-17).
 - Fecha tope de las evidencias de avance de la Fase 2: 2026-10-26
   (lunes). La entrega final de la Fase 2 es en la semana 15.
+- (Registrado el 2026-11-13.) La entrega del demo, el avance del
+  proyecto al cliente, es el lunes 2026-10-26 hasta las 12:00; Walmart
+  pidió el informe y el GitHub una semana antes. Cambia el primer demo
+  operativo: antes "a más tardar 2026-10-31", ahora 2026-10-26 a las
+  12:00.
 
 ### Semana 8 (2026-10-05 a 2026-10-09): actividades de la semana
 
