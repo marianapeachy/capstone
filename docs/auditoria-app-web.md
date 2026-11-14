@@ -1,7 +1,7 @@
 # Auditoría de la app web antes de publicarla (2026-10-18)
 
 Revisión de la app web (`web/`, ítem #28) contra los requerimientos
-(`Anexos/Diseño/Lista de Requerimientos.xlsx`: RF01-RF09, RNF01-RNF06),
+(`Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Lista de Requerimientos.xlsx`: RF01-RF09, RNF01-RNF06),
 los casos de uso CU00-CU07, los mockups de la Fase 1 y los acuerdos con
 Walmart del README. Las minutas de las reuniones no estaban en el PC donde
 se hizo la revisión: se usó el resumen público del README.

@@ -177,7 +177,7 @@ Un perfil sin permiso recibe 403. CU07 (evaluación por lotes) va por
 | `Config` | `umbral` (1-100, 30 por defecto) | Una sola fila (`Config.get()`) |
 | `Camera` | `nombre` (único), `pasillo`, `gondola`, `calibracion` (JSON de OpenCV) | Una cámara por góndola |
 
-El modelo lógico y relacional de la base está en `Anexos/Diseño/Base de datos/`;
+El modelo lógico y relacional de la base está en `Fase 2/Evidencias Proyecto/Evidencias de sistema/Base de datos/`;
 cubre `User`, los perfiles y `Analysis`. `Config` y `Camera` (#44) son posteriores.
 
 ### 6.3 Reglas de negocio

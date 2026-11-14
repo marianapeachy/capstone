@@ -14,7 +14,7 @@ estructura que describe "Requisitos vigentes" en `docs/curso.md`:
 **Estado:**
 
 - **Parte A:** ya está en la plantilla oficial, en
-  `Fase 2/2.4_GuiaEstudiante_Fase 2_DesarrolloProyecto APT.docx`
+  `Fase 2/Evidencias Grupales/2.4_GuiaEstudiante_Fase 2_DesarrolloProyecto APT (Español).docx`
   (2026-10-20).
 - **Parte B:** las evidencias individuales van en
   `Fase 2/Evidencias Individuales/`: ahí están el diario 2.1 y la
@@ -26,7 +26,7 @@ Las opiniones de la parte B (causa de la semana sin avances y
 evaluación del trabajo en grupo) las dio Mariana el 2026-10-22.
 
 Datos al corte del 2026-10-21. Fuentes: `PROGRESS.md`,
-`Anexos/Gestion/Carta Gantt Fase 2.xlsx`, `docs/plan-de-mejoras.md`, el
+`Fase 2/Evidencias Proyecto/Evidencias de documentación/Gestion/Carta Gantt Fase 2.xlsx`, `docs/plan-de-mejoras.md`, el
 historial de Pull Requests y el README.
 
 ---
@@ -160,7 +160,7 @@ Ajustada.
 | C3 | Casos de uso y diagramas alineados con Walmart | Plantillas de C.U, Mermaid | 09-10 al 10-10 | Francisco | - | Completado | - |
 | C3 | Plantillas de C.U y diagramas según la app Django (#42) | Plantillas de C.U, Mermaid | 21-10 | Mariana | CU00-CU06 y diagrama de arquitectura; fuentes Mermaid nuevas de CU00 y de la arquitectura | Completado | Sin API REST, JWT ni React |
 | C2 | Plan de mejoras de la Fase 1 | `docs/plan-de-mejoras.md` | 20-10 | Mariana | Plazo 09-10 | Con retraso (terminado el 20-10) | - |
-| C2 | Informe intermedio | Word | 19-10 al 21-10 | Francisco | Borrador en `Fase 2/`; entrega 21-10 | En curso | Antes era de Nicko; reasignado el 19-10 |
+| C2 | Informe intermedio | Word | 19-10 al 21-10 | Francisco | Borrador en `Fase 2/Evidencias Grupales/`; entrega 21-10 | En curso | Antes era de Nicko; reasignado el 19-10 |
 | C1 | Análisis de resultados: 10 mejores y 10 peores casos | Kaggle CC0, pipeline | 20-10 | Francisco | Alerta correcta en el 84% de 44 fotos | Completado | - |
 | C2 | README completo | README.md | 20-10 | Francisco | Ejemplo reproducible | Completado | - |
 | C2 | Video de demostración (5 a 10 min) | App web, fotos sin SKU-110K | 21-10 | Nicko | Entrega 21-10 | No iniciado | Antes era de Francisco; reasignado el 20-10 |
