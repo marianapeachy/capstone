@@ -1,9 +1,12 @@
 # Bitácora de Sprint 1 - ShelfVision AI
 
-El Sprint 1 cierra con la demo de la Evaluación 2 (Avance) de la Fase
-2: semana del 2026-10-28, con el 50% de los C.U de la fase resueltos,
-y debe servir como primer demo operativo ante Walmart (a más tardar
-2026-10-31). Ver `docs/curso.md`.
+El Sprint 1 cerró con la Evaluación 2 (Avance) de la Fase 2 (semana del
+2026-10-28) y el primer demo ante Walmart (2026-10-26). Lo que sigue
+cierra con la entrega final de la Fase 2: 2026-11-20 a las 12:00, con
+el 100% de los C.U resueltos, manuales de usuario (uno por perfil) y
+manual de instalación; antes, el GitHub al día para la revisión final
+de Walmart (2026-11-16) y la entrega del MVP al cliente (a más tardar
+la semana del 2026-11-16). Ver `docs/curso.md`.
 
 Cada ítem tiene un número fijo (**#N**) que no cambia al reordenar: los
 PR y otros documentos lo citan. Para tomar un ítem, agregar
@@ -54,9 +57,54 @@ moverlo a "Hecho" en el mismo PR, editando solo las líneas de ese ítem
 
 ## Pendientes (priorizados)
 
-Los cuatro primeros responden al mensaje del profesor de la semana 8, y
-los siguientes hasta el #39, al del 2026-10-16 (ver "Próximos
-hitos" en `docs/curso.md`).
+Los ítems #59 a #67 responden a los mensajes del profesor del 2026-11-02
+al 2026-11-13: GitHub al día para la revisión final de Walmart el
+2026-11-16, entrega del MVP al cliente esa misma semana y entrega final
+de la Fase 2 el 2026-11-20 a las 12:00 (ver "Próximos hitos" en
+`docs/curso.md`). Los cuatro siguientes responden al mensaje de la
+semana 8, y los demás hasta el #39, al del 2026-10-16.
+
+- [ ] **#59** (dueño: Francisco) Subir la versión del detector con mejor
+      precisión que tiene en su PC: compartir los pesos por Drive (no se
+      versionan), registrar sus métricas en `docs/test-plan.md` y en
+      `PROGRESS.md` (contra `yolo26s-finetune`) y abrir los PR de sus
+      ramas `feat/ruido-camara` (#55) y `feat/camara-sala-simulada`
+      (#58), subidas el 2026-11-09 desde un PC de Duoc con la identidad
+      "AO-Alumno": antes de commitear en esos PC, `git config user.name`
+      y `user.email` con su cuenta, o no le cuentan en GitHub. Antes del
+      2026-11-16 (revisión de Walmart).
+- [ ] **#60** Manuales de usuario (uno por perfil: Administrador, Jefe de
+      Salón y Reponedor) y manual de instalación (instructivo del plan
+      de instalación y PDF de implementación del ambiente de desarrollo).
+      Los pide la entrega del MVP al cliente (semana del 2026-11-16) y la
+      final; hay ejemplos en Drive (mensaje del profesor del 2026-11-06).
+      La instalación hoy está solo en el README.
+- [ ] **#61** Video tutorial con audio (solo la ejecución de los
+      módulos, sin código) y correo de entrega del MVP al cliente:
+      módulos, funcionalidades, instrucciones de acceso, video, manuales
+      y agradecimiento al cliente, con copia al profesor (o reenviarle el
+      correo si ya se envió). Ver si sirve el video de #36.
+- [ ] **#62** Script SQL que crea la estructura de la base y la puebla con
+      datos de prueba, coherente con `web/models.py` (incluye `Config`,
+      `Camera` y `User.locked_until`). Va en "Evidencias de sistema / Base
+      de datos" de la entrega final.
+- [ ] **#63** Documentación SCRUM de la entrega final: análisis del caso;
+      épicas, sprints e historias de usuario; priorización de las H.U.
+      Salen del backlog (`PROGRESS.md`), la Carta Gantt y los C.U.
+- [ ] **#64** Diagramas de actividad de los C.U (los pide la entrega
+      final; no están en el repositorio).
+- [ ] **#65** Informe final de la Fase 2 (`PTY4478 APT2.0 FASE 2 Informe
+      Final`, guía 2.6 en `Fase 2/`), presentación final (ppt) y la pauta
+      de reflexión individual de cada integrante
+      (`Apellido_Nombre_Pauta_de_reflexión_informe_de_avance_proyecto_APT`).
+      Entrega 2026-11-20 a las 12:00.
+- [ ] **#66** Reordenar las carpetas del GitHub según la imagen del
+      profesor ("orden de carpetas GitHub (COMPLETO)", mensaje del
+      2026-11-13), sin cambiar nombres ni ubicaciones pedidas. Falta la
+      imagen. Antes del 2026-11-16.
+- [ ] **#67** Hojas semanales del Excel "RESUMEN Estado de Avance Casos
+      de Uso" desde la semana del 2026-10-26 (va en la raíz del Drive
+      compartido con el profesor) y su versión para la entrega final.
 
 - [x] **#27** (dueño: Francisco) Informe de estado de avance para el
       profesor, con los puntos que pidió su correo de la semana 7. Ya
@@ -229,12 +277,18 @@ hitos" en `docs/curso.md`).
       no ven clientes de perfil. Falta: que Walmart confirme el plazo
       (#24) y programarlo una vez al día en el servidor del CITT (#39).
       2 tests nuevos.
-- [ ] **#48** Modelar el diagrama de la base de datos (entidad-relación) a partir de
+- [ ] **#48** (dueño: Nicko) Modelar el diagrama de la base de datos (entidad-relación) a partir de
       `web/models.py` (`User`, perfiles como grupos de Django, `Analysis`)
       y dejarlo en `Anexos/Diseño/Diagramas fuente (Mermaid)/` (`erDiagram`).
       Las filas de modelamiento de la Carta Gantt figuran cumplidas (#28)
       pero no hay diagrama. Incluir las tablas que traerían #43 y #44
       (cámaras, configuración) si se decide su diseño. Cruza con #42.
+      Actualización (2026-11-14): Nicko hizo el modelo lógico, el
+      relacional y el diccionario (`Anexos/Diseño/Base de datos/`), pero
+      no incluyen las tablas `Config` y `Camera` (#44) ni el campo
+      `User.locked_until` (#51), ni la normalización de pasillo y góndola
+      (#49). Actualizarlos para la revisión de Walmart (2026-11-16) y la
+      entrega final.
 - [x] **#47** (dueño: Francisco) Auditoría de commits de GitHub: `.mailmap`
       que unifica las identidades (hoy 6 autores para 3 personas) y
       commits y PR sin la línea `Co-Authored-By` ni el pie de Claude
