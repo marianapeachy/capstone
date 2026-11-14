@@ -10,7 +10,7 @@ web
 
 Personal de una sala de alimentos no perecibles de un supermercado de
 Walmart Chile, con tres perfiles (casos de uso CU00-CU07 en
-`Anexos/Diseño/`):
+`Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/`):
 
 - **Reponedor**: en el pasillo, de pie, con el teléfono en una mano y
   productos en la otra. Necesita saber qué góndola reponer primero, dónde
@@ -83,7 +83,7 @@ un modelo que el equipo pueda explicar a uno con más rendimiento.
 
 ## Evidence on Hand
 
-- Mockups de la Fase 1 (evaluados): `Anexos/Diseño/Mockups/` (Admin,
+- Mockups de la Fase 1 (evaluados): `Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Mockups/` (Admin,
   Dashboard y Mobile). Sus datos (KPIs, nombres, tiempos) son de
   ejemplo, no resultados reales.
 - Fotos que se pueden mostrar a terceros: Kaggle supermarket-shelves

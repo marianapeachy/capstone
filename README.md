@@ -82,7 +82,7 @@ El proyecto contempla una estructura de dos niveles de solución para garantizar
 
 ## 👥 Perfiles de Usuario
 
-La interfaz va después del pipeline: Walmart pidió priorizar que la lógica funcione. La aplicación web (ver "Aplicación web") ya tiene el login por perfil (CU00), la gestión de usuarios y roles (CU06), el análisis de fotos (CU01), las alertas (CU02), el dashboard de góndolas (CU03), los reportes (CU04) y la configuración de umbral y cámaras (CU05). Los casos de uso CU00-CU07 están en `Anexos/Diseño/`.
+La interfaz va después del pipeline: Walmart pidió priorizar que la lógica funcione. La aplicación web (ver "Aplicación web") ya tiene el login por perfil (CU00), la gestión de usuarios y roles (CU06), el análisis de fotos (CU01), las alertas (CU02), el dashboard de góndolas (CU03), los reportes (CU04) y la configuración de umbral y cámaras (CU05). Los casos de uso CU00-CU07 están en `Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/`.
 
 1. **Reponedor de Tienda**: Recibe alertas inmediatas en dispositivos móviles para acudir a los pasillos con quiebre crítico.
 2. **Jefe de Salón / Supervisor**: Visualiza dashboards de disponibilidad por pasillo y exporta reportes periódicos de desempeño.
@@ -134,7 +134,7 @@ flowchart TB
     WEB --> DB[("SQLite<br/>usuarios, análisis, alertas")]
 ```
 
-Cada etapa vive en su paquete y no importa los detalles de otra: se pasan arrays, tuplas y *dataclasses*. `src/pipeline.py` es el único que las encadena, y tanto el CLI como la app web solo llaman a `run_image()`. Los diagramas de diseño de la Fase 1 (casos de uso y arquitectura) están en `Anexos/Diseño/`, actualizados a la app Django el 2026-10-21 (ítem #42); sus fuentes Mermaid, en `Anexos/Diseño/Diagramas fuente (Mermaid)/`.
+Cada etapa vive en su paquete y no importa los detalles de otra: se pasan arrays, tuplas y *dataclasses*. `src/pipeline.py` es el único que las encadena, y tanto el CLI como la app web solo llaman a `run_image()`. Los diagramas de diseño de la Fase 1 (casos de uso y arquitectura) están en `Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/`, actualizados a la app Django el 2026-10-21 (ítem #42); sus fuentes Mermaid, en `Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Diagramas fuente (Mermaid)/`.
 
 La especificación técnica (qué recibe y entrega cada etapa, parámetros con sus valores, formato del JSON de salida, rutas y permisos de la app web y modelo de datos) está en [docs/especificacion-tecnica.md](docs/especificacion-tecnica.md).
 
@@ -224,6 +224,12 @@ Al 2026-10-20. El detalle por ítem y su dueño están en [PROGRESS.md](PROGRESS
 ├── data/                   # Datasets (data/raw y data/processed, no versionados)
 ├── tests/                  # Pruebas unitarias e integración (pytest)
 ├── Fase 1/                 # Entregables académicos de la Fase 1 (no modificar)
+├── Fase 2/                 # Entregables de la Fase 2, en el orden de carpetas que pide el profesor
+│   ├── Evidencias Individuales/  # Diario de reflexión (2.1) de cada integrante
+│   ├── Evidencias Grupales/      # Guías 2.4 y 2.6, informe intermedio y formativa
+│   └── Evidencias Proyecto/
+│       ├── Evidencias de documentación/  # Diseño (C.U, diagramas, mockups), Gestion (Gantt, riesgos, RACI, actas) y manuales de usuario
+│       └── Evidencias de sistema/        # Aplicación (el código está en src/ y web/) y Base de datos (modelos y diccionario)
 ├── Dockerfile              # Imagen de la app web y del pipeline (python:3.13-slim-trixie)
 ├── CLAUDE.md               # Memoria de proyecto y reglas de código para IA
 ├── PROGRESS.md             # Bitácora de tareas por sprint

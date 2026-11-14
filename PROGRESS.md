@@ -80,10 +80,11 @@ semana 8, y los demás hasta el #39, al del 2026-10-16.
       final; hay ejemplos en Drive (mensaje del profesor del 2026-11-06).
       La instalación hoy está solo en el README.
       **Hecho (2026-11-14)**: los tres manuales de usuario en
-      `Anexos/Manual de usuario/` (Word, con índice y capturas de la app
+      `Fase 2/Evidencias Proyecto/Evidencias de documentación/Manual de usuario/` (Word, con índice y capturas de la app
       con usuarios ficticios y fotos CC0 de Kaggle, nunca SKU-110K).
       **Falta**: el manual de instalación y el PDF del ambiente de
-      desarrollo; moverlos a la carpeta que pide el profesor con el #66.
+      desarrollo. Con el #66, los manuales pasaron a `Fase 2/Evidencias
+      Proyecto/Evidencias de documentación/Manual de usuario/`.
 - [ ] **#61** Video tutorial con audio (solo la ejecución de los
       módulos, sin código) y correo de entrega del MVP al cliente:
       módulos, funcionalidades, instrucciones de acceso, video, manuales
@@ -99,14 +100,23 @@ semana 8, y los demás hasta el #39, al del 2026-10-16.
 - [ ] **#64** Diagramas de actividad de los C.U (los pide la entrega
       final; no están en el repositorio).
 - [ ] **#65** Informe final de la Fase 2 (`PTY4478 APT2.0 FASE 2 Informe
-      Final`, guía 2.6 en `Fase 2/`), presentación final (ppt) y la pauta
+      Final`, guía 2.6 en `Fase 2/Evidencias Grupales/`), presentación final (ppt) y la pauta
       de reflexión individual de cada integrante
       (`Apellido_Nombre_Pauta_de_reflexión_informe_de_avance_proyecto_APT`).
       Entrega 2026-11-20 a las 12:00.
-- [ ] **#66** Reordenar las carpetas del GitHub según la imagen del
+- [x] **#66** (dueño: Mariana) Reordenar las carpetas del GitHub según la imagen del
       profesor ("orden de carpetas GitHub (COMPLETO)", mensaje del
-      2026-11-13), sin cambiar nombres ni ubicaciones pedidas. Falta la
-      imagen. Antes del 2026-11-16.
+      2026-11-13), sin cambiar nombres ni ubicaciones pedidas. Antes del
+      2026-11-16. **Hecho (2026-11-14)**: `Anexos/` pasó a `Fase 2/Evidencias
+      Proyecto/` (Diseño, Gestion y manuales a `Evidencias de
+      documentación/`; la base de datos a `Evidencias de sistema/Base de
+      datos/`), las guías 2.4 y 2.6 con "(Español)", el informe intermedio,
+      la formativa 2.3 y la planilla del avance a `Fase 2/Evidencias
+      Grupales/`, y el video a `Evidencias de sistema/Aplicación/` (con un
+      README que apunta al código). Rutas al día en CLAUDE.md, README y
+      `docs/`. `Fase 1/` no se tocó (regla de CLAUDE.md), aunque sus
+      nombres difieren de la imagen: queda como pregunta en
+      `docs/curso.md`. `Presentación Proyecto.pptx` llega con el #65.
 - [ ] **#67** Hojas semanales del Excel "RESUMEN Estado de Avance Casos
       de Uso" desde la semana del 2026-10-26 (va en la raíz del Drive
       compartido con el profesor) y su versión para la entrega final.
@@ -116,12 +126,12 @@ semana 8, y los demás hasta el #39, al del 2026-10-16.
       atrasado: el profesor lo está esperando. Ahora es el informe
       intermedio que pide el cliente, entrega 2026-10-21 (puntos en
       "Requisitos vigentes" de `docs/curso.md`). Formato Word, lo arma
-      Francisco. Carta Gantt actualizada: `Anexos/Gestion/Carta Gantt
+      Francisco. Carta Gantt actualizada: `Fase 2/Evidencias Proyecto/Evidencias de documentación/Gestion/Carta Gantt
       Fase 2.xlsx` (copia de la Iteración 1, por semana, con estado de
       cada actividad; corte 2026-10-19). Las fechas de #7 y #37 son
       propuestas, a confirmar por sus dueñas. Puntos 2, 3 y 6 del
       informe salen de #35, #34 y #36. Avance (2026-10-20): borrador en
-      `Fase 2/Informe intermedio de avance - ShelfVision AI.docx` con el
+      `Fase 2/Evidencias Grupales/Informe intermedio de avance - ShelfVision AI.docx` con el
       formato de las pautas 2.2 y 2.3 (portada, índice, resumen y
       abstract, Calibri 11, número de página): estado por módulo y por
       C.U, Gantt, riesgos, próximos pasos, decisiones técnicas,
@@ -218,7 +228,7 @@ semana 8, y los demás hasta el #39, al del 2026-10-16.
       sistema. Hecho (2026-10-21): plantillas CU00, CU01, CU02 y CU06
       corregidas (CU03-CU05 no nombraban JWT ni API); fuentes Mermaid de
       CU00-CU06 y nueva fuente del diagrama de arquitectura
-      (`Anexos/Diseño/Diagramas fuente (Mermaid)/`), con sus PNG
+      (`Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Diagramas fuente (Mermaid)/`), con sus PNG
       regenerados con mermaid-cli. Verificado contra `web/` (login con
       RUT o correo, bloqueo tras 5 intentos, vista por rol, alertas).
 - [x] **#43** (dueño: Mariana) Dashboard de disponibilidad (CU03, RF05): estado de cada
@@ -284,12 +294,12 @@ semana 8, y los demás hasta el #39, al del 2026-10-16.
       2 tests nuevos.
 - [ ] **#48** (dueño: Nicko) Modelar el diagrama de la base de datos (entidad-relación) a partir de
       `web/models.py` (`User`, perfiles como grupos de Django, `Analysis`)
-      y dejarlo en `Anexos/Diseño/Diagramas fuente (Mermaid)/` (`erDiagram`).
+      y dejarlo en `Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Diagramas fuente (Mermaid)/` (`erDiagram`).
       Las filas de modelamiento de la Carta Gantt figuran cumplidas (#28)
       pero no hay diagrama. Incluir las tablas que traerían #43 y #44
       (cámaras, configuración) si se decide su diseño. Cruza con #42.
       Actualización (2026-11-14): Nicko hizo el modelo lógico, el
-      relacional y el diccionario (`Anexos/Diseño/Base de datos/`), pero
+      relacional y el diccionario (`Fase 2/Evidencias Proyecto/Evidencias de sistema/Base de datos/`), pero
       no incluyen las tablas `Config` y `Camera` (#44) ni el campo
       `User.locked_until` (#51), ni la normalización de pasillo y góndola
       (#49). Actualizarlos para la revisión de Walmart (2026-11-16) y la
@@ -1040,7 +1050,7 @@ semana 8, y los demás hasta el #39, al del 2026-10-16.
       quedan por confirmar, #24); RF01 acepta lotes de fotos; RF04 alerta
       por góndola; RF05 con contenido mínimo; RF06 nuevo (evaluación por
       lotes); evaluación de Walmart por IoU y fotos propias (#32).
-      Casos de uso (`Anexos/Diseño/Plantilla de C.U 0X.docx`): CU01 con
+      Casos de uso (`Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Plantilla de C.U 0X.docx`): CU01 con
       el pipeline real (YOLO26, segmentación, sin bodega ni islas,
       excepciones de góndola no encontrada y cámara defectuosa) y sin
       exigir 1 cámara = 1 góndola; CU02 y CU03 con el umbral expresado
@@ -1056,9 +1066,9 @@ semana 8, y los demás hasta el #39, al del 2026-10-16.
       regenerados (CU00 sin cambios): el general, con CU07, CU02
       `<<extend>>` de CU01 y CU07 `<<include>>` de CU01, y los de
       secuencia de CU01 a CU07, alineados con las plantillas (CU05 ya no
-      dibuja ROI). Sus fuentes quedan en `Anexos/Diseño/Diagramas fuente
+      dibuja ROI). Sus fuentes quedan en `Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Diagramas fuente
       (Mermaid)/` (`.drawio` del general y `.mmd` de cada C.U, con
-      `LEEME.md`); `.gitignore` deja versionar los PNG de `Anexos/`.
+      `LEEME.md`); `.gitignore` deja versionar los PNG de `Fase 2/`.
       `docs/curso.md` lista los 8 C.U. Ítems
       nuevos: #31 (bodega superior), #32 (fotos propias y set anotado)
       y #33 (verificar el detector fuera de SKU-110K). Se numeraron
@@ -1120,7 +1130,7 @@ semana 8, y los demás hasta el #39, al del 2026-10-16.
   profundidad de góndola es constante, de 20-30 cm. Ya están actualizados
   README, CLAUDE.md, `docs/datasets.md` y `roi_filter.py`. Siguen
   desactualizados estos anexos de diseño, que no se modificaron:
-  `Anexos/Diseño/Mockups/Mockup Admin-1.jpg` (pantalla "Editor de Región
+  `Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Mockups/Mockup Admin-1.jpg` (pantalla "Editor de Región
   de Interés (ROI)" con el botón "Guardar Máscara ROI"),
   y `Mockup Admin-4.jpg` (log "Actualizó máscara ROI"). Actualizarlos
   quedó postergado para más adelante (decidido 2026-09-27). Las

@@ -8,8 +8,8 @@ La app web (`web/`, ítem #28, 2026-10-18) se construyó con Django y
 sesiones, no con la API FastAPI/Flask + JWT + React del diseño de la Fase
 1 (justificación en el README, "Estrategia Algorítmica y Arquitectura").
 Este documento lista qué hay que cambiar en las plantillas de C.U
-(`Anexos/Diseño/Plantilla de C.U 0X.docx`), en sus diagramas de secuencia
-(fuentes en `Anexos/Diseño/Diagramas fuente (Mermaid)/`) y en el diagrama
+(`Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Plantilla de C.U 0X.docx`), en sus diagramas de secuencia
+(fuentes en `Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Diagramas fuente (Mermaid)/`) y en el diagrama
 de arquitectura, para rehacerlos en el ítem #42.
 
 ## Cambio general (aplica a todos los diagramas)
@@ -109,7 +109,7 @@ Plantilla y `Diagrama C.U 06.mmd`.
 Sin cambios: corre por `scripts/run_pipeline.py --annotations`, no por la
 app web.
 
-## Diagrama de arquitectura (`Anexos/Diseño/Diagrama de arquitectura/`)
+## Diagrama de arquitectura (`Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Diagrama de arquitectura/`)
 
 - Capa 3: "API Backend Service - Python FastAPI/Flask" -> "App web Django
   (vistas, ORM, migraciones)"; "Validación JWT / Bcrypt" -> "Sesiones +

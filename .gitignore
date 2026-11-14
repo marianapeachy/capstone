@@ -31,7 +31,7 @@ data/processed/*
 !docs/**/*.jpg
 !docs/**/*.jpeg
 !docs/**/*.png
-!Anexos/**/*.png
+!Fase 2/**/*.png
 
 # --- Minutas de reuniones con Walmart: confidenciales, nunca versionar ---
 # (se comparten por Drive; ver "Minutas de reuniones con Walmart" en CLAUDE.md)
@@ -46,7 +46,8 @@ checkpoints/
 
 # --- Reportes generados (Excel, CSV, PDF) ---
 *.xlsx
-!Anexos/**/*.xlsx
+!Fase 2/**/*.xlsx
+!Fase 2/**/*.pdf
 *.csv
 *.pdf
 !docs/**/*.pdf

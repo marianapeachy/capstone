@@ -90,7 +90,7 @@ semana) del mensaje que trae el enlace, para buscarlo ahí.
 
 - **Evaluación 2 (Avance)**: el 50% de los casos de uso de la fase
   resueltos. Los C.U del diseño son 8 (CU00-CU07, en
-  `Anexos/Diseño/Plantilla de C.U 0X.docx`): CU00 autenticar usuario,
+  `Fase 2/Evidencias Proyecto/Evidencias de documentación/Diseño/Plantilla de C.U 0X.docx`): CU00 autenticar usuario,
   CU01 ingestar y analizar imagen, CU02 notificar alerta de quiebre,
   CU03 dashboard de disponibilidad, CU04 exportar reporte, CU05
   configurar cámara y umbrales, CU06 gestionar cuentas y roles, y CU07
