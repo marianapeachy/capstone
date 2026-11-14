@@ -73,12 +73,17 @@ semana 8, y los demás hasta el #39, al del 2026-10-16.
       "AO-Alumno": antes de commitear en esos PC, `git config user.name`
       y `user.email` con su cuenta, o no le cuentan en GitHub. Antes del
       2026-11-16 (revisión de Walmart).
-- [ ] **#60** Manuales de usuario (uno por perfil: Administrador, Jefe de
+- [ ] **#60** (dueño: Mariana) Manuales de usuario (uno por perfil: Administrador, Jefe de
       Salón y Reponedor) y manual de instalación (instructivo del plan
       de instalación y PDF de implementación del ambiente de desarrollo).
       Los pide la entrega del MVP al cliente (semana del 2026-11-16) y la
       final; hay ejemplos en Drive (mensaje del profesor del 2026-11-06).
       La instalación hoy está solo en el README.
+      **Hecho (2026-11-14)**: los tres manuales de usuario en
+      `Anexos/Manual de usuario/` (Word, con índice y capturas de la app
+      con usuarios ficticios y fotos CC0 de Kaggle, nunca SKU-110K).
+      **Falta**: el manual de instalación y el PDF del ambiente de
+      desarrollo; moverlos a la carpeta que pide el profesor con el #66.
 - [ ] **#61** Video tutorial con audio (solo la ejecución de los
       módulos, sin código) y correo de entrega del MVP al cliente:
       módulos, funcionalidades, instrucciones de acceso, video, manuales
